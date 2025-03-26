@@ -3,6 +3,8 @@ public abstract class Pessoa {
     protected String nome;
     protected String telefone;
     protected int IDPessoa;
+    protected int Idade;
+    protected String dataNascimento;
 
         public Pessoa(String nome,String telefone,int IDPessoa){//atributos default para pessoa
             this.nome = nome;
