@@ -1,3 +1,4 @@
+package Negocios;
 public abstract class Pessoa {
     protected String nome;
     protected String telefone;
