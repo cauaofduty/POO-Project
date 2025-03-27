@@ -28,6 +28,7 @@ public class Pix implements FormaDePagamento {
         if(valor > saldoPix){
             throw new Exception("saldo insuficiente! tente outra forma de pagamento");
         }
-        this.saldoPix -= valor;//o recebimento sera feito ao motorista
+        this.saldoPix -= valor;//o recebimento sera feito ao motorista e issoo
+        //tipo isso aqui
 }
 }
