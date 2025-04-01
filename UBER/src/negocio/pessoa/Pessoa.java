@@ -10,6 +10,7 @@ public abstract class Pessoa {
             this.telefone = telefone;
             this.IDPessoa = IDPessoa;
             this.dataNascimento = dataNascimento;
+            //implementar senha para login
         }
         //getters default abaixo
         public String getNome(){
