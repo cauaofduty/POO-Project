@@ -1,4 +1,6 @@
-package Negocios;
+package negocio.pessoa;
+
+import negocio.demaisEntidades.Veiculo;
 
 public class Motorista extends Pessoa {
     private double saldoMotorista; //TERIA UMA CLASSE PARA O MOTORISTA PASSAR TROCO EM CASO DE PIX X DINHEIRO, MAS O CLIENTE NAO ESTA PAGANDO TANTO ASSIM PELO PROJETO

@@ -1,4 +1,4 @@
-package app;
+package ui;
 
  class Main {
     public static void main(final String[] args) throws Exception {
