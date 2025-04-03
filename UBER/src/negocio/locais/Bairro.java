@@ -1,6 +1,6 @@
 package negocio.locais;
 
-public enum Bairro {//tudo em ordem pai
+public enum Bairro {//tudo em ordem, printar para o usuario ter a "cola" dos locais
     DOM_HELDER_CAMARA,
     MAGANO,
     SAO_JOSE,

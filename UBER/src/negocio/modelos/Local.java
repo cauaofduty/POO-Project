@@ -1,33 +1,39 @@
 package negocio.modelos;
+import negocio.locais.*;
 public class Local {
-    private String cidade;//nao tem sentido colocar varias strings aqui sendo que o natural e o cliente separar tudo por virgula
-    private String bairro;
-    private String rua;
-   
-    public Local(String cidade, String bairro, String rua) {
-        this.cidade = cidade;
-        this.bairro = bairro;
-        this.rua = rua;
-    }
+    private Bairro bairro;//nao tem sentido colocar varias strings aqui sendo que o natural e o cliente separar tudo por virgula
+    private Zona zona;
     
-    public String getCidade() {
-        return cidade;
+    public Local(Bairro bairro, Zona zona) {//ver se e necessario haverem setters para a classe
+        this.bairro = bairro;
+        this.zona = zona;
     }
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-    public String getBairro() {
+
+    public Bairro getBairro() {
         return bairro;
     }
-    public void setBairro(String bairro) {
+
+    public void setBairro(Bairro bairro) {
         this.bairro = bairro;
     }
-    public String getRua() {
-        return rua;
+
+    public Zona getZona() {
+        return zona;
     }
-    public void setRua(String rua) {
-        this.rua = rua;
+
+    public void setZona(Zona zona) {
+        this.zona = zona;
     }
+    public int getX(){/* pega as coordenadas do local no "mapa" */
+        return this.bairro.ordinal();
+    }
+    public int getY(){/* pega as coordenadas do local no "mapa" */
+        return this.zona.ordinal();
+    }
+   
+    
+    
+
     
     
 }
