@@ -13,8 +13,7 @@ public class Dinheiro implements FormaDePagamento {
     
     @Override
     public void pagar(double valor) throws Exception {
-        if(valor > saldo) throw new 
-        throw new UnsupportedOperationException("Unimplemented method 'pagar'");
+        if(valor > saldo) throw new UnsupportedOperationException("Unimplemented method 'pagar'");
     }
 
     public double getSaldo() {
