@@ -1,8 +1,8 @@
-package negocio.pessoa;
-
+package negocio;
 import java.util.ArrayList;
-import negocio.demaisEntidades.Local;
-import negocio.demaisEntidades.Viagem;
+import negocio.modelos.Local;
+import negocio.modelos.Pessoa;
+import negocio.modelos.Viagem;
 
 public class Cliente extends Pessoa{
     private final ArrayList<Viagem> viagensHistorico;  

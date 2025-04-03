@@ -1,7 +1,6 @@
-package negocio.demaisEntidades;
-
-import negocio.pessoa.Cliente;
-import negocio.pessoa.Motorista;
+package negocio.modelos;
+import negocio.Cliente;
+import negocio.Motorista;
 
 public class Viagem {
     protected Local origem;//aqui literalmente so muda o nome das variaveis para distinção 

@@ -1,5 +1,6 @@
-package negocio.demaisEntidades;
-    
+package negocio;
+import negocio.modelos.Veiculo;
+
 public  class Motocicleta extends Veiculo{
     private final String nomeVeiculo;
     private final double taxaViagem;

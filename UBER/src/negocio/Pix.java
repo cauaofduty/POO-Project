@@ -1,6 +1,8 @@
-package negocio.demaisEntidades;
+package negocio;
 
 import java.util.ArrayList;
+
+import negocio.modelos.FormaDePagamento;
 
 public class Pix implements FormaDePagamento {
     private ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?
@@ -26,7 +28,7 @@ public class Pix implements FormaDePagamento {
     @Override
     public void pagar(double valor) throws Exception{
         if(valor > saldoPix){
-            throw new Exception("saldo insuficiente! tente outra forma de pagamento");
+            throw new PagamentoException("saldo insuficiente! tente outra forma de pagamento");
         }
         this.saldoPix -= valor;//o recebimento sera feito ao motorista e issoo
         //tipo isso aqui

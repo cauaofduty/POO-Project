@@ -1,5 +1,6 @@
-package negocio.demaisEntidades;
-    
+package negocio;
+import negocio.modelos.Veiculo;
+
 public class Luxo extends Veiculo {
     private final String nomeVeiculo;
     private final int ano;

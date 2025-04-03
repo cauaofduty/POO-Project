@@ -1,6 +1,5 @@
-package negocio.demaisEntidades;
-import negocio.pessoa.Cliente;
-import negocio.pessoa.Motorista;
+package negocio;
+import negocio.modelos.Viagem;
 
 public class ViagemEntrega extends Viagem{
     private double pesoEntrega;//implementar tempo nas classes, perguntar ao professor

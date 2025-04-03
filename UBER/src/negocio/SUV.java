@@ -1,4 +1,5 @@
-package negocio.demaisEntidades;
+package negocio;
+import negocio.modelos.Veiculo;
 
 public class SUV extends Veiculo{
     private final String nomeVeiculo;

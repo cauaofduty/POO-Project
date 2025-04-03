@@ -1,4 +1,4 @@
-package negocio.demaisEntidades;
+package negocio.modelos;
 public abstract class Veiculo {
     protected final String placa;
     protected final String cor;

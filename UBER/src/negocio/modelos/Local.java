@@ -1,4 +1,4 @@
-package negocio.demaisEntidades;
+package negocio.modelos;
 public class Local {
     private String cidade;//nao tem sentido colocar varias strings aqui sendo que o natural e o cliente separar tudo por virgula
     private String bairro;
