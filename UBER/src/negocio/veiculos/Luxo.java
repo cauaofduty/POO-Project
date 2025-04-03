@@ -1,15 +1,15 @@
-package negocio;
+package negocio.veiculos;
 import negocio.modelos.Veiculo;
 
-public  class Motocicleta extends Veiculo{
+public class Luxo extends Veiculo {
     private final String nomeVeiculo;
-    private final double taxaViagem;
     private final int ano;
-    
-    public Motocicleta(String placa, String cor, String nomeVeiculo, int ano) {
+    private final double taxaViagem;
+
+    public Luxo(String placa, String cor, String nomeVeiculo, int ano) {
         super(placa, cor);
         this.nomeVeiculo = nomeVeiculo;
-        this.taxaViagem = -0.2;//de moto e mais barato
+        this.taxaViagem = 2.0;//definido pela empresa
         this.ano = ano;
     }
 
@@ -24,9 +24,8 @@ public  class Motocicleta extends Veiculo{
     public int getAno() {
         return ano;
     }
-
     @Override//VER NO QUE ESTE OVERRIDE DA
     public String toString() {
-        return "Motocicleta {"+ nomeVeiculo + " " + ano + " " + super.toString()  +   "}";
+        return "Luxo {"+ nomeVeiculo + " " + ano + " " + super.toString()  +   "}";
     }
 }

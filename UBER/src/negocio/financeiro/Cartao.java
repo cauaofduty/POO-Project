@@ -1,4 +1,4 @@
-package negocio;
+package negocio.financeiro;
 
 import negocio.modelos.FormaDePagamento;
 
@@ -7,6 +7,7 @@ public class Cartao implements FormaDePagamento{
     private final String numeroCartao;
     private final String cVV;
     private final String senhaCartao;
+    private final String tipo = "Cartão";
 
 
     public Cartao(double limiteCartao, String numeroCartao, String cVV, String senhaCartao) {
@@ -19,10 +20,9 @@ public class Cartao implements FormaDePagamento{
 
     @Override
     public void pagar(double valor) throws Exception {
-        if(valor > this.limiteCartao)
-        throw new UnsupportedOperationException("");
+        if(valor > this.limiteCartao) throw new PagamentoNegadoException("pagamento negado.",tipo);
+        this.limiteCartao -= valor;
     }
-
 
     public double getLimiteCartao() {
         return limiteCartao;
@@ -46,6 +46,12 @@ public class Cartao implements FormaDePagamento{
 
     public String getSenhaCartao() {
         return senhaCartao;
+    }
+
+
+    @Override
+    public String getTipo() {
+        return this.tipo;
     }
     
     

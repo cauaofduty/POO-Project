@@ -1,29 +1,27 @@
 package negocio;
 import java.util.ArrayList;
-import negocio.modelos.Local;
+
+import negocio.modelos.FormaDePagamento;
 import negocio.modelos.Pessoa;
 import negocio.modelos.Viagem;
 
 public class Cliente extends Pessoa{
-    private final ArrayList<Viagem> viagensHistorico;  
-    private Local localAtual;//simulação para o GPS, nao esta no construtor
-    //implementar senha com usuario sendo o login, talvez na abstrata mesmo
+    private final ArrayList<Viagem> viagensHistorico; 
+    private final ArrayList<FormaDePagamento> formasPagamento;//criar toString para cada forma de pagamento
     
-    public Cliente(String nome, String telefone, int IDPessoa, String dataNascimento){
-        super(nome, telefone, IDPessoa, dataNascimento);
+    public Cliente(String nome, String telefone, int IDPessoa, String dataNascimento, ArrayList<FormaDePagamento> formasPagamento, String senhaAcesso){
+        super(nome, telefone, IDPessoa, dataNascimento, senhaAcesso);
         viagensHistorico = new ArrayList<>();
+        this.formasPagamento = formasPagamento;
+        //adicionar aqui uma primeira forma de pagamento
     }
 
-    public ArrayList<Viagem> getViagensHistorico() {
+    public ArrayList<Viagem> getViagensHistorico(){
         return viagensHistorico;
     }
 
-    public Local getLocalAtual() {
-        return localAtual;
-    }
-
-    public void setLocalAtual(Local localAtual) {
-        this.localAtual = localAtual;
+    public ArrayList<FormaDePagamento> getFormasPagamento() {
+        return formasPagamento;
     }
 
 }

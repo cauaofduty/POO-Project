@@ -4,13 +4,14 @@ public abstract class Pessoa {
     protected String telefone;
     protected final int IDPessoa;//imutavel apos criacao
     protected String dataNascimento;
-
-        public Pessoa(String nome,String telefone,int IDPessoa, String dataNascimento){//atributos default para pessoa
+    protected Local localAtual;//pulo do gato
+    protected String senhaAcesso; 
+        public Pessoa(String nome,String telefone,int IDPessoa, String dataNascimento, String senhaAcesso){//atributos default para pessoa
             this.nome = nome;
             this.telefone = telefone;
             this.IDPessoa = IDPessoa;
             this.dataNascimento = dataNascimento;
-            //implementar senha para login
+            this.senhaAcesso = senhaAcesso;
         }
         //getters default abaixo
         public String getNome(){
@@ -28,6 +29,13 @@ public abstract class Pessoa {
             return this.dataNascimento;
         }
 
+        public Local getLocalAtual() {
+            return localAtual;
+        }
+    
+        public void setLocalAtual(Local localAtual) {
+            this.localAtual = localAtual;
+        }
         public void setNome(String nome){
             this.nome = nome;
         }

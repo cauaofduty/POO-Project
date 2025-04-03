@@ -1,4 +1,4 @@
-package negocio;
+package negocio.veiculos;
 import negocio.modelos.Veiculo;
 
 public class SUV extends Veiculo{

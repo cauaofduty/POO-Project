@@ -2,11 +2,13 @@ package negocio;
 import negocio.modelos.Pessoa;
 import negocio.modelos.Veiculo;
 
-public class Motorista extends Pessoa {
+public class Motorista extends Pessoa { // como fazer para ele receber dinheiro?
     private double saldoMotorista; //TERIA UMA CLASSE PARA O MOTORISTA PASSAR TROCO EM CASO DE PIX X DINHEIRO, MAS O CLIENTE NAO ESTA PAGANDO TANTO ASSIM PELO PROJETO
-    Veiculo veiculo;//ver se funciona colocar a classe abstrata aqui
-    public Motorista(String nome,String telefone,int IDPessoa, String dataNascimento, Veiculo veiculo){
-        super(nome,telefone,IDPessoa,dataNascimento);
+    Veiculo veiculo;//ver se funciona pois tarta-se de classe abstrata aqui
+
+
+    public Motorista(String nome,String telefone,int IDPessoa, String dataNascimento, String senhaAcesso, Veiculo veiculo){
+        super(nome,telefone,IDPessoa,dataNascimento, senhaAcesso);
         this.saldoMotorista = 0;
         this.veiculo = veiculo;
     }
