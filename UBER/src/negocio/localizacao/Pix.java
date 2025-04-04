@@ -1,6 +1,9 @@
-package negocio.financeiro;
+package negocio.localizacao;
 
 import java.util.ArrayList;
+
+import negocio.financeiro.FormaDePagamento;
+import negocio.financeiro.PagamentoNegadoException;
 
 public class Pix implements FormaDePagamento {
     private final ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?

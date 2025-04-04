@@ -1,14 +1,14 @@
 package negocio.pessoas;
 import java.util.ArrayList;
 import negocio.financeiro.FormaDePagamento;
-import negocio.locais.Viagem;
+import negocio.localizacao.Viagem;
 
 public class Cliente extends Pessoa{
-    private final ArrayList<Viagem> viagensHistorico; 
+     
     private final ArrayList<FormaDePagamento> formasPagamento;//criar toString para cada forma de pagamento
     
-    public Cliente(String nome, String telefone, int IDPessoa, String dataNascimento, ArrayList<FormaDePagamento> formasPagamento, String senhaAcesso){
-        super(nome, telefone, IDPessoa, dataNascimento, senhaAcesso);
+    public Cliente(String nome, String telefone, int IDPessoa, int idade, ArrayList<FormaDePagamento> formasPagamento, String senhaAcesso){
+        super(nome, telefone, IDPessoa, idade, senhaAcesso);
         viagensHistorico = new ArrayList<>();
         this.formasPagamento = formasPagamento;
         //adicionar aqui uma primeira forma de pagamento

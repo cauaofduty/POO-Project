@@ -1,4 +1,4 @@
-package negocio.locais;
+package negocio.localizacao;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 

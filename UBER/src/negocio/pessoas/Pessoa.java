@@ -1,51 +1,55 @@
 package negocio.pessoas;
 
-import negocio.locais.Local;
+import java.util.ArrayList;
+import negocio.localizacao.Local;
+import negocio.localizacao.Viagem;
 
 public abstract class Pessoa {
-    protected String nome;//apenas nome de usuario
-    protected String telefone;
+
+    protected final String nome;//apenas nome de usuario
     protected final int IDPessoa;//imutavel apos criacao
-    protected String dataNascimento;
+    protected final int idade;
     protected Local localAtual;
-    protected String senhaAcesso; 
-        public Pessoa(String nome,String telefone,int IDPessoa, String dataNascimento, String senhaAcesso){//atributos default para pessoa
-            this.nome = nome;
-            this.telefone = telefone;
-            this.IDPessoa = IDPessoa;
-            this.dataNascimento = dataNascimento;
-            this.senhaAcesso = senhaAcesso;
-        }
-        //getters default abaixo
-        public String getNome(){
-            return this.nome;
-        }
+    protected String senhaAcesso;
+    private final ArrayList<Viagem> viagensHistorico;
 
-        public String getTelefone(){
-            return this.telefone;
-        }
-        
-        public int getIDPessoa(){
-            return this.IDPessoa;
-        }
-        public String getDataNascimento(){
-            return this.dataNascimento;
-        }
+    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico) {
+        this.IDPessoa = IDPessoa;
+        this.idade = idade;
+        this.localAtual = localAtual;
+        this.nome = nome;
+        this.senhaAcesso = senhaAcesso;
+        this.viagensHistorico = viagensHistorico;
+    }
+    //getters default abaxo
+    public String getNome(){
+        return this.nome;
+    }
 
-        public Local getLocalAtual() {
-            return localAtual;
-        }
     
-        public void setLocalAtual(Local localAtual) {
-            this.localAtual = localAtual;
+    public int getIDPessoa(){
+        return this.IDPessoa;
+    }
+
+
+    public Local getLocalAtual() {
+        return localAtual;
+    }
+
+    public void setLocalAtual(Local localAtual) {
+        this.localAtual = localAtual;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public ArrayList<Viagem> getViagensHistorico() {
+        return viagensHistorico;
         }
-        public void setNome(String nome){
-            this.nome = nome;
-        }
-        public void setTelefene(String telefone){
-            this.telefone = telefone;
-        }
-        public void setDataNascimento(String dataNascimento){
-            this.dataNascimento = dataNascimento;
-        }
+
+
+    public String getSenhaAcesso() {
+        return senhaAcesso;
+    }
 }
