@@ -2,8 +2,6 @@ package negocio.financeiro;
 
 import java.util.ArrayList;
 
-import negocio.modelos.FormaDePagamento;
-
 public class Pix implements FormaDePagamento {
     private final ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?
     private double saldoPix;//saldo deve ser uma classe??

@@ -1,7 +1,6 @@
 package negocio.locais;
-import negocio.Cliente;
-import negocio.Motorista;
-import negocio.modelos.Local;
+import negocio.pessoas.Cliente;
+import negocio.pessoas.Motorista;
 
 public class ViagemEntrega extends Viagem{
     private double pesoEntrega;

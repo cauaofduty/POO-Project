@@ -1,7 +1,5 @@
 package negocio.financeiro;
 
-import negocio.modelos.FormaDePagamento;
-
 public class Cartao implements FormaDePagamento{
     private double limiteCartao; 
     private final String numeroCartao;

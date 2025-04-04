@@ -1,10 +1,13 @@
-package negocio.modelos;
+package negocio.pessoas;
+
+import negocio.locais.Local;
+
 public abstract class Pessoa {
     protected String nome;//apenas nome de usuario
     protected String telefone;
     protected final int IDPessoa;//imutavel apos criacao
     protected String dataNascimento;
-    protected Local localAtual;//pulo do gato
+    protected Local localAtual;
     protected String senhaAcesso; 
         public Pessoa(String nome,String telefone,int IDPessoa, String dataNascimento, String senhaAcesso){//atributos default para pessoa
             this.nome = nome;

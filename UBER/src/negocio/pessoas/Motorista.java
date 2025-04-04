@@ -1,6 +1,5 @@
-package negocio;
-import negocio.modelos.Pessoa;
-import negocio.modelos.Veiculo;
+package negocio.pessoas;
+import negocio.veiculos.Veiculo;
 
 public class Motorista extends Pessoa { // como fazer para ele receber dinheiro?
     private double saldoMotorista; //TERIA UMA CLASSE PARA O MOTORISTA PASSAR TROCO EM CASO DE PIX X DINHEIRO, MAS O CLIENTE NAO ESTA PAGANDO TANTO ASSIM PELO PROJETO

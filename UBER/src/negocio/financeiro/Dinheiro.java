@@ -1,5 +1,4 @@
 package negocio.financeiro;
-import negocio.modelos.FormaDePagamento;
 
 public class Dinheiro implements FormaDePagamento {
     private double saldo;

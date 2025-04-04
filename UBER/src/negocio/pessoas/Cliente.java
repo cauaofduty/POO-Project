@@ -1,9 +1,7 @@
-package negocio;
+package negocio.pessoas;
 import java.util.ArrayList;
-
+import negocio.financeiro.FormaDePagamento;
 import negocio.locais.Viagem;
-import negocio.modelos.FormaDePagamento;
-import negocio.modelos.Pessoa;
 
 public class Cliente extends Pessoa{
     private final ArrayList<Viagem> viagensHistorico; 

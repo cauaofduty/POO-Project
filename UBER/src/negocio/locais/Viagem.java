@@ -1,7 +1,6 @@
 package negocio.locais;
-import negocio.Cliente;
-import negocio.Motorista;
-import negocio.modelos.Local;
+import negocio.pessoas.Cliente;
+import negocio.pessoas.Motorista;
 
 public abstract class Viagem {
     protected final Local origem; 
