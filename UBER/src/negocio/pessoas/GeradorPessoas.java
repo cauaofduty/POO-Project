@@ -68,27 +68,38 @@ public class GeradorPessoas {
 
     //CONTINUAR AQUI
     private static Local gerarLocal(ArrayList<Pessoa> pessoas){
-        String[] cidades = {
+        //setando valores estaticos como "base de dados"
+        String[] cidadesRandom = {
             "Garanhuns", "Caruaru", "Belo Jardim", "Lajedo", "Pesqueira",
             "Santa Cruz do Capibaribe", "Toritama", "Surubim", "São Bento do Una", "Brejo da Madre de Deus",
             "Taquaritinga do Norte", "Bonito", "Bezerros", "Gravatá", "Jataúba",
             "Agrestina", "Panelas", "Altinho", "Cupira", "Lagoa dos Gatos"
         };
-        String[] bairros = {
+        String[] bairrosRandom = {
             "Centro", "Cohab I", "Cohab II", "Boa Vista", "São José",
             "Heliópolis", "Magano", "Aluísio Pinto", "Dom Thiago Postma", "Francisco Figueira",
             "Indiano", "Brasília", "Novo Heliópolis", "Várzea", "Liberdade",
             "Manoel Chéu", "Massaranduba", "José Maria Dourado", "Severiano Moraes Filho", "Parque Fênix"
         };
         Zona[] zonas = Zona.values();
+
+        //selecao aleatoria
+        int indexCidadeRandom = r.nextInt(cidadesRandom.length);
+        int indexBairro = r.nextInt(bairrosRandom.length);
+        int indexZona = r.nextInt(zonas.length);
         
-        int indexCidadeRandom = r.nextInt(cidades.length);
-        Cidade cidade = new Cidade(cidades[indexCidadeRandom], null);
         
-        int indexBairro = r.nextInt(bairros.length);
-        int 
-        
-        Local local = new Local();
+        //criando atributos
+        ArrayList<Bairro> bairros = new ArrayList<>();//arraylist vazio para prevenir problemas
+        String nomeCidade = cidadesRandom[indexCidadeRandom];
+        String nomeBairro = bairrosRandom[indexBairro];
+
+        //instanciando classes
+        Zona zona = zonas[indexZona];
+        Bairro bairro = new Bairro(nomeBairro, zona);
+        Cidade cidade = new Cidade(nomeCidade, bairros, bairro);
+        Local local = new Local(cidade, bairro, zona);
+        return local;
     }
 
 }

@@ -11,7 +11,7 @@ public abstract class Pessoa {
     protected final int idade;
     protected Local localAtual;
     protected String senhaAcesso;
-    private final ArrayList<Viagem> viagensHistorico;
+    protected final ArrayList<Viagem> viagensHistorico;
 
     public Pessoa(int IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico) {
         this.IDPessoa = IDPessoa;
