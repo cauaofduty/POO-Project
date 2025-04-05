@@ -1,11 +1,14 @@
 package negocio.financeiro;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
 import negocio.pessoas.Pessoa;
 
-public class Pix implements FormaDePagamento {
-    private final ArrayList<String> chaves;
-    private double saldoPix;//saldo deve ser uma classe??
+public class Pix implements FormaDePagamento, Serializable {
+    private static final long serialVersionUID = 302L;
+    private final ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?
+    private double saldoPix;//saldo deve ser uma classe??  // Creio que não, a complexidade não é tanta (Hugo)
     private final String tipo = "Pix";
     
     public Pix(String chave, double saldoPix){//apenas cadastra a primeira chave pix
@@ -20,7 +23,9 @@ public class Pix implements FormaDePagamento {
         return this.saldoPix;
     }
     public void addChave(String chave){
-        this.chaves.add(chave);
+        if (!this.chaves.contains(chave)) {  // Adicionei a verificação para evitar chaves duplicadas (Hugo)
+            this.chaves.add(chave);
+        }
     }
     
     public ArrayList<String> getChaves(){

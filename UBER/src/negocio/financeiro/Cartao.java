@@ -2,7 +2,10 @@ package negocio.financeiro;
 
 import negocio.pessoas.Pessoa;
 
-public class Cartao implements FormaDePagamento{
+import java.io.Serializable;
+
+public class Cartao implements FormaDePagamento, Serializable {
+    private static final long serialVersionUID = 300L;
     private double limiteCartao; 
     private final String numeroCartao;
     private final String cVV;
