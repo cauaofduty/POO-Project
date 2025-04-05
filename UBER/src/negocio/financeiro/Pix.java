@@ -1,18 +1,17 @@
-package negocio.localizacao;
+package negocio.financeiro;
 
 import java.util.ArrayList;
-
-import negocio.financeiro.FormaDePagamento;
-import negocio.financeiro.PagamentoNegadoException;
+import negocio.pessoas.Pessoa;
 
 public class Pix implements FormaDePagamento {
-    private final ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?
+    private final ArrayList<String> chaves;
     private double saldoPix;//saldo deve ser uma classe??
     private final String tipo = "Pix";
     
-    public Pix(String chave){//apenas cadastra a primeira chave pix
+    public Pix(String chave, double saldoPix){//apenas cadastra a primeira chave pix
         this.chaves = new ArrayList<>();
         this.chaves.add(chave);
+        this.saldoPix = saldoPix;
     }
     public void setSaldoPix(double saldoPix){
         this.saldoPix = saldoPix;
@@ -39,5 +38,10 @@ public class Pix implements FormaDePagamento {
         }
         this.saldoPix -= valor;//o recebimento sera feito ao motorista e isso
         //tipo isso aqui
-}
+    }
+    //TERMINAR
+    @Override
+    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

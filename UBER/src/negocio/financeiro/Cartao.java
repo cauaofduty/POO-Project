@@ -1,18 +1,18 @@
 package negocio.financeiro;
 
+import negocio.pessoas.Pessoa;
+
 public class Cartao implements FormaDePagamento{
     private double limiteCartao; 
     private final String numeroCartao;
     private final String cVV;
-    private final String senhaCartao;
     private final String tipo = "Cartão";
 
 
-    public Cartao(double limiteCartao, String numeroCartao, String cVV, String senhaCartao) {
+    public Cartao(double limiteCartao, String numeroCartao, String cVV) {
         this.limiteCartao = limiteCartao;
         this.numeroCartao = numeroCartao;
         this.cVV = cVV;
-        this.senhaCartao = senhaCartao;
     }
 
 
@@ -42,14 +42,17 @@ public class Cartao implements FormaDePagamento{
     }
 
 
-    public String getSenhaCartao() {
-        return senhaCartao;
-    }
-
 
     @Override
     public String getTipo() {
         return this.tipo;
+    }
+
+    //TERMINAR
+    @Override
+    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registrarPagamento'");
     }
     
     

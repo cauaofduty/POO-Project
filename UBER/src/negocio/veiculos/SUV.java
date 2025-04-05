@@ -1,11 +1,10 @@
 package negocio.veiculos;
 
 public class SUV extends Veiculo{//ver isso
-    private final double taxaViagem;
+    private final double taxaViagem = 1.5;
 
-    public SUV(String placa, String cor, int ano, String nomeVeiculo, double TaxaViagem) {
+    public SUV(String placa, String cor, int ano, String nomeVeiculo) {
         super(placa, cor, ano, nomeVeiculo);
-        this.taxaViagem = 1.5;
     }
 
     

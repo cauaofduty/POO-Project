@@ -1,5 +1,7 @@
 package negocio.financeiro;
 
+import negocio.pessoas.Pessoa;
+
 public class Dinheiro implements FormaDePagamento {
     private double saldo;
     private final String tipo = "Dinheiro";
@@ -25,5 +27,11 @@ public class Dinheiro implements FormaDePagamento {
     @Override
     public String getTipo() {
         throw new UnsupportedOperationException("Unimplemented method 'getTipo'");
+    }
+
+    //TERMINAR
+    @Override
+    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

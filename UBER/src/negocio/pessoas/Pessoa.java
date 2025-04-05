@@ -11,17 +11,25 @@ public abstract class Pessoa {
     protected final int idade;
     protected Local localAtual;
     protected String senhaAcesso;
-    protected final ArrayList<Viagem> viagensHistorico;
+    protected ArrayList<Viagem> viagensHistorico;
 
-    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico) {
+    //construtor para simulacao
+    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome) {
         this.IDPessoa = IDPessoa;
         this.idade = idade;
         this.localAtual = localAtual;
         this.nome = nome;
-        this.senhaAcesso = senhaAcesso;
-        this.viagensHistorico = viagensHistorico;
+        this.senhaAcesso = null;//vazio para criacao random
+        this.viagensHistorico = new ArrayList<>();//vazio para simplificar criacao random
     }
-    //getters default abaxo
+    //construtor completo
+    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico){
+        this(IDPessoa, idade, localAtual, nome);
+        this.viagensHistorico = viagensHistorico;
+        this.senhaAcesso = senhaAcesso;    
+    }
+
+    //getters default abaixo
     public String getNome(){
         return this.nome;
     }
