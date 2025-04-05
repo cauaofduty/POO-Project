@@ -1,11 +1,12 @@
 package negocio.pessoas;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
 
-public abstract class Pessoa {
-
+public abstract class Pessoa implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected final String nome;//apenas nome de usuario
     protected final int IDPessoa;//imutavel apos criacao
     protected final int idade;
