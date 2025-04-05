@@ -3,23 +3,24 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import negocio.veiculos.Veiculo;
 import negocio.pessoas.PlacaNaoEncontradaException;
+import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
     private final String arquivo = "veiculos.bin";
-    private List<Veiculo> veiculos;
+    private final List<Veiculo> veiculos;
 
     public RepositorioVeiculoArquivo() {
         this.veiculos = carregarArquivo();
     }
 
+    @Override
     public void adicionar(Veiculo veiculo) {
         veiculos.add(veiculo);
         salvarArquivo();
     }
     
+    @Override
     public Veiculo buscarPorPlaca(String placa) throws PlacaNaoEncontradaException {
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
@@ -29,6 +30,7 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         throw new PlacaNaoEncontradaException(placa);
     }
 
+    @Override
     public List<Veiculo> listarVeiculos() {
         return new ArrayList<>(veiculos);
     }
@@ -41,7 +43,6 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<Veiculo> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (List<Veiculo>) in.readObject();

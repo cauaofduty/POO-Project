@@ -3,7 +3,6 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
@@ -11,17 +10,19 @@ import negocio.pessoas.PessoaNaoEncontradaException;
 
 public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     private final String arquivo = "pessoas.bin";
-    private List<Pessoa> pessoas;
+    private final List<Pessoa> pessoas;
 
     public RepositorioPessoaArquivo() {
         this.pessoas = carregarArquivo();
     }
 
+    @Override
     public void adicionar(Pessoa pessoa) {
         pessoas.add(pessoa);
         salvarArquivo();
     }
 
+    @Override
     public Pessoa buscarPorID(int idPessoa) throws PessoaNaoEncontradaException {
         for (Pessoa p : pessoas) {
             if (p.getIDPessoa() == idPessoa) {
@@ -31,21 +32,23 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         throw new PessoaNaoEncontradaException(idPessoa);
     }
 
+    @Override
     public List<Cliente> listarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Cliente) {
-                clientes.add((Cliente) p);
+            if (p instanceof Cliente cliente) {//ver se funciona
+                clientes.add(cliente);
             }
         }
         return clientes;
     }
 
+    @Override
     public List<Motorista> listarMotoristas() {
         List<Motorista> motoristas = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Motorista) {
-                motoristas.add((Motorista) p);
+            if (p instanceof Motorista motorista) {
+                motoristas.add(motorista);
             }
         }
         return motoristas;
@@ -59,7 +62,7 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+
     private List<Pessoa> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (List<Pessoa>) in.readObject();
