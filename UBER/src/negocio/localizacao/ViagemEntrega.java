@@ -1,4 +1,6 @@
-package negocio;
+package negocio.localizacao;
+import negocio.Cliente;
+import negocio.Motorista;
 import negocio.modelos.Viagem;
 
 public class ViagemEntrega extends Viagem{

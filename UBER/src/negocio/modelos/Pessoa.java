@@ -1,5 +1,9 @@
 package negocio.modelos;
-public abstract class Pessoa {
+
+import java.io.Serializable;
+
+public abstract class Pessoa implements Serializable {
+    private static final long serialVersionUID = 100L;
     protected String nome;//apenas nome de usuario
     protected String telefone;
     protected final int IDPessoa;//imutavel apos criacao

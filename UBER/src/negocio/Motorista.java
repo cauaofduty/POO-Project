@@ -4,7 +4,7 @@ import negocio.modelos.Veiculo;
 
 public class Motorista extends Pessoa {
     private double saldoMotorista; //TERIA UMA CLASSE PARA O MOTORISTA PASSAR TROCO EM CASO DE PIX X DINHEIRO, MAS O CLIENTE NAO ESTA PAGANDO TANTO ASSIM PELO PROJETO
-    Veiculo veiculo;//ver se funciona colocar a classe abstrata aqui
+    Veiculo veiculo;//ver se funciona colocar a classe abstrata aqui    //Veiculo tem que ser private? (Hugo)
     public Motorista(String nome,String telefone,int IDPessoa, String dataNascimento, Veiculo veiculo){
         super(nome,telefone,IDPessoa,dataNascimento);
         this.saldoMotorista = 0;

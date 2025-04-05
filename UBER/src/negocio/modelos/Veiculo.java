@@ -1,5 +1,9 @@
 package negocio.modelos;
-public abstract class Veiculo {
+
+import java.io.Serializable;
+
+public abstract class Veiculo implements Serializable {
+    private static final long serialVersionUID = 400L;
     protected final String placa;
     protected final String cor;
     
