@@ -3,7 +3,6 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
@@ -11,7 +10,7 @@ import negocio.pessoas.PessoaNaoEncontradaException;
 
 public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     private final String arquivo = "pessoas.bin";
-    private List<Pessoa> pessoas;
+    private final List<Pessoa> pessoas;
 
     public RepositorioPessoaArquivo() {
         this.pessoas = carregarArquivo();
@@ -36,6 +35,7 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         for (Pessoa p : pessoas) {
             if (p instanceof Cliente) {
                 clientes.add((Cliente) p);
+
             }
         }
         return clientes;

@@ -1,5 +1,6 @@
 package negocio.pessoas;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import negocio.localizacao.Local;

@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import negocio.localizacao.Viagem;
 
 public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
@@ -50,7 +49,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
         }
     }
-
+  
     @SuppressWarnings("unchecked")
     private List<Viagem> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {

@@ -3,7 +3,6 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import negocio.veiculos.Veiculo;
 import negocio.pessoas.PlacaNaoEncontradaException;
 
@@ -19,7 +18,7 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         veiculos.add(veiculo);
         salvarArquivo();
     }
-    
+
     public Veiculo buscarPorPlaca(String placa) throws PlacaNaoEncontradaException {
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
@@ -40,6 +39,7 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
         }
     }
+
 
     @SuppressWarnings("unchecked")
     private List<Veiculo> carregarArquivo() {

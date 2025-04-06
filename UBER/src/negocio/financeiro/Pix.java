@@ -2,6 +2,7 @@ package negocio.financeiro;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import negocio.pessoas.Pessoa;
 
 public class Pix implements FormaDePagamento, Serializable {
@@ -22,7 +23,9 @@ public class Pix implements FormaDePagamento, Serializable {
         return this.saldoPix;
     }
     public void addChave(String chave){
-        this.chaves.add(chave);
+        if (!this.chaves.contains(chave)) {  // Adicionei a verificação para evitar chaves duplicadas (Hugo)
+            this.chaves.add(chave);
+        }
     }
     
     public ArrayList<String> getChaves(){

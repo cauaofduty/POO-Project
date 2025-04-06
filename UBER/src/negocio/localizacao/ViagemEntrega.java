@@ -1,4 +1,5 @@
 package negocio.localizacao;
+
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 
@@ -16,6 +17,9 @@ public class ViagemEntrega extends Viagem {
     }
     
     public void setPesoEntrega(double pesoEntrega) {
+        if (pesoEntrega < 0) throw new IllegalArgumentException("Peso da entrega não pode ser negativo.");
         this.pesoEntrega = pesoEntrega;
     }
+
+    // Adicionar toString() para a classe ViagemEntrega, se necessário
 }
