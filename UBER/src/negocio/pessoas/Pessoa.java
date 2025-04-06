@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
 
-public abstract class Pessoa implements Serializable{
-    private static final long serialVersionUID = 100L;
+public abstract class Pessoa implements Serializable {
+    private static final long serialVersionUID = 100000L;
     protected final String nome;//apenas nome de usuario
     protected final int IDPessoa;//imutavel apos criacao
     protected final int idade;

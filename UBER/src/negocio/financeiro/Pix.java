@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import negocio.pessoas.Pessoa;
 
 public class Pix implements FormaDePagamento, Serializable {
-    private static final long serialVersionUID = 302L;
-    private final ArrayList<String> chaves;//PESSOA DEVE TER MAIS DE UMA CHAVE PIX! mnas como fazer do jeito certo?
-    private double saldoPix;//saldo deve ser uma classe??  // Creio que não, a complexidade não é tanta (Hugo)
+    private static final long serialVersionUID = 400003L;
+    private final ArrayList<String> chaves;
+    private double saldoPix;//saldo deve ser uma classe??
     private final String tipo = "Pix";
     
     public Pix(String chave, double saldoPix){//apenas cadastra a primeira chave pix

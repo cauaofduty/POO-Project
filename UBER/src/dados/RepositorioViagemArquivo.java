@@ -11,19 +11,17 @@ import negocio.localizacao.Viagem;
 
 public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     private final String arquivo = "viagens.bin";
-    private final List<Viagem> viagens;
+    private List<Viagem> viagens;
 
     public RepositorioViagemArquivo() {
         this.viagens = carregarArquivo();
     }
 
-    @Override
     public void adicionar(Viagem viagem) {
         viagens.add(viagem);
         salvarArquivo();
     }
 
-    @Override
     public List<Viagem> listarViagensCliente(int idCliente) {
         List<Viagem> viagemCliente = new ArrayList<>();
         for (Viagem v : viagens) { 
@@ -34,7 +32,6 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         return viagemCliente;
     }
 
-    @Override
     public List<Viagem> listarViagensMotorista(int idMotorista) {
         List<Viagem> viagemMotorista = new ArrayList<>();
         for (Viagem v : viagens) {
@@ -52,7 +49,8 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
         }
     }
-    
+  
+    @SuppressWarnings("unchecked")
     private List<Viagem> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (List<Viagem>) in.readObject();

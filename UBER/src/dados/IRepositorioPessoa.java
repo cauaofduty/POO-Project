@@ -1,7 +1,6 @@
 package dados;
 
 import java.util.List;
-
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;

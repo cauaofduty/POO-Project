@@ -5,6 +5,7 @@ import negocio.localizacao.Viagem;
 import negocio.veiculos.Veiculo;
 
 public class Motorista extends Pessoa { // como fazer para ele receber dinheiro?
+    private static final long serialVersionUID = 100002L;
     private double saldoMotorista; //TERIA UMA CLASSE PARA O MOTORISTA PASSAR TROCO EM CASO DE PIX X DINHEIRO, MAS O CLIENTE NAO ESTA PAGANDO TANTO ASSIM PELO PROJETO
     Veiculo veiculo;//ver se funciona pois tarta-se de classe abstrata aqui
 

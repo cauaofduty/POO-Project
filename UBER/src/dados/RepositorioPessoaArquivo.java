@@ -16,13 +16,11 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         this.pessoas = carregarArquivo();
     }
 
-    @Override
     public void adicionar(Pessoa pessoa) {
         pessoas.add(pessoa);
         salvarArquivo();
     }
 
-    @Override
     public Pessoa buscarPorID(int idPessoa) throws PessoaNaoEncontradaException {
         for (Pessoa p : pessoas) {
             if (p.getIDPessoa() == idPessoa) {
@@ -32,23 +30,22 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         throw new PessoaNaoEncontradaException(idPessoa);
     }
 
-    @Override
     public List<Cliente> listarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Cliente cliente) {//ver se funciona
-                clientes.add(cliente);
+            if (p instanceof Cliente) {
+                clientes.add((Cliente) p);
+
             }
         }
         return clientes;
     }
 
-    @Override
     public List<Motorista> listarMotoristas() {
         List<Motorista> motoristas = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Motorista motorista) {
-                motoristas.add(motorista);
+            if (p instanceof Motorista) {
+                motoristas.add((Motorista) p);
             }
         }
         return motoristas;
@@ -62,7 +59,7 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         }
     }
 
-
+    @SuppressWarnings("unchecked")
     private List<Pessoa> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (List<Pessoa>) in.readObject();
