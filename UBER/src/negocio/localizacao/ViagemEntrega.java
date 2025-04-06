@@ -2,7 +2,8 @@ package negocio.localizacao;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 
-public class ViagemEntrega extends Viagem{
+public class ViagemEntrega extends Viagem {
+    private static final long serialVersionUID = 300002L;
     private double pesoEntrega;
 
     public ViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega) {

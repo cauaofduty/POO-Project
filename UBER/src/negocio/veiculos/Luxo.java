@@ -1,6 +1,7 @@
 package negocio.veiculos;
 
 public class Luxo extends Veiculo {
+    private static final long serialVersionUID = 200003L;
     private final double taxaViagem = 2.0;;
 
     public Luxo(String placa, String cor, int ano, String nomeVeiculo) {

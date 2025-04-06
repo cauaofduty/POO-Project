@@ -1,9 +1,11 @@
 package negocio.financeiro;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import negocio.pessoas.Pessoa;
 
-public class Pix implements FormaDePagamento {
+public class Pix implements FormaDePagamento, Serializable {
+    private static final long serialVersionUID = 400003L;
     private final ArrayList<String> chaves;
     private double saldoPix;//saldo deve ser uma classe??
     private final String tipo = "Pix";

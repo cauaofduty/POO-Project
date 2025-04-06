@@ -1,8 +1,11 @@
 package negocio.financeiro;
 
+import java.io.Serializable;
+
 import negocio.pessoas.Pessoa;
 
-public class Dinheiro implements FormaDePagamento {
+public class Dinheiro implements FormaDePagamento, Serializable {
+    private static final long serialVersionUID = 400001L;
     private double saldo;
     private final String tipo = "Dinheiro";
 

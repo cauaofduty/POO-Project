@@ -1,8 +1,11 @@
 package negocio.localizacao;
+import java.io.Serializable;
+
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 
-public abstract class Viagem {
+public abstract class Viagem implements Serializable {
+    private static final long serialVersionUID = 300000L;
     protected final Local origem; 
     protected final Local destino;
     protected final Cliente cliente;
