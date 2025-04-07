@@ -35,7 +35,7 @@ public class GeradorPessoas {//MUITO TRABALHO
             List<Veiculo> veiculos = new ArrayList<>();//para armazenar veiculos (foco em placas)
             for(int i = 0; i < indice; i++){
                 String nome = gerarNome(pessoasAleatorias);
-                int IDPessoa = gerarID(pessoasAleatorias);
+                String IDPessoa = gerarID(pessoasAleatorias);
                 int idade = gerarIdade();
                 Local local = gerarLocal();
                 Veiculo veiculo = gerarVeiculo(veiculos);
@@ -45,7 +45,7 @@ public class GeradorPessoas {//MUITO TRABALHO
         }else{//ESSE PROJETO E UM FILHO PRA MIM
             for(int i = 0; i < indice; i++){
                 String nome = gerarNome(pessoasAleatorias);
-                int IDPessoa = gerarID(pessoasAleatorias);
+                String IDPessoa = gerarID(pessoasAleatorias);
                 int idade = gerarIdade();
                 Local local = gerarLocal();
                 FormaDePagamento formaDePagamento = gerarFormaPagamento();
@@ -79,11 +79,12 @@ public class GeradorPessoas {//MUITO TRABALHO
         return pessoa;//do contrario, retorna-o
     }
 
-    private static int gerarID(ArrayList<Pessoa> pessoas){
-        int ID = geraInteirosRandom(100000, 999999);//6 digitos
-        if(pessoas.stream().anyMatch(p -> p.getIDPessoa() == (ID)))
+    public static String gerarID(ArrayList<Pessoa> pessoas){//utilizado pelo gerernciador para gerar ids
+        int ID = r.nextInt(100000);//6 digitos
+        String IDFormatado = String.format("%06d", ID);
+        if(pessoas.stream().anyMatch(p -> p.getIDPessoa().equals(IDFormatado)))
             gerarID(pessoas);
-        return ID;
+        return IDFormatado;
     }
     
     private static int gerarIdade(){
@@ -141,7 +142,7 @@ public class GeradorPessoas {//MUITO TRABALHO
                 String numeroCartao = Arrays.toString(numeros).replaceAll(", ", "").replaceAll("[\\[\\]]", "").trim();
             
                 //cria e transforma em string digito de seguranca
-                String cVV = String.valueOf(geraInteirosRandom(100, 1000));
+                String cVV = String.valueOf(geraInteirosRandom(100, 1000));//nao vou mudar para format nao
                 
                 //instancia e retorna cartao
                 return new Cartao(limite, numeroCartao, cVV);

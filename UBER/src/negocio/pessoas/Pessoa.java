@@ -9,27 +9,40 @@ import negocio.localizacao.Viagem;
 public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 100000L;
     protected final String nome;//apenas nome de usuario
-    protected final int IDPessoa;//imutavel apos criacao
+    protected final String IDPessoa;//imutavel apos criacao
     protected final int idade;
     protected Local localAtual;
     protected String senhaAcesso;
     protected ArrayList<Viagem> viagensHistorico;
-
-    //construtor para simulacao
-    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome) {
+    
+    
+    //construtor completo
+    public Pessoa(String IDPessoa, int idade, Local localAtual, String nome) {
         this.IDPessoa = IDPessoa;
         this.idade = idade;
         this.localAtual = localAtual;
         this.nome = nome;
         this.senhaAcesso = null;//vazio para criacao random
         this.viagensHistorico = new ArrayList<>();//vazio para simplificar criacao random
-    }
-    //construtor completo
-    public Pessoa(int IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico){
+    } 
+
+    //construtor para simulacao
+    public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico){
         this(IDPessoa, idade, localAtual, nome);
         this.viagensHistorico = viagensHistorico;
         this.senhaAcesso = senhaAcesso;    
     }
+
+    public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso) {
+        this.IDPessoa = IDPessoa;
+        this.idade = idade;
+        this.localAtual = localAtual;
+        this.nome = nome;
+        this.senhaAcesso = senhaAcesso;
+    }
+
+    
+    
 
     //getters default abaixo
     public String getNome(){
@@ -37,7 +50,7 @@ public abstract class Pessoa implements Serializable {
     }
 
     
-    public int getIDPessoa(){
+    public String getIDPessoa(){
         return this.IDPessoa;
     }
 

@@ -54,7 +54,6 @@ public class Cartao implements FormaDePagamento,Serializable {
     //TERMINAR
     @Override
     public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'registrarPagamento'");
     }
     

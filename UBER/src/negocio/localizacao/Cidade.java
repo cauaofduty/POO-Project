@@ -7,14 +7,19 @@ public class Cidade {
     private final Bairro bairro;//bairro da localizacao atual
     private final ArrayList<Bairro> bairros;//bairros da cidade
     
-    public Cidade(String nome, ArrayList<Bairro> bairros, Bairro bairro){
-        this.nome = nome;
+    public Cidade(String cidade, ArrayList<Bairro> bairros, Bairro bairro){
+        this.nome = cidade;
         this.bairro = bairro;
         this.bairros = bairros;
     }
+    public Cidade(String cidade){//construtor para cadastro
+        this(cidade, new ArrayList<>(), null);
+    }
+
     public Bairro getBairro() {
             return bairro;
-        }
+    }
+
     public String getNome() {
         return nome;
     }

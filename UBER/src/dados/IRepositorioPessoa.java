@@ -7,8 +7,8 @@ import negocio.pessoas.Pessoa;
 import negocio.pessoas.PessoaNaoEncontradaException;
 
 public interface IRepositorioPessoa <P extends Pessoa> {
-    void adicionar(P pessoa);
-    P buscarPorID(int idPessoa) throws PessoaNaoEncontradaException;
+    void adicionar(Pessoa pessoa);//mesmo efeito
+    Pessoa buscarPorID(String IDPessoa) throws PessoaNaoEncontradaException;//mudei para mesmo nome do atributo
     List<Cliente> listarClientes();
     List<Motorista> listarMotoristas();
 }

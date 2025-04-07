@@ -2,7 +2,6 @@ package dados;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
@@ -10,7 +9,7 @@ import negocio.pessoas.PessoaNaoEncontradaException;
 
 public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     private final String arquivo = "pessoas.bin";
-    private final List<Pessoa> pessoas;
+    private final ArrayList<Pessoa> pessoas;//mudei pois usei no codigo todo este tipo
 
     public RepositorioPessoaArquivo() {
         this.pessoas = carregarArquivo();
@@ -21,31 +20,31 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         salvarArquivo();
     }
 
-    public Pessoa buscarPorID(int idPessoa) throws PessoaNaoEncontradaException {
+    public Pessoa buscarPorID(String IDPessoa) throws PessoaNaoEncontradaException {
         for (Pessoa p : pessoas) {
-            if (p.getIDPessoa() == idPessoa) {
+            if (p.getIDPessoa().equals(IDPessoa)) {
                 return p;
             }
         }
-        throw new PessoaNaoEncontradaException(idPessoa);
+        throw new PessoaNaoEncontradaException(IDPessoa);
     }
 
-    public List<Cliente> listarClientes() {
-        List<Cliente> clientes = new ArrayList<>();
+    public ArrayList<Cliente> listarClientes() {
+        ArrayList<Cliente> clientes = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Cliente) {
-                clientes.add((Cliente) p);
+            if (p instanceof Cliente cliente) {
+                clientes.add(cliente);
 
             }
         }
         return clientes;
     }
 
-    public List<Motorista> listarMotoristas() {
-        List<Motorista> motoristas = new ArrayList<>();
+    public ArrayList<Motorista> listarMotoristas() {
+        ArrayList<Motorista> motoristas = new ArrayList<>();
         for (Pessoa p : pessoas) {
-            if (p instanceof Motorista) {
-                motoristas.add((Motorista) p);
+            if (p instanceof Motorista motorista) {
+                motoristas.add(motorista);
             }
         }
         return motoristas;
@@ -60,12 +59,16 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Pessoa> carregarArquivo() {
+    private ArrayList<Pessoa> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (List<Pessoa>) in.readObject();
+            return (ArrayList<Pessoa>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    public ArrayList<Pessoa> getPessoas() {//precisei para adicao de certos atributos (id por exemplo)
+        return pessoas;
     }
 }
