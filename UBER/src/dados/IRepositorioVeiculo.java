@@ -2,8 +2,8 @@ package dados;
 
 import java.util.List;
 
+import negocio.exceptions.PlacaNaoEncontradaException;
 import negocio.veiculos.Veiculo;
-import negocio.pessoas.PlacaNaoEncontradaException;
 
 public interface IRepositorioVeiculo<V extends Veiculo> {
     void adicionar(V veiculo);

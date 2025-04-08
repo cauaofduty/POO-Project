@@ -3,19 +3,19 @@ package negocio.servicos;
 import dados.IRepositorioPessoa;
 import dados.RepositorioPessoaArquivo;
 import java.util.ArrayList;
+
+import negocio.exceptions.PessoaNaoEncontradaException;
 import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
-import negocio.localizacao.Cidade;
 import negocio.localizacao.Local;
 import negocio.pessoas.Cliente;
-import negocio.pessoas.GeradorPessoas;
+import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
+import negocio.veiculos.Veiculo;
 
 public class GerenciadorPessoa {
     private final RepositorioPessoaArquivo repoPessoa;
-    
-
 
     public GerenciadorPessoa() {
         this.repoPessoa = new RepositorioPessoaArquivo();
@@ -24,38 +24,36 @@ public class GerenciadorPessoa {
     public IRepositorioPessoa<Pessoa> getRepoPessoa() {
         return repoPessoa;
     }
-    //CRIAR CADASTRO PARA MOTORISTA | apos isso, começar UI!
-    //public void cadastrarMotorista(){}
 
-    public void cadastrarCliente(){
-        //recebe atributos necessarios apenas para criar conta
-        System.out.println("Qual seu nome?");
-        String nome = Util.entrada.nextLine();//apenas nome de usuario
-        
-        String IDPessoa = GeradorPessoas.gerarID(repoPessoa.getPessoas());//necessita checar IDs ja criados
-        
-        System.out.println("qual sua idade?");
-        int idade = Util.entrada.nextInt();
-        while (idade < 18) {//garante validade da idade
-            System.out.println("Digite uma idade válida.");
-            idade = Util.entrada.nextInt();
+    public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) {//separado pois tratam atributos diferentes
+        //visto que o ID é aleatório, não vai implicar com nada
+        Cliente cliente = new Cliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
+        repoPessoa.adicionar(cliente);//adiciona ao repositorio
+        return cliente;
+    }
+    public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) {//separado pois tratam atributos diferentes
+        //visto que o ID é aleatório, não vai implicar com nada
+        Motorista motorista = new Motorista(veiculo, IDPessoa, idade, local, nome, senhaAcesso, historicoVeiculos);
+        repoPessoa.adicionar(motorista);//adiciona ao repositorio
+        return motorista;
+    }
+
+    public Pessoa buscarPessoa(String IDPessoa) throws PessoaNaoEncontradaException {//busca por ID, retorna pessoa ou Exception
+        return repoPessoa.buscarPorID(IDPessoa);
+    }
+
+    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa){//muda a senha de acordo com o ID e o código de recuperação
+        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
+        if (pessoa != null) {
+            if (pessoa.getCodigoRecuperacao() == codigoRecuperacao) {
+                pessoa.setSenhaAcesso(novaSenha);
+            } else {
+                System.out.println("Código de recuperação inválido.");
+            }
+        } else {
+            throw new PessoaNaoEncontradaException(IDPessoa);
         }
 
-        System.out.println("Agora, digite sua senha (mínimo de 8 caracteres)");
-        String senhaAcesso = criarSenha();//função dedicada
-        
-        System.out.println("Agora, digite o nome da sua cidade:");
-        String cidade = Util.entrada.nextLine();
-        
-        //instanciações | VER SE ESTA MUITO COMPLICADO
-        ArrayList<FormaDePagamento> formasDePagamento = new ArrayList<>();
-        adicionarFormaPagamento(formasDePagamento);
-        Cidade cidadeLocal = new Cidade(cidade);
-        Local local = new Local(cidadeLocal);//pode estar complicado: cidade é um tipo, porém basta a cidade para mostrar o mapa então será instanciado cidade sem bairro ou zona e Local apenas com cidade por agora  
-        System.out.println("Cliente " + nome+ " cadastrado com sucesso.");
-
-        //adiciona ao repositorio
-        repoPessoa.adicionar(new Cliente(formasDePagamento, IDPessoa, idade, local, nome, senhaAcesso)); 
     }
 
     //demais funções subordinadas:
@@ -113,7 +111,7 @@ public class GerenciadorPessoa {
             numeroCartao = Util.entrada.nextLine();
         }      
         //para adicioanr os espacoes manualmente para evitar mais complexidade
-         String numeroCartaoFormatado = numeroCartao.substring(0, 4) + " " +
+        String numeroCartaoFormatado = numeroCartao.substring(0, 4) + " " +
                                         numeroCartao.substring(4, 8) + " " +
                                         numeroCartao.substring(8, 12) + " " +
                                         numeroCartao.substring(12, 16);

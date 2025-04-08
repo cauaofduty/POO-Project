@@ -3,12 +3,13 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import negocio.exceptions.PlacaNaoEncontradaException;
 import negocio.veiculos.Veiculo;
-import negocio.pessoas.PlacaNaoEncontradaException;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
     private final String arquivo = "veiculos.bin";
-    private List<Veiculo> veiculos;
+    private final List<Veiculo> veiculos;
 
     public RepositorioVeiculoArquivo() {
         this.veiculos = carregarArquivo();
@@ -19,16 +20,16 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         salvarArquivo();
     }
 
-    public Veiculo buscarPorPlaca(String placa) throws PlacaNaoEncontradaException {
+    public Veiculo buscarPorPlaca(String placa){ //removi o throws pois estava dando conflito com outra exception
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
                 return v;
             }
         }
-        throw new PlacaNaoEncontradaException(placa);
+        return null;
     }
 
-    public List<Veiculo> listarVeiculos() {
+    public List<Veiculo> listarVeiculos() {//apenas para o adm, o motorista so precisa ver seus veiculos
         return new ArrayList<>(veiculos);
     }
 

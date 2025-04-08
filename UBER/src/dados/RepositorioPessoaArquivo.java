@@ -2,10 +2,11 @@ package dados;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import negocio.exceptions.PessoaNaoEncontradaException;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
-import negocio.pessoas.PessoaNaoEncontradaException;
 
 public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     private final String arquivo = "pessoas.bin";

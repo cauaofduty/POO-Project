@@ -1,4 +1,4 @@
-package negocio.pessoas;
+package negocio.exceptions;
 
 public class PlacaNaoEncontradaException extends Exception {
     public PlacaNaoEncontradaException(String placa) {
