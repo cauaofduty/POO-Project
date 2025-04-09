@@ -3,7 +3,6 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 
-import negocio.exceptions.PessoaNaoEncontradaException;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
@@ -21,13 +20,13 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         salvarArquivo();
     }
 
-    public Pessoa buscarPorID(String IDPessoa) throws PessoaNaoEncontradaException {
+    public Pessoa buscarPorID(String IDPessoa) {
         for (Pessoa p : pessoas) {
             if (p.getIDPessoa().equals(IDPessoa)) {
                 return p;
             }
         }
-        throw new PessoaNaoEncontradaException(IDPessoa);
+        return null;
     }
 
     public ArrayList<Cliente> listarClientes() {

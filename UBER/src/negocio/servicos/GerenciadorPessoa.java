@@ -3,7 +3,9 @@ package negocio.servicos;
 import dados.IRepositorioPessoa;
 import dados.RepositorioPessoaArquivo;
 import java.util.ArrayList;
-import negocio.exceptions.PessoaNaoEncontradaException;
+
+import negocio.exceptions.EntidadeJaExisteException;
+import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
@@ -24,24 +26,54 @@ public class GerenciadorPessoa {
         return repoPessoa;
     }
 
-    public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) {//separado pois tratam atributos diferentes
+    public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+        if (repoPessoa.buscarPorID(IDPessoa) != null) {
+            throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe cliente com o mesmo ID.");
+        }
         //visto que o ID é aleatório, não vai implicar com nada
         Cliente cliente = new Cliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
         repoPessoa.adicionar(cliente);//adiciona ao repositorio
         return cliente;
     }
-    public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) {//separado pois tratam atributos diferentes
+
+    public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+        if (repoPessoa.buscarPorID(IDPessoa) != null) {
+            throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe motorista com o mesmo ID.");
+        }
         //visto que o ID é aleatório, não vai implicar com nada
         Motorista motorista = new Motorista(veiculo, IDPessoa, idade, local, nome, senhaAcesso, historicoVeiculos);
         repoPessoa.adicionar(motorista);//adiciona ao repositorio
         return motorista;
     }
 
-    public Pessoa buscarPessoa(String IDPessoa) throws PessoaNaoEncontradaException {//busca por ID, retorna pessoa ou Exception
+    public Pessoa buscarPessoa(String IDPessoa) throws EntidadeNaoEncontradaException {//busca por ID, retorna pessoa ou Exception
         return repoPessoa.buscarPorID(IDPessoa);
     }
 
-   
+    public ArrayList<Cliente> listarClientes() {
+        return repoPessoa.listarClientes();
+    }
+
+    public ArrayList<Motorista> listarMotoristas() {
+        return repoPessoa.listarMotoristas();
+    }
+//qualquer coisa eu resolvo
+    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa){//muda a senha de acordo com o ID e o código de recuperação
+        try {
+            pessoa = repoPessoa.buscarPorID(pessoa.getIDPessoa());
+
+            if (pessoa != null) {
+                if (pessoa.getCodigoRecuperacao() == codigoRecuperacao) {
+                    pessoa.setSenhaAcesso(novaSenha);
+                    // esse getter e esse setter não foram criados na classe Pessoa, por isso ta dando erro
+                } else {
+                    System.out.println("Código de recuperação inválido.");
+                }
+        } catch (Exception e) {
+            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
+        }
+
+    }
 
     //demais funções subordinadas:
 
@@ -60,8 +92,7 @@ public class GerenciadorPessoa {
             }
         }
     }
-
-    
+      
     public String criarSenha(){
         String senhaAcesso = Util.entrada.nextLine();
         
@@ -76,6 +107,7 @@ public class GerenciadorPessoa {
                 System.out.println("Senhas não coincidem. Digite a confirmação novamente:");
             }else{
                 return senhaAcesso;
+                // talvez não seja necessário retornar senha, igualmente para cartão e pix
             }
         } //pede senha correta enquanto estiver errada
     }
@@ -97,7 +129,7 @@ public class GerenciadorPessoa {
             System.out.println("Digite um número válido.");
             numeroCartao = Util.entrada.nextLine();
         }      
-        //para adicioanr os espacoes manualmente para evitar mais complexidade
+        //para adicionar os espacoes manualmente para evitar mais complexidade
         String numeroCartaoFormatado = numeroCartao.substring(0, 4) + " " +
                                         numeroCartao.substring(4, 8) + " " +
                                         numeroCartao.substring(8, 12) + " " +

@@ -10,7 +10,7 @@ public abstract class Veiculo implements Serializable {
     private final int ano;
 
     //colocar atributo taxa para cada tipo de veiculo no extends!
-    public Veiculo(String placa,String cor, String nomeVeiculo, int ano){
+    public Veiculo(String placa, String cor, String nomeVeiculo, int ano){
         this.placa = placa;
         this.cor = cor;
         this.nomeVeiculo = nomeVeiculo;
