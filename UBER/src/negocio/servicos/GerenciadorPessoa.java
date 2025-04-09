@@ -42,19 +42,7 @@ public class GerenciadorPessoa {
         return repoPessoa.buscarPorID(IDPessoa);
     }
 
-    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa){//muda a senha de acordo com o ID e o código de recuperação
-        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
-        if (pessoa != null) {
-            if (pessoa.getCodigoRecuperacao() == codigoRecuperacao) {
-                pessoa.setSenhaAcesso(novaSenha);
-            } else {
-                System.out.println("Código de recuperação inválido.");
-            }
-        } else {
-            throw new PessoaNaoEncontradaException(IDPessoa);
-        }
-
-    }
+   
 
     //demais funções subordinadas:
 
