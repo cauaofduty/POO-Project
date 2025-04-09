@@ -1,31 +1,99 @@
 package negocio.servicos;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import negocio.exceptions.EntidadeJaExisteException;
+import negocio.exceptions.EntidadeNaoEncontradaException;
+import negocio.financeiro.Cartao;
+import negocio.financeiro.FormaDePagamento;
+import negocio.financeiro.Pix;
+import negocio.localizacao.Local;
+import negocio.localizacao.Viagem;
+import negocio.pessoas.Pessoa;
+import negocio.pessoas.Cliente;
+import negocio.veiculos.Veiculo;
+import negocio.pessoas.Motorista;
+
 public class Fachada {
-    private final GerenciadorPessoa PManager;
-    private final GerenciadorVeiculos VeiculoManager;
-    private final GerenciadorViagens ViagemManager;
+    private final GerenciadorPessoa pessoaManager;
+    private final GerenciadorVeiculos veiculoManager;
+    private final GerenciadorViagens viagemManager;
     
-    public Fachada(GerenciadorPessoa pManager, GerenciadorVeiculos veiculoManager, GerenciadorViagens viagemManager) {
-        PManager = pManager;
-        VeiculoManager = veiculoManager;
-        ViagemManager = viagemManager;
+    public Fachada() {
+        this.pessoaManager = new GerenciadorPessoa();
+        this.veiculoManager = new GerenciadorVeiculos();
+        this.viagemManager = new GerenciadorViagens();
     }
-    void adicionarPessoa(String nome, String cpf, String telefone, String email, String endereco) {
-        PManager.adicionarPessoa(nome, cpf, telefone, email, endereco);
+
+    // Funções de GerenciadorPessoa
+
+    void cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {
+        pessoaManager.cadastrarCliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
     }
-    void adicionarVeiculo(String placa, String modelo, String cor, String ano, String tipo) {
-        VeiculoManager.adicionarVeiculo(placa, modelo, cor, ano, tipo);
+
+    void cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) throws EntidadeJaExisteException {
+        pessoaManager.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senhaAcesso, historicoVeiculos);
     }
-    void adicionarViagem(String origem, String destino, String data, String hora, String motorista) {
-        ViagemManager.adicionarViagem(origem, destino, data, hora, motorista);
+
+    public Pessoa buscarPessoa(String IDPessoa) throws EntidadeNaoEncontradaException {
+        return pessoaManager.buscarPessoa(IDPessoa);
     }
-    void listarPessoas() {
-        PManager.listarPessoas();
+
+    // Parando para pensar, as funções de listarClientes e listarMotoristas não existem em um aplicativo como o UBER né? Seriam funções de admin, talves fosse útil perguntar no inicio quem esta acessando o sistema
+    public ArrayList<Cliente> listarClientes() {
+        return pessoaManager.listarClientes();
     }
-    void listarVeiculos() {
-        VeiculoManager.listarVeiculos();
+
+    public ArrayList<Motorista> listarMotoristas() {
+        return pessoaManager.listarMotoristas();
     }
-    void listarViagens() {
-        ViagemManager.listarViagens();
+
+    public String criarSenha() {
+        return pessoaManager.criarSenha();
+    }
+
+    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa) {
+        pessoaManager.mudarSenha(codigoRecuperacao, novaSenha, pessoa); 
+    }
+
+    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas) {
+        pessoaManager.adicionarFormaPagamento(formas);
+    }
+
+    public Cartao cadastrarCartao(){
+       return pessoaManager.cadastrarCartao();
+    }
+
+    public Pix cadastrarPix(){
+         return pessoaManager.cadastrarPix();
+    }
+
+   // Funções de GerenciadorVeiculos
+
+    void cadastrarVeiculo(String placa, String cor, int ano, String nome, int tipoVeiculo) throws EntidadeJaExisteException {
+        veiculoManager.cadastrarVeiculo(placa, cor, ano, nome, tipoVeiculo);
+    }
+
+    public Veiculo buscarVeiculo(String placa) {
+        return veiculoManager.buscarVeiculo(placa);
+    }
+
+    public List<Veiculo> listarVeiculos() {
+        return veiculoManager.listarVeiculos();
+    }
+
+    // Funções de GerenciadorViagens
+
+    void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
+        viagemManager.adicionarViagemCliente(origem, destino, cliente,motorista, preco);
+    }
+
+    public List<Viagem> listarViagensCliente(int idCliente) {
+        return viagemManager.listarViagensCliente(idCliente);
+    }
+
+    public List<Viagem> listarViagensMotorista(int idMotorista) {
+        return viagemManager.listarViagensMotorista(idMotorista);
     }
 }

@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import negocio.exceptions.PlacaNaoEncontradaException;
 import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
@@ -20,7 +19,7 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         salvarArquivo();
     }
 
-    public Veiculo buscarPorPlaca(String placa){ //removi o throws pois estava dando conflito com outra exception
+    public Veiculo buscarPorPlaca(String placa) { //removi o throws pois estava dando conflito com outra exception
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
                 return v;

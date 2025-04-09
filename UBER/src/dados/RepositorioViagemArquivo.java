@@ -25,7 +25,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     public List<Viagem> listarViagensCliente(int idCliente) {
         List<Viagem> viagemCliente = new ArrayList<>();
         for (Viagem v : viagens) { 
-            if (v.getCliente().getIDPessoa() == idCliente) {
+            if (Integer.parseInt(v.getCliente().getIDPessoa()) == idCliente) {
                 viagemCliente.add(v);
             }
         }
@@ -35,7 +35,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     public List<Viagem> listarViagensMotorista(int idMotorista) {
         List<Viagem> viagemMotorista = new ArrayList<>();
         for (Viagem v : viagens) {
-            if (v.getMotorista().getIDPessoa() == idMotorista) {
+            if (Integer.parseInt(v.getMotorista().getIDPessoa()) == idMotorista) {
                 viagemMotorista.add(v);
             }
         }
