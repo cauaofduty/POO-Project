@@ -92,8 +92,7 @@ public class GerenciadorPessoa {
             }
         }
     }
-
-    
+      
     public String criarSenha(){
         String senhaAcesso = Util.entrada.nextLine();
         
