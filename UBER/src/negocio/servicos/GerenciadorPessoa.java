@@ -3,7 +3,6 @@ package negocio.servicos;
 import dados.IRepositorioPessoa;
 import dados.RepositorioPessoaArquivo;
 import java.util.ArrayList;
-
 import negocio.exceptions.PessoaNaoEncontradaException;
 import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
