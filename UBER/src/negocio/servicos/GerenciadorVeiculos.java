@@ -1,7 +1,9 @@
 package negocio.servicos;
 
+import java.util.List;
+
 import dados.RepositorioVeiculoArquivo;
-import negocio.exceptions.VeiculoJaExisteException;
+import negocio.exceptions.EntidadeJaExisteException;
 import negocio.veiculos.Economico;
 import negocio.veiculos.Luxo;
 import negocio.veiculos.Motocicleta;
@@ -16,9 +18,9 @@ public class GerenciadorVeiculos {
         this.repoVeiculo = new RepositorioVeiculoArquivo();
     }
 
-    public Veiculo cadastrarVeiculo(String placa, String cor, int ano, String nome, String tipo, int tipoVeiculo)throws  VeiculoJaExisteException{//adiciona qualquer tipo de veículo ao repositorio, e deve ser adicionado ao histórico de veículos do motorista
+    public Veiculo cadastrarVeiculo(String placa, String cor, int ano, String nome, int tipoVeiculo) throws EntidadeJaExisteException {//adiciona qualquer tipo de veículo ao repositorio, e deve ser adicionado ao histórico de veículos do motorista
             if (repoVeiculo.buscarPorPlaca(placa) != null) {//na interface o erro e tratado, aqui apenas é verificado se o veículo já existe
-                throw new VeiculoJaExisteException("Não foi possível cadastrar veículo. Já existe veículo com mesma placa na base de dados: ", placa);
+                throw new EntidadeJaExisteException("Não foi possível cadastrar. Já existe veículo com mesma placa: " + placa);
             }
             //caso não tenha dado erro, o veículo é adicionado ao repositório
             switch (tipoVeiculo) {
@@ -53,8 +55,12 @@ public class GerenciadorVeiculos {
             
             }
         }
-        public Veiculo buscarVeiculo(String placa) {//veiculo ou null
-            return repoVeiculo.buscarPorPlaca(placa);
-        }
+
+    public Veiculo buscarVeiculo(String placa) {//veiculo ou null
+        return repoVeiculo.buscarPorPlaca(placa);
     }
 
+    public List<Veiculo> listarVeiculos() {
+        return repoVeiculo.listarVeiculos();
+    }
+}

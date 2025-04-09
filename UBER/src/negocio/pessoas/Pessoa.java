@@ -54,7 +54,6 @@ public abstract class Pessoa implements Serializable {
         return this.IDPessoa;
     }
 
-
     public Local getLocalAtual() {
         return localAtual;
     }
@@ -70,7 +69,6 @@ public abstract class Pessoa implements Serializable {
     public ArrayList<Viagem> getViagensHistorico() {
         return viagensHistorico;
         }
-
 
     public String getSenhaAcesso() {
         return senhaAcesso;
