@@ -139,6 +139,7 @@ public class GerenciadorPessoa {
         String cVVFormatado =String.format("%03d", cVV);
         return new Cartao(limiteCartao, numeroCartaoFormatado, cVVFormatado);
     }
+
     public Pix cadastrarPix(){
         String chave = Util.entrada.nextLine();
         while(chave.contains(" ")){//unica checagem que farei pois chave pode ser cpf, email, celular e aleatoria e nenhum tipo contem espaços 
@@ -152,5 +153,14 @@ public class GerenciadorPessoa {
             saldoPix = Util.entrada.nextDouble();
         }
         return new Pix(chave, saldoPix);
+    }
+
+    public Motorista buscarMotoristaDisponivel() {
+        for (Motorista motorista : listarMotoristas()) {
+            if (motorista.isDisponivel()) {
+                return motorista;
+            }
+        }
+        return null;
     }
 }

@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.SortOrder;
 
+import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.financeiro.FormaDePagamento;
 import negocio.localizacao.Cidade;
 import negocio.localizacao.Local;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
+import negocio.servicos.Fachada;
 import negocio.servicos.Util;
 import negocio.veiculos.Veiculo;
 
-class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
+public class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     //instanciar fachada aqui E ANALIZAR ONDE HAVERÃO LIMPEZAS DE TELA E DEMORAS DE TELA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     private static String codigo;//codigo de recuperação caso de senha esquecida
     private static Pessoa pessoa;//pessoa logada, pode ser motorista ou cliente
     public static void main(final String[] args) throws Exception {
+        Fachada fachada = new Fachada();
+
         setCodigo(null);//codigo começa vazio
         System.out.println("\tH&C TRANSPORTES");
         System.out.println("TE LEVANDO ONDE VOCÊ QUER IR");
