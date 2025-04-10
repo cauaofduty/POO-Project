@@ -19,7 +19,8 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         
         //função apenas para legibilidade da UI
         mensagemInicial();
-        
+        esperar1200();
+        limparTela(); 
         //main menu chamado nesse loop para permitir navegação
         //com flag para continuar rodando o menu
         boolean continuar = true;
@@ -61,8 +62,8 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                             String senha = negocio.servicos.Util.entrada.nextLine();
                             //preparado para tratar exceptions de senha
                             try {
-                                // Tenta validar a senha
                                 fachada.receberSenhaLogin(senha, IDPessoa);
+                                // Tenta validar a senha
                                 // Se a senha estiver correta, entra no menu logado
                                 System.out.println("Olá " + pessoa.getNome() + "! O que deseja fazer?");
                                 System.out.println("Menu logado abaixo");
@@ -522,7 +523,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
 
     public static void esperar1200(){
         try {
-            Thread.sleep(1200);
+            Thread.sleep(1650);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
