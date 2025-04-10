@@ -2,7 +2,7 @@ package negocio.financeiro;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Objects;
 import negocio.pessoas.Pessoa;
 
 public class Pix implements FormaDePagamento, Serializable {
@@ -32,6 +32,26 @@ public class Pix implements FormaDePagamento, Serializable {
         return this.chaves;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(chaves);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Pix other = (Pix) obj;
+
+        for (String chave : this.chaves) {
+            if (other.chaves.contains(chave)) {
+                return true; // pelo menos uma chave em comum
+            }
+        }
+
+        return false; // nenhuma chave em comum
+    }
+    
     @Override
     public String getTipo(){
         return this.tipo;

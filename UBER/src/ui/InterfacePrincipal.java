@@ -1,7 +1,6 @@
 package ui;
 
 import java.util.ArrayList;
-
 import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
@@ -9,7 +8,6 @@ import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.FormaDePagamento;
 import negocio.localizacao.Cidade;
 import negocio.localizacao.Local;
-import negocio.pessoas.Cliente;
 import negocio.pessoas.Pessoa;
 import negocio.servicos.Fachada;
 import negocio.servicos.Util;
@@ -67,10 +65,13 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                                 fachada.receberSenhaLogin(senha, IDPessoa);
                                 // Se a senha estiver correta, entra no menu logado
                                 System.out.println("Olá " + pessoa.getNome() + "! O que deseja fazer?");
-                                boolean continuar = menuLogado(pessoa);
+                                System.out.println("Menu logado abaixo");
+                                esperar1200();
+                                limparTela();
+                                /* boolean continuar = menuLogado(pessoa);
                                 while (continuar) {
                                     continuar = menuLogado(pessoa);
-                                }
+                                } */
                                 return true;//retorna ao menu principal
                                 
                             // Se a senha estiver incorreta, lança uma exceção
@@ -126,7 +127,10 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                         System.out.println("Cadastro realizado com sucesso! Seu ID é\n<" + pessoaOnline.getIDPessoa() + ">\nLogando...");
                         esperar1200();
                         limparTela();
-                        menuLogado(pessoaOnline);
+                        //menuLogado(pessoaOnline);
+                        System.out.println("menu logado abaixo");
+                        esperar1200();
+                        limparTela();
                     }
                     case 3 -> {//mudar senha
                         System.out.println("Deseja mudar sua senha? (1-Sim, Qualquer tecla-Não)");
@@ -222,14 +226,14 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     
     static Pessoa menuCadastro() { // falta limpar tela aqui e colocar delay
         Fachada fachada = Fachada.getInstancia();
+        
         //variaveis para receber os dados do cadastro
         String nome = null, senha = null, confirmarSenha, cidade = null, placa, cor, modelo, IDPessoa = null;
         int idade = 0, tipoCadastro = 0, tipoVeiculo, ano;
-        Pessoa pessoa;
+        Pessoa pessoa = null;
         Local local = null;
         Veiculo veiculo;
         ArrayList<FormaDePagamento> formas = new ArrayList<>();
-        FormaDePagamento formaPagamento = null;
 
         boolean cadastroFinalizado = false;
         //usado para navegar entre etapas em caso de erros
@@ -335,56 +339,12 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                             System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente");
                         }
                     //cadastro de cliente
-                    } else{
-                        System.out.println("1-Adicionar cartão\n2-Adicionar chave pix\n3-Pular (pagar pessoalmente)");
-                        int forma = Util.entrada.nextInt();
-                        Util.entrada.nextLine();
-                        while(forma <0 && forma > 3){
-                            System.out.println("Opção inválida. Tente novamente:");
-                            forma = Util.entrada.nextInt();
-                            Util.entrada.nextLine();
-                        }
-                        switch (forma) {
-                            case 1->{
-                                System.out.println("Qual o limite do cartão?");
-                                double limiteCartao = Util.entrada.nextDouble();
-                                Util.entrada.nextLine();
-                                
-                                //caso limite negativo
-                                while (limiteCartao < 0) {
-                                    System.out.println("Limite inválido. Digite o limite correto:");
-                                    limiteCartao = Util.entrada.nextDouble();  
-                                    Util.entrada.nextLine();      
-                                }
-                                //recebe numero do cartao e checa e formata com espaços
-                                System.out.println("Qual o numero do cartão? (com espaço)");
-                                String numeroCartao = Util.entrada.nextLine();
-                                
-                                //pedira o numero ate que possua apenas numeros e possua 16 digitos
-                                while (numeroCartao.length() < 16 && !numeroCartao.matches("\\d+")) {
-                                    System.out.println("Digite um número válido.");
-                                    numeroCartao = Util.entrada.nextLine();
-                                }
-                                numeroCartao = fachada.formatarCartao(numeroCartao);      
-                                
-                            }
-                            case 2->{
-                                //formas.add(cadastrarPix());
-                            }
-                            case 3 ->{
-                                System.out.println("Forma de pagamento pulada. Você pode adicionar uma forma de pagamento depois.");
-                                break;
-                            }
-                            default->{
-                                System.out.println("Opção inválida.");
-                            }
-                        }
-
-                        fachada.adicionarFormaPagamento(formas); // Implementar se aplicável
+                    } else  {
+                        cadastrarFormasPagamentoCliente(formas); //por ficar muito grande fiz função separada
                         try {
                             pessoa = fachada.cadastrarCliente(formas, IDPessoa, idade, local, nome, senha);
                         } catch (EntidadeJaExisteException e) {
-                            e.getMessage();
+                            System.out.println("Erro: " + e.getMessage());
                         }
                         System.out.println("Cliente cadastrado com sucesso!");
                     }
@@ -392,11 +352,107 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                 }
             }
         }
-        return pessoa;
+        return pessoa;// ENFIM
     }
     
+    private static void cadastrarFormasPagamentoCliente(ArrayList<FormaDePagamento> formas) {
+        Fachada fachada = Fachada.getInstancia();
+        boolean adicionando = true;
+    
+        while (adicionando) {
+            System.out.println("\nComo deseja adicionar uma forma de pagamento?");
+            System.out.println("1 - Adicionar cartão");
+            System.out.println("2 - Adicionar chave pix");
+            System.out.println("3 - Pular (pagar pessoalmente)");
+            System.out.println("0 - Finalizar cadastro de formas");
+    
+            int tipo = Util.entrada.nextInt();
+            Util.entrada.nextLine();
+    
+            if (tipo == 0) {
+                adicionando = false;
+                continue;
+            }
+    
+            switch (tipo) {
+                case 1 -> {
+                    System.out.println("Qual o limite do cartão?");
+                    double limiteCartao = Util.entrada.nextDouble();
+                    Util.entrada.nextLine();
+    
+                    while (limiteCartao < 0) {
+                        System.out.println("Limite inválido. Digite o limite correto:");
+                        limiteCartao = Util.entrada.nextDouble();
+                        Util.entrada.nextLine();
+                    }
+    
+                    System.out.println("Qual o número do cartão? (somente dígitos)");
+                    String numeroCartao = Util.entrada.nextLine();
+    
+                    while (numeroCartao.length() < 16 || !numeroCartao.matches("\\d+")) {
+                        System.out.println("Digite um número válido (16 dígitos, somente números):");
+                        numeroCartao = Util.entrada.nextLine();
+                    }
+    
+                    numeroCartao = fachada.formatarCartao(numeroCartao);
+    
+                    try {
+                        fachada.cadastrarCartao(formas, numeroCartao, limiteCartao);
+                        System.out.println("Cartão cadastrado com sucesso!");
+                    } catch (EntidadeJaExisteException ex) {
+                        System.out.println("Erro: " + ex.getMessage());
+                    }
+                }
+                case 2 -> {
+                    System.out.println("Digite a chave pix:");
+                    String chave = Util.entrada.nextLine();
+    
+                    while (chave.contains(" ")) {
+                        System.out.println("Digite uma chave válida (sem espaços):");
+                        chave = Util.entrada.nextLine(); 
+                    }
+    
+                    System.out.println("Digite seu saldo:");
+                    double saldoPix = Util.entrada.nextDouble();
+                    Util.entrada.nextLine();
+    
+                    while (saldoPix < 0) {
+                        System.out.println("Digite seu saldo corretamente:");
+                        saldoPix = Util.entrada.nextDouble();
+                        Util.entrada.nextLine();
+                    }
+    
+                    try {
+                        fachada.cadastrarPix(formas, chave, saldoPix);
+                        System.out.println("Pix cadastrado com sucesso!");
+                    } catch (EntidadeJaExisteException e) {
+                        System.out.println("Erro: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    System.out.println("Você optou por pagar pessoalmente. Nenhuma forma adicionada.");
+                    adicionando = false;
+                }
+                default -> {
+                    System.out.println("Opção inválida. Tente novamente.");
+                }
+            }
+    
+            if (adicionando) {
+                System.out.println("Deseja adicionar outra forma de pagamento? (s/n)");
+                String resposta = Util.entrada.nextLine();
+                if (!resposta.equalsIgnoreCase("s")) {
+                    adicionando = false;
+                }
+            }
+        }
+    
+        if (formas.isEmpty()) {
+            System.out.println("Forma de pagamento pulada. Você pode adicionar uma forma de pagamento depois.");
+        }
+    }
 
-    static boolean menuLogado(Pessoa pessoa){
+    /* static boolean menuLogado(Pessoa pessoa){
         //mostra uma UI diferente para cada tipo de pessoa
         if(pessoa instanceof Cliente){ 
             //mostra UI-Cliente
@@ -460,7 +516,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             return true;//retorna ao menu logado
         }
 
-    }
+    } */
     
     
 

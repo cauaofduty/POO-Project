@@ -141,11 +141,8 @@ public class PessoasRandom {
                 int[] numeros = r.ints(4, 1000, 10000).toArray();
                 String numeroCartao = Arrays.toString(numeros).replaceAll(", ", "").replaceAll("[\\[\\]]", "").trim();
             
-                //cria e transforma em string digito de seguranca
-                String cVV = String.valueOf(geraInteirosRandom(100, 1000));//nao vou mudar para format nao
-                
                 //instancia e retorna cartao
-                return new Cartao(limite, numeroCartao, cVV);
+                return new Cartao(limite, numeroCartao);
             }
 
             case 2 -> {

@@ -1,6 +1,7 @@
 package negocio.financeiro;
 
 import java.io.Serializable;
+import java.util.Objects;
 import negocio.pessoas.Pessoa;
 
 public class Cartao implements FormaDePagamento,Serializable {
@@ -40,6 +41,19 @@ public class Cartao implements FormaDePagamento,Serializable {
     @Override
     public String getTipo() {
         return this.tipo;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Cartao cartao = (Cartao) obj;
+        return numeroCartao.equals(cartao.numeroCartao); // considera iguais se o número do cartão for igual
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numeroCartao);
     }
 
     //TERMINAR

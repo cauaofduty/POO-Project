@@ -56,23 +56,10 @@ public class Fachada {
         return pessoaManager.listarMotoristas();
     }
 
-    
-    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas, FormaDePagamento f) {
-        pessoaManager.adicionarFormaPagamento(formas, f);
-    }
-
-    public Cartao cadastrarCartao(){
-       return pessoaManager.cadastrarCartao();
-    }
-    
     public String formatarCartao(String cartao) {
         return pessoaManager.formatarCartao(cartao);
     }
     
-    public Pix cadastrarPix(){
-         return pessoaManager.cadastrarPix();
-    }
-
    // Funções de GerenciadorVeiculos
 
     public Veiculo cadastrarVeiculo(String placa, String cor, int ano, String nome, int tipoVeiculo) throws EntidadeJaExisteException {
@@ -113,14 +100,24 @@ public class Fachada {
     public void mudarSenha(String novaSenha, Pessoa pessoa){
         pessoaManager.mudarSenha(pessoa, novaSenha); 
     } 
+    
     public void validarCodigoRecuperacao(String codigoRecuperacao, Pessoa pessoa) throws CodigoIncorretoException {
         pessoaManager.validarCodigoRecuperacao(codigoRecuperacao, pessoa);
     }
+
     public String gerarIDPessoa() {
         return pessoaManager.gerarIDPessoa();
     }
-    //gera um código de recuperação e setta no usuario
+
     public void gerarCodigoRecuperacao(String IDPessoa) {
         pessoaManager.gerarCodigoRecuperacao(IDPessoa);
     }
+
+    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
+        return pessoaManager.cadastrarCartao(formas,numero, limite);
+    }
+    public Pix cadastrarPix(ArrayList<FormaDePagamento> formas,String chave, double saldoPix) throws EntidadeJaExisteException {
+        return pessoaManager.cadastrarPix(formas, chave, saldoPix);
+    }
+
 }

@@ -63,36 +63,26 @@ public class GerenciadorPessoa {
 
     //demais funções subordinadas:
 
-    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas ,FormaDePagamento f){//revisar
+    public void removerCliente(Cliente cliente) throws EntidadeNaoEncontradaException {//para pessoa administrador
+        if (repoPessoa.buscarPorID(cliente.getIDPessoa()) == null) {
+            throw new EntidadeNaoEncontradaException("Cliente não encontrado.");
+        }
+        //repoPessoa.remover(cliente);>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    }
+    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
+        Cartao cartao = new Cartao(limite, numero); 
+        if (formas.contains(cartao)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
+        return cartao;
+    }
+    
+    public Pix cadastrarPix(ArrayList<FormaDePagamento> formas, String chave, double saldoPix)throws EntidadeJaExisteException {
+        Pix pix = new Pix(chave, saldoPix);
         
-        int forma = Util.entrada.nextInt();
-        switch (forma) {
-            case 1->{
-                formas.add(f);
-            }
-            case 2->{
-                formas.add(cadastrarPix());
-            }
-            default->{
-                System.out.println("Opção inválida.");
-            }
-        }
+        //adiciona forma de pagamento ao cliente, se já não estiver cadastrado 
+        
+        formas.add(pix);
+        return pix;
     }
-    public Pix cadastrarPix(){
-        String chave = Util.entrada.nextLine();
-        while(chave.contains(" ")){//unica checagem que farei pois chave pode ser cpf, email, celular e aleatoria e nenhum tipo contem espaços 
-            System.out.println("Digite uma chave válida.");
-            chave = Util.entrada.nextLine(); 
-        }
-        System.out.println("Digite seu saldo:");
-        double saldoPix = Util.entrada.nextDouble();
-        while(saldoPix < 0){
-            System.out.println("Digite seu saldo correto.");
-            saldoPix = Util.entrada.nextDouble();
-        }
-        return new Pix(chave, saldoPix);
-    }
-
 
     public String formatarCartao(String numeroCartao) {
         //para adicionar os espacos manualmente para evitar mais complexidade
@@ -100,21 +90,6 @@ public class GerenciadorPessoa {
                 numeroCartao.substring(4, 8) + " " +
                 numeroCartao.substring(8, 12) + " " +
                 numeroCartao.substring(12, 16);
-    }
-
-    public Pix cadastrarPix(){
-        String chave = Util.entrada.nextLine();
-        while(chave.contains(" ")){//unica checagem que farei pois chave pode ser cpf, email, celular e aleatoria e nenhum tipo contem espaços 
-            System.out.println("Digite uma chave válida.");
-            chave = Util.entrada.nextLine(); 
-        }
-        System.out.println("Digite seu saldo:");
-        double saldoPix = Util.entrada.nextDouble();
-        while(saldoPix < 0){
-            System.out.println("Digite seu saldo correto.");
-            saldoPix = Util.entrada.nextDouble();
-        }
-        return new Pix(chave, saldoPix);
     }
 
     //funcões para login, criar senha e mudar senha
@@ -158,19 +133,4 @@ public class GerenciadorPessoa {
             throw new CodigoIncorretoException("Código de recuperação inválido.");
         }
     }
-        /* reutilizar na UI
-        if(senhaAcesso.isEmpty() || senhaAcesso.length() < 8){
-            System.out.println("Digite uma senha válida.");
-            criarSenha();
-        }
-        System.out.println("Confirme sua senha:");
-        while (true){ 
-            String confirmarSenha = Util.entrada.nextLine();
-            if(!senhaAcesso.equals(confirmarSenha)){
-                System.out.println("Senhas não coincidem. Digite a confirmação novamente:");
-            }else{
-                return senhaAcesso;
-                // talvez não seja necessário retornar senha, igualmente para cartão e pix
-            }
-        } //pede senha correta enquanto estiver errada */
 }
