@@ -3,9 +3,10 @@ package negocio.servicos;
 import dados.IRepositorioPessoa;
 import dados.RepositorioPessoaArquivo;
 import java.util.ArrayList;
-
+import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
+import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
@@ -27,21 +28,23 @@ public class GerenciadorPessoa {
     }
 
     public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+        //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
             throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe cliente com o mesmo ID.");
         }
-        //visto que o ID é aleatório, não vai implicar com nada
+        //instancia e adiciona ao repositorio
         Cliente cliente = new Cliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
         repoPessoa.adicionar(cliente);//adiciona ao repositorio
         return cliente;
     }
 
     public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+        //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
             throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe motorista com o mesmo ID.");
         }
-        //visto que o ID é aleatório, não vai implicar com nada
-        Motorista motorista = new Motorista(veiculo, IDPessoa, idade, local, nome, senhaAcesso, historicoVeiculos);
+        //instancia motorista com os atributos necessários e adiciona ao repositório
+        Motorista motorista = new Motorista(idade, veiculo, IDPessoa, idade, local, nome);
         repoPessoa.adicionar(motorista);//adiciona ao repositorio
         return motorista;
     }
@@ -56,23 +59,6 @@ public class GerenciadorPessoa {
 
     public ArrayList<Motorista> listarMotoristas() {
         return repoPessoa.listarMotoristas();
-    }
-//qualquer coisa eu resolvo
-    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa){//muda a senha de acordo com o ID e o código de recuperação
-        try {
-            pessoa = repoPessoa.buscarPorID(pessoa.getIDPessoa());
-
-            if (pessoa != null) {
-                if (pessoa.getCodigoRecuperacao() == codigoRecuperacao) {
-                    pessoa.setSenhaAcesso(novaSenha);
-                    // esse getter e esse setter não foram criados na classe Pessoa, por isso ta dando erro
-                } else {
-                    System.out.println("Código de recuperação inválido.");
-                }
-        } catch (Exception e) {
-            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
-        }
-
     }
 
     //demais funções subordinadas:
@@ -91,25 +77,6 @@ public class GerenciadorPessoa {
                 System.out.println("Opção inválida.");
             }
         }
-    }
-      
-    public String criarSenha(){
-        String senhaAcesso = Util.entrada.nextLine();
-        
-        if(senhaAcesso.isEmpty() || senhaAcesso.length() < 8){
-            System.out.println("Digite uma senha válida.");
-            criarSenha();
-        }
-        System.out.println("Confirme sua senha:");
-        while (true){ 
-            String confirmarSenha = Util.entrada.nextLine();
-            if(!senhaAcesso.equals(confirmarSenha)){
-                System.out.println("Senhas não coincidem. Digite a confirmação novamente:");
-            }else{
-                return senhaAcesso;
-                // talvez não seja necessário retornar senha, igualmente para cartão e pix
-            }
-        } //pede senha correta enquanto estiver errada
     }
 
     public Cartao cadastrarCartao(){
@@ -153,4 +120,53 @@ public class GerenciadorPessoa {
         }
         return new Pix(chave, saldoPix);
     }
+
+    //funcões para login, criar senha e mudar senha
+    public void receberSenhaLogin(String senhaEsperada, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
+        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
+        //se pessoa for null ou se senha estiver incorreta, lança exceção 
+        if (pessoa == null) {
+            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
+        } else if (!pessoa.getSenhaAcesso().equals(senhaEsperada)) {
+            throw new SenhaIncorretaException("Senha incorreta");
+        }
+    }
+
+    public void criarSenha(String senha, Pessoa pessoa) throws EntidadeNaoEncontradaException {
+        Pessoa encontrada = repoPessoa.buscarPorID(pessoa.getIDPessoa());
+    
+        if (encontrada == null) {
+            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
+        }
+        encontrada.setSenhaAcesso(senha);
+    }
+    public void mudarSenha(Pessoa pessoa, String novaSenha) {
+        pessoa.setSenhaAcesso(novaSenha);
+    }
+    public void gerarCodigoRecuperacao(String IDPessoa){//nao necessita lançar exceção pois é garantido que pessoa existe
+        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
+        String codigo = String.format("%06d", Util.r.nextInt(1000000)); //6 digitos
+        pessoa.setCodigoRecuperacao(codigo);
+    }
+    public void validarCodigoRecuperacao(String codigoInformado, Pessoa pessoa) throws CodigoIncorretoException {
+        //verifica invalidade do codigo
+        if (pessoa == null || pessoa.getCodigoRecuperacao() == null || !pessoa.getCodigoRecuperacao().equals(codigoInformado)) {
+            throw new CodigoIncorretoException("Código de recuperação inválido.");
+        }
+    }
+        /* reutilizar na UI
+        if(senhaAcesso.isEmpty() || senhaAcesso.length() < 8){
+            System.out.println("Digite uma senha válida.");
+            criarSenha();
+        }
+        System.out.println("Confirme sua senha:");
+        while (true){ 
+            String confirmarSenha = Util.entrada.nextLine();
+            if(!senhaAcesso.equals(confirmarSenha)){
+                System.out.println("Senhas não coincidem. Digite a confirmação novamente:");
+            }else{
+                return senhaAcesso;
+                // talvez não seja necessário retornar senha, igualmente para cartão e pix
+            }
+        } //pede senha correta enquanto estiver errada */
 }

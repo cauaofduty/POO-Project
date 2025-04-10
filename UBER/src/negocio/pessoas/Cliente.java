@@ -2,14 +2,10 @@ package negocio.pessoas;
 import java.util.ArrayList;
 import negocio.financeiro.FormaDePagamento;
 import negocio.localizacao.Local;
-import negocio.localizacao.Viagem;
 
 public class Cliente extends Pessoa {
     private static final long serialVersionUID = 100001L;
     private final ArrayList<FormaDePagamento> formasPagamento;
-    
-    //construtor default| CRIAR UM QUE RECEBA SENHA
-    
     
     //construtor simulacao
     public Cliente(ArrayList<FormaDePagamento> formasPagamento, String IDPessoa, int idade, Local localAtual, String nome) {
@@ -22,16 +18,11 @@ public class Cliente extends Pessoa {
         this.formasPagamento = formasPagamento;
     }
     
-    
-   
-
-    @Override
-    public ArrayList<Viagem> getViagensHistorico(){
-        return viagensHistorico;
-    }
-
     public ArrayList<FormaDePagamento> getFormasPagamento() {
         return formasPagamento;
+    }
+    public void adicionarFormaPagamento(FormaDePagamento formaPagamento) {
+        this.formasPagamento.add(formaPagamento);
     }
 
 }

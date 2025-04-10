@@ -3,6 +3,7 @@ package negocio;
 import java.util.ArrayList;
 
 import negocio.basicas.Cliente;
+import simulacao.GeradorPessoas;
 
 public class Resto {
     //criar um repositorio de pagamentos TALVEZ -> extrai de Viagem

@@ -22,6 +22,7 @@ public class GerenciadorViagens {
     }
 
     // Aqui teria que criar um para viagem de cliente e de viagem de entrega, ou seja, dois tipos de viagem, um para cada tipo (Hugo)
+    
     public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
         ViagemCliente viagem = new ViagemCliente(origem, destino, cliente, motorista, preco);
         repoViagem.adicionar(viagem);

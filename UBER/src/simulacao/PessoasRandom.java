@@ -1,4 +1,4 @@
-package negocio.pessoas;
+package simulacao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,36 +8,44 @@ import negocio.financeiro.Dinheiro;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
 import negocio.localizacao.*;
+import negocio.pessoas.Cliente;
+import negocio.pessoas.Motorista;
+import negocio.pessoas.Pessoa;
 import negocio.veiculos.Economico;
 import negocio.veiculos.Luxo;
 import negocio.veiculos.Motocicleta;
 import negocio.veiculos.SUV;
 import negocio.veiculos.Veiculo;
 
-public class GeradorPessoas {//MUITO TRABALHO
+public class PessoasRandom {
     private static final Random r = new Random();
-       
+    private final ArrayList<Pessoa> pessoasAleatorias;//para armazenar pessoas
+    
+
     public static int geraInteirosRandom(int limMin, int limMax){//gera inteiros limitados para numero de pessoas
         int valor = r.nextInt(limMax - limMin) + limMin;
         return valor;
     }
 
-    public ArrayList<Pessoa> gerarPessoasPara(Pessoa pessoa){
+    public PessoasRandom(Pessoa pessoa) {//gera já nop construtor para o gerenciador de locais
+        this.pessoasAleatorias = gerarPessoasPara(pessoa);
+    }
+
+    public final ArrayList<Pessoa> gerarPessoasPara(Pessoa pessoa){
        
         //comeca criando tamanho para lista de pessoas
         int indice = geraInteirosRandom(5, 11);//intenção de criar entre 5 e 10 pessoas
         
-        //cria o array para pessoas e usa um for para preenche-lo com os atributos de pessoa
-        ArrayList<Pessoa> pessoasAleatorias = new ArrayList<>();//para armazenar pessoas
-        
-        //desvio para qual tipo criar
+        //desvio para qual tipo criar (Cliente cria morotista, vice-versa)
         if(pessoa instanceof Cliente){
-            List<Veiculo> veiculos = new ArrayList<>();//para armazenar veiculos (foco em placas)
+            //precisa de lista de veiculos para checar se a placa ja existe
+            List<Veiculo> veiculos = new ArrayList<>();
+            //cria motorista com veiculo aleatorio
             for(int i = 0; i < indice; i++){
-                String nome = gerarNome(pessoasAleatorias);
+                String nome = gerarNome(pessoasAleatorias);//recebe a lista que esta sendo 
                 String IDPessoa = gerarID(pessoasAleatorias);
                 int idade = gerarIdade();
-                Local local = gerarLocal();
+                Local local = gerarLocal(pessoa);
                 Veiculo veiculo = gerarVeiculo(veiculos);
                 veiculos.add(veiculo);
                 pessoasAleatorias.add(new Motorista(0, veiculo, IDPessoa, idade, local, nome));
@@ -47,7 +55,7 @@ public class GeradorPessoas {//MUITO TRABALHO
                 String nome = gerarNome(pessoasAleatorias);
                 String IDPessoa = gerarID(pessoasAleatorias);
                 int idade = gerarIdade();
-                Local local = gerarLocal();
+                Local local = gerarLocal(pessoa);
                 FormaDePagamento formaDePagamento = gerarFormaPagamento();
                 ArrayList<FormaDePagamento> formas = new ArrayList<>();
                 formas.add(formaDePagamento); 
@@ -79,10 +87,10 @@ public class GeradorPessoas {//MUITO TRABALHO
         return pessoa;//do contrario, retorna-o
     }
 
-    public static String gerarID(ArrayList<Pessoa> pessoas){//utilizado pelo gerernciador para gerar ids
-        int ID = r.nextInt(100000);//6 digitos
+    public static String gerarID(ArrayList<Pessoa> pessoas){//utilizado pelo gerenciador para gerar ids
+        int ID = r.nextInt(1000000);//6 digitos
         String IDFormatado = String.format("%06d", ID);
-        if(pessoas.stream().anyMatch(p -> p.getIDPessoa().equals(IDFormatado)))
+        if(pessoas.stream().anyMatch(p -> p.getIDPessoa().equals(IDFormatado)))//gera outro id se este ja existe
             gerarID(pessoas);
         return IDFormatado;
     }
@@ -92,37 +100,29 @@ public class GeradorPessoas {//MUITO TRABALHO
         return idade;
     }
  
-    private static Local gerarLocal(){
+    private static Local gerarLocal(Pessoa pessoa){
         //setando valores estaticos como "base de dados"
-        String[] cidadesRandom = {
-            "Garanhuns", "Caruaru", "Belo Jardim", "Lajedo", "Pesqueira",
-            "Santa Cruz do Capibaribe", "Toritama", "Surubim", "São Bento do Una", "Brejo da Madre de Deus",
-            "Taquaritinga do Norte", "Bonito", "Bezerros", "Gravatá", "Jataúba",
-            "Agrestina", "Panelas", "Altinho", "Cupira", "Lagoa dos Gatos"
-        };
+        //pega nome da cidade da pessoa online
+        String cidadePessoaAtual = pessoa.getLocalAtual().getCidade().getNome();
         String[] bairrosRandom = {
             "Centro", "Cohab I", "Cohab II", "Boa Vista", "São José",
             "Heliópolis", "Magano", "Aluísio Pinto", "Dom Thiago Postma", "Francisco Figueira",
             "Indiano", "Brasília", "Novo Heliópolis", "Várzea", "Liberdade",
-            "Manoel Chéu", "Massaranduba", "José Maria Dourado", "Severiano Moraes Filho", "Parque Fênix"
-        };
+            "Manoel Chéu", "Massaranduba", "José Maria Dourado", "Severiano Moraes Filho", "Parque Fênix"};
         Zona[] zonas = Zona.values();
 
-        //selecao aleatoria
-        int indexCidadeRandom = r.nextInt(cidadesRandom.length);
+        //selecao aleatoria (entre bairros e zonas)
         int indexBairro = r.nextInt(bairrosRandom.length);
         int indexZona = r.nextInt(zonas.length);
-        
-        
+       
         //criando atributos
-        ArrayList<Bairro> bairros = new ArrayList<>();//arraylist vazio para prevenir problemas
-        String nomeCidade = cidadesRandom[indexCidadeRandom];
+        ArrayList<Bairro> bairros = new ArrayList<>();
         String nomeBairro = bairrosRandom[indexBairro];
 
         //instanciando classes
         Zona zona = zonas[indexZona];
         Bairro bairro = new Bairro(nomeBairro, zona);
-        Cidade cidade = new Cidade(nomeCidade, bairros, bairro);
+        Cidade cidade = new Cidade(cidadePessoaAtual, bairros, bairro);
         Local local = new Local(cidade, bairro, zona);
         return local;
     }
@@ -199,16 +199,16 @@ public class GeradorPessoas {//MUITO TRABALHO
         int veiculoTipo = r.nextInt(4) + 1;
         switch (veiculoTipo) {
             case 1->{
-                return new Economico(placa, cor, ano, nome);
+                return new Economico(placa, cor, nome, ano);
             }
             case 2->{
-                return new Luxo(placa, cor, ano, nome);
+                return new Luxo(placa, cor, nome, ano);
             }
             case 3->{
-                return new Motocicleta(placa, cor, ano, nome);
+                return new Motocicleta(placa, cor, nome, ano);
             }
             case 4->{
-                return new SUV(placa, cor, ano, nome);
+                return new SUV(placa, cor, nome, ano);
             }
             
                 default-> throw new ExceptionInInitializerError("erro desconhecido");// perguntar sobre estas exceptions
@@ -236,5 +236,9 @@ public class GeradorPessoas {//MUITO TRABALHO
         if(veiculos.stream().anyMatch(v -> v.getPlaca().equalsIgnoreCase(placa))) //caso placa ja exista
             return gerarPlacaAleatoria(veiculos);
         return placa;
+    }
+
+    public ArrayList<Pessoa> getPessoasAleatorias() {
+        return pessoasAleatorias;
     }
 }

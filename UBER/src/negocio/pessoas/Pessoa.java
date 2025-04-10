@@ -13,7 +13,7 @@ public abstract class Pessoa implements Serializable {
     protected final int idade;
     protected Local localAtual;
     protected String senhaAcesso;
-    protected ArrayList<Viagem> viagensHistorico;
+    protected String codigoRecuperacao;
     
     
     //construtor completo
@@ -23,13 +23,11 @@ public abstract class Pessoa implements Serializable {
         this.localAtual = localAtual;
         this.nome = nome;
         this.senhaAcesso = null;//vazio para criacao random
-        this.viagensHistorico = new ArrayList<>();//vazio para simplificar criacao random
     } 
 
     //construtor para simulacao
     public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico){
         this(IDPessoa, idade, localAtual, nome);
-        this.viagensHistorico = viagensHistorico;
         this.senhaAcesso = senhaAcesso;    
     }
 
@@ -41,8 +39,6 @@ public abstract class Pessoa implements Serializable {
         this.senhaAcesso = senhaAcesso;
     }
 
-    
-    
 
     //getters default abaixo
     public String getNome(){
@@ -66,15 +62,19 @@ public abstract class Pessoa implements Serializable {
         return idade;
     }
 
-    public ArrayList<Viagem> getViagensHistorico() {
-        return viagensHistorico;
-        }
-
     public String getSenhaAcesso() {
         return senhaAcesso;
     }
 
     public void setSenhaAcesso(String senhaAcesso) {
         this.senhaAcesso = senhaAcesso;
+    }
+
+    public String getCodigoRecuperacao() {
+        return codigoRecuperacao;
+    }
+
+    public void setCodigoRecuperacao(String codigoRecuperacao) {
+        this.codigoRecuperacao = codigoRecuperacao;
     }
 }

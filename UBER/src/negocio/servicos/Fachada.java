@@ -2,31 +2,38 @@ package negocio.servicos;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
+import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
-import negocio.pessoas.Pessoa;
 import negocio.pessoas.Cliente;
-import negocio.veiculos.Veiculo;
 import negocio.pessoas.Motorista;
+import negocio.pessoas.Pessoa;
+import negocio.veiculos.Veiculo;
 
 public class Fachada {
     private final GerenciadorPessoa pessoaManager;
     private final GerenciadorVeiculos veiculoManager;
     private final GerenciadorViagens viagemManager;
+    private static Fachada instancia = null;
     
-    public Fachada() {
+    private Fachada() {
         this.pessoaManager = new GerenciadorPessoa();
         this.veiculoManager = new GerenciadorVeiculos();
         this.viagemManager = new GerenciadorViagens();
     }
+    public static Fachada getInstancia() {
+        //cria fachada caso não criada, do contrario retorna a ja criada para evitar instanciações desnecessarias (singleton)
+        if (instancia == null) instancia = new Fachada();
+        return instancia;
+    }
 
-    // Funções de GerenciadorPessoa
+    // Funções de GerenciadorPessoa (TALVEZ SOLTAR EXCEPTION DE SEGUNDA SENHA INCORRETA???????)
 
     void cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {
         pessoaManager.cadastrarCliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
@@ -40,7 +47,7 @@ public class Fachada {
         return pessoaManager.buscarPessoa(IDPessoa);
     }
 
-    // Parando para pensar, as funções de listarClientes e listarMotoristas não existem em um aplicativo como o UBER né? Seriam funções de admin, talves fosse útil perguntar no inicio quem esta acessando o sistema
+    // Parando para pensar, as funções de listarClientes e listarMotoristas não existem em um aplicativo como o UBER né? Seriam funções de admin, talves fosse útil perguntar no inicio quem esta acessando o sistema //CAua-> mesmo assim ele quer, e a implementação vao ficar pro final, com remoção de usuarios e tudo
     public ArrayList<Cliente> listarClientes() {
         return pessoaManager.listarClientes();
     }
@@ -49,14 +56,7 @@ public class Fachada {
         return pessoaManager.listarMotoristas();
     }
 
-    public String criarSenha() {
-        return pessoaManager.criarSenha();
-    }
-
-    public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa) {
-        pessoaManager.mudarSenha(codigoRecuperacao, novaSenha, pessoa); 
-    }
-
+    
     public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas) {
         pessoaManager.adicionarFormaPagamento(formas);
     }
@@ -95,5 +95,25 @@ public class Fachada {
 
     public List<Viagem> listarViagensMotorista(int idMotorista) {
         return viagemManager.listarViagensMotorista(idMotorista);
+    }
+
+    //funções subordinadas da UI
+    public void criarSenha(String senhaAcesso, Pessoa pessoa) throws EntidadeNaoEncontradaException {
+        pessoaManager.criarSenha(senhaAcesso, pessoa);
+    }
+
+    public void receberSenhaLogin(String senha, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
+        pessoaManager.receberSenhaLogin(senha, IDPessoa);
+    }
+
+    public void mudarSenha(String novaSenha, Pessoa pessoa){
+        pessoaManager.mudarSenha(pessoa, novaSenha); 
+    } 
+    public void validarCodigoRecuperacao(String codigoRecuperacao, Pessoa pessoa) throws CodigoIncorretoException {
+        pessoaManager.validarCodigoRecuperacao(codigoRecuperacao, pessoa);
+    }
+    //gera um código de recuperação e setta no usuario
+    public void gerarCodigoRecuperacao(String IDPessoa) {
+        pessoaManager.gerarCodigoRecuperacao(IDPessoa);
     }
 }
