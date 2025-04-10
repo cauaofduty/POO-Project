@@ -77,4 +77,8 @@ public abstract class Pessoa implements Serializable {
     public void setSenhaAcesso(String senhaAcesso) {
         this.senhaAcesso = senhaAcesso;
     }
+
+    public int getCodigoRecuperacao() {
+        return Integer.parseInt(IDPessoa.substring(0, 3)) + Integer.parseInt(IDPessoa.substring(3, 6)) + Integer.parseInt(IDPessoa.substring(6, 9));
+    }
 }
