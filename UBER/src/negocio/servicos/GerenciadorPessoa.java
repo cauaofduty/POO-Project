@@ -57,7 +57,7 @@ public class GerenciadorPessoa {
     public ArrayList<Motorista> listarMotoristas() {
         return repoPessoa.listarMotoristas();
     }
-
+//qualquer coisa eu resolvo
     public void mudarSenha(int codigoRecuperacao, String novaSenha, Pessoa pessoa){//muda a senha de acordo com o ID e o código de recuperação
         try {
             pessoa = repoPessoa.buscarPorID(pessoa.getIDPessoa());
@@ -129,7 +129,7 @@ public class GerenciadorPessoa {
             System.out.println("Digite um número válido.");
             numeroCartao = Util.entrada.nextLine();
         }      
-        //para adicioanr os espacoes manualmente para evitar mais complexidade
+        //para adicionar os espacoes manualmente para evitar mais complexidade
         String numeroCartaoFormatado = numeroCartao.substring(0, 4) + " " +
                                         numeroCartao.substring(4, 8) + " " +
                                         numeroCartao.substring(8, 12) + " " +
