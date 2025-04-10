@@ -38,7 +38,7 @@ public class GerenciadorPessoa {
         return cliente;
     }
 
-    public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso, ArrayList<Veiculo> historicoVeiculos) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+    public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
         //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
             throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe motorista com o mesmo ID.");
@@ -63,12 +63,12 @@ public class GerenciadorPessoa {
 
     //demais funções subordinadas:
 
-    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas){//revisar
-        System.out.println("1-Adicionar cartão\n2-Adicionar chave pix");
+    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas ,FormaDePagamento f){//revisar
+        
         int forma = Util.entrada.nextInt();
         switch (forma) {
             case 1->{
-                formas.add(cadastrarCartao());
+                formas.add(f);
             }
             case 2->{
                 formas.add(cadastrarPix());
@@ -78,34 +78,30 @@ public class GerenciadorPessoa {
             }
         }
     }
-
-    public Cartao cadastrarCartao(){
-        //recebe limite
-        System.out.println("Qual o limite do cartão?");
-        double limiteCartao = Util.entrada.nextDouble();
-        //caso limite negativo
-        while (limiteCartao < 0) {
-            System.out.println("Limite inválido. Digite o limite correto");
-            limiteCartao = Util.entrada.nextDouble();        
+    public Pix cadastrarPix(){
+        String chave = Util.entrada.nextLine();
+        while(chave.contains(" ")){//unica checagem que farei pois chave pode ser cpf, email, celular e aleatoria e nenhum tipo contem espaços 
+            System.out.println("Digite uma chave válida.");
+            chave = Util.entrada.nextLine(); 
         }
-        //recebe numero do cartao e checa e formata com espaços
-        System.out.println("Qual o numero do cartão? (com espaço)");
-        String numeroCartao = Util.entrada.nextLine();
-        //pedira o numero ate que possua apenas numeros e possua 16 digitos
-        while (numeroCartao.length() < 16 && !numeroCartao.matches("\\d+")) {
-            System.out.println("Digite um número válido.");
-            numeroCartao = Util.entrada.nextLine();
-        }      
-        //para adicionar os espacoes manualmente para evitar mais complexidade
-        String numeroCartaoFormatado = numeroCartao.substring(0, 4) + " " +
-                                        numeroCartao.substring(4, 8) + " " +
-                                        numeroCartao.substring(8, 12) + " " +
-                                        numeroCartao.substring(12, 16);
-        
-        int cVV = Util.r.nextInt(1000);
-        String cVVFormatado =String.format("%03d", cVV);
-        return new Cartao(limiteCartao, numeroCartaoFormatado, cVVFormatado);
+        System.out.println("Digite seu saldo:");
+        double saldoPix = Util.entrada.nextDouble();
+        while(saldoPix < 0){
+            System.out.println("Digite seu saldo correto.");
+            saldoPix = Util.entrada.nextDouble();
+        }
+        return new Pix(chave, saldoPix);
     }
+
+
+    public String formatarCartao(String numeroCartao) {
+        //para adicionar os espacos manualmente para evitar mais complexidade
+        return numeroCartao.substring(0, 4) + " " +
+                numeroCartao.substring(4, 8) + " " +
+                numeroCartao.substring(8, 12) + " " +
+                numeroCartao.substring(12, 16);
+    }
+
     public Pix cadastrarPix(){
         String chave = Util.entrada.nextLine();
         while(chave.contains(" ")){//unica checagem que farei pois chave pode ser cpf, email, celular e aleatoria e nenhum tipo contem espaços 
@@ -145,8 +141,16 @@ public class GerenciadorPessoa {
     }
     public void gerarCodigoRecuperacao(String IDPessoa){//nao necessita lançar exceção pois é garantido que pessoa existe
         Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
-        String codigo = String.format("%06d", Util.r.nextInt(1000000)); //6 digitos
+        String codigo = String.format("%04d", Util.r.nextInt(10000)); //4 digitos
         pessoa.setCodigoRecuperacao(codigo);
+    }
+    public String gerarIDPessoa() {
+        String IDPessoa = String.format("%05d", Util.r.nextInt(100000)); //5 digitos
+        //"enquanto houverem IDs iguais, gera novo ID"
+        while (repoPessoa.buscarPorID(IDPessoa) != null) {
+            IDPessoa = String.format("%04d", Util.r.nextInt(10000)); //4 digitos
+        }
+        return IDPessoa;
     }
     public void validarCodigoRecuperacao(String codigoInformado, Pessoa pessoa) throws CodigoIncorretoException {
         //verifica invalidade do codigo

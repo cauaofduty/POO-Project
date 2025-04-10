@@ -8,14 +8,12 @@ public class Cartao implements FormaDePagamento,Serializable {
 
     private double limiteCartao; 
     private final String numeroCartao;
-    private final String cVV;
     private final String tipo = "Cartão";
 
 
-    public Cartao(double limiteCartao, String numeroCartao, String cVV) {
+    public Cartao(double limiteCartao, String numeroCartao) {
         this.limiteCartao = limiteCartao;
         this.numeroCartao = numeroCartao;
-        this.cVV = cVV;
     }
 
 
@@ -38,13 +36,6 @@ public class Cartao implements FormaDePagamento,Serializable {
     public String getNumeroCartao() {
         return numeroCartao;
     }
-
-
-    public String getcVV() {
-        return cVV;
-    }
-
-
 
     @Override
     public String getTipo() {

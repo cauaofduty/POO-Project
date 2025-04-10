@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 
 import negocio.exceptions.CodigoIncorretoException;
+import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.FormaDePagamento;
@@ -121,7 +122,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                         }
                         
                         //chama menuCadastro, que retorna a pessoa cadastrada (motorista ou cliente) e mostra menu logado
-                        pessoaOnline = menuCadastro(tipo);
+                        pessoaOnline = menuCadastro();
                         System.out.println("Cadastro realizado com sucesso! Seu ID é\n<" + pessoaOnline.getIDPessoa() + ">\nLogando...");
                         esperar1200();
                         limparTela();
@@ -219,68 +220,181 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         }
     } 
     
-    static Pessoa menuCadastro(int tipo){
-            //recebe atributos
-            System.out.println("Qual seu nome?");
-            String nome = Util.entrada.nextLine();//apenas nome de usuario
-            //String IDPessoa = GeradorPessoas.gerarID("array do repositorio");//necessita checar IDs ja criados por meio da fachada>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            System.out.println("qual sua idade?");
-            
-            int idade = Util.entrada.nextInt();
-            while (idade < 18) {//garante validade da idade
-                System.out.println("Digite uma idade válida.");
-                idade = Util.entrada.nextInt();
-            }
+    static Pessoa menuCadastro() { // falta limpar tela aqui e colocar delay
+        Fachada fachada = Fachada.getInstancia();
+        //variaveis para receber os dados do cadastro
+        String nome = null, senha = null, confirmarSenha, cidade = null, placa, cor, modelo, IDPessoa = null;
+        int idade = 0, tipoCadastro = 0, tipoVeiculo, ano;
+        Pessoa pessoa;
+        Local local = null;
+        Veiculo veiculo;
+        ArrayList<FormaDePagamento> formas = new ArrayList<>();
+        FormaDePagamento formaPagamento = null;
 
-            //função dedicada para receber senha
-            String senhaAcesso = criarSenha();
-
-            System.out.println("Agora, digite o nome da sua cidade:");
-            String cidade = Util.entrada.nextLine();
-            Cidade cidadeLocal = new Cidade(cidade);//instancia cidade para ser passada para o local
-            Local local = new Local(cidadeLocal);//pode estar complicado: cidade é um tipo, porém basta a cidade para mostrar o mapa então será instanciado cidade sem bairro ou zona e Local apenas com cidade por agora
-            //a partir daqui cadastra os atributos especificos
-            switch(tipo) {
-                case 1 ->{ //cadastra primeiro veiculo depois motorista
-                    System.out.println("Digite a placa do veículo: ");
-                    String placa = Util.entrada.nextLine();
-                    //garante que a placa tenha 7 caracteres
-                    while(placa.length() != 7){
-                        System.out.println("Placa inválida. Digite novamente: ");
-                        placa = Util.entrada.nextLine();
-                    }
-                    //verifica se o veiculo ja existe no repositorio, se sim, pede para cadastrar outro>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                    System.out.println("Digite a cor do veículo: ");
-                    String cor = Util.entrada.nextLine();
-                    System.out.println("Digite o ano do veículo: ");
-                    int ano = Util.entrada.nextInt();
-                    System.out.println("Digite o nome do modelo do veículo: ");
-                    String modelo = Util.entrada.nextLine();
-                    System.out.println("Digite o tipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta): ");
-                    int tipoVeiculo = Util.entrada.nextInt();
-                    while(tipoVeiculo < 1 || tipoVeiculo > 4){//garante opção válida
-                        System.out.println("Opção inválida. Tente novamente.");
-                        tipoVeiculo = Util.entrada.nextInt();
-                    }
-                    //fachada.cadastrarVeiculo(placa, cor, ano, modelo, tipoVeiculo);//chama a função de cadastro de veiculo da fachada
-
-                    //agora cadastra motorista
-                    ArrayList<Veiculo> historicoVeiculos = new ArrayList<>();//historico de veiculos do motorista, pára caso ele vá ter mais de um veiculo cadastrado
-                    historicoVeiculos.add(veiculo);//adiciona o veiculo ao historico de veiculos do motorista
-                    //Motorista motorista = fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senhaAcesso, historicoVeiculos);//chama a função de cadastro de motorista da fachada
-                    System.out.println("Motorista " + nome+ " cadastrado com sucesso.");
-                } 
-                case 2 -> {//cadastra cliente, adicionando seus atributos especificos e instanciando a classe cliente
-                    ArrayList<FormaDePagamento> formasDePagamento = new ArrayList<>();
-                    //fachada.adicionarFormaPagamento(formasDePagamento); adicionar fachada>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                    //Cliente cliente = fachada.cadastrarCliente(formasDePagamento, IDPessoa, idade, local, nome, senhaAcesso);//chama a função de cadastro de cliente da fachada
-                    System.out.println("Cliente " + nome+ " cadastrado com sucesso.");
-                    return cliente;
+        boolean cadastroFinalizado = false;
+        //usado para navegar entre etapas em caso de erros
+        int etapa = 1;
+        while (!cadastroFinalizado) {
+            switch (etapa) {
+                case 1 -> { //apenas nome
+                    System.out.println("Qual seu nome?");
+                    nome = Util.entrada.nextLine();
+                    etapa++;
                 }
-                default -> System.out.println("Opção inválida.");
+                case 2 -> {// idade (retorna exception caso menor de idade)
+                    System.out.println("Qual sua idade? (18 anos ou mais)");
+                    try {
+                        idade = Util.entrada.nextInt();
+                        Util.entrada.nextLine();
+                        if (idade < 18) throw new IllegalArgumentException("Digite uma idade válida.");
+                        //caso idade seja valida, incrementa etapa
+                        etapa++;
+                    } catch (IllegalArgumentException e) {
+                        //mostra erro e retorna ao inicio da etapa
+                        System.out.println("Erro: " + e.getMessage());
+                    }
+                }
+                case 3 -> {// criação e confirmação de senha
+                    System.out.println("Digite sua senha:");
+                    senha = Util.entrada.nextLine();
+                    System.out.println("Confirme sua senha:");
+                    confirmarSenha = Util.entrada.nextLine();
+                    if (!senha.equals(confirmarSenha)) {
+                        System.out.println("As senhas não coincidem.");
+                    } else if (senha.length() < 8) {
+                        System.out.println("A senha deve ter pelo menos 8 caracteres.");
+                    } else {
+                        etapa++;
+                    }
+                }
+                case 4 -> {//nome da cidade
+                    System.out.println("Digite o nome da sua cidade:");
+                    cidade = Util.entrada.nextLine();
+                    etapa++;
+                }
+                case 5 -> {
+                    //decisão de cadastro
+                    System.out.println("Como quer se cadastrar?");
+                    System.out.println("1 - Motorista\n2 - Cliente");
+                    
+                    tipoCadastro = Util.entrada.nextInt();
+                    Util.entrada.nextLine();
+                    
+                    while(tipoCadastro != 1 && tipoCadastro != 2) {
+                        System.out.println("Opção inválida. Tente novamente:");
+                        tipoCadastro = Util.entrada.nextInt();
+                    }
+                    etapa++;
+                }
+                case 6 -> {
+                    Cidade cidadeObj = new Cidade(cidade);
+                    local = new Local(cidadeObj);
+                    IDPessoa = fachada.gerarIDPessoa();
+                    etapa++;
+                }
+                case 7 -> {
+                    if (tipoCadastro == 1) {
+                        System.out.println("Digite a placa do veículo:");
+                        placa = Util.entrada.nextLine();
+                        while (placa.length() != 7) {
+                            System.out.println("Placa inválida. Digite novamente:");
+                            placa = Util.entrada.nextLine();
+                        }
+                        //placa nao existe na base, cadastra
+                        if(fachada.buscarVeiculo(placa) == null){
+                            //demais dados do veículo
+                            System.out.println("Digite a cor do veículo:");
+                            cor = Util.entrada.nextLine();
+                            System.out.println("Digite o ano do veículo:");
+                            ano = Util.entrada.nextInt();
+                            Util.entrada.nextLine();
+                            System.out.println("Digite o modelo:");
+                            modelo = Util.entrada.nextLine(); 
+                            
+                            //intância de veículo
+                            System.out.println("Tipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta):");
+                            tipoVeiculo = Util.entrada.nextInt();
+                            Util.entrada.nextLine();
+                            
+                            while (tipoVeiculo < 1 || tipoVeiculo > 4) {
+                                System.out.println("Tipo inválido. Tente novamente:");
+                                tipoVeiculo = Util.entrada.nextInt();
+                                Util.entrada.nextLine();
+                            }
+                            try {
+                                veiculo = fachada.cadastrarVeiculo(placa, cor, ano, modelo, tipoVeiculo);
+
+                                pessoa = fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senha);
+                                System.out.println("Motorista cadastrado com sucesso!");
+                                return pessoa;
+                            } catch (EntidadeJaExisteException e ) {//nao ira cair nesse cath mas por segurança esta ai
+                                System.out.println("Erro: " + e.getMessage());
+                            }
+                        //placa ja existe, volta ao inicio da etapa
+                        } else {
+                            System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente");
+                        }
+                    //cadastro de cliente
+                    } else{
+                        System.out.println("1-Adicionar cartão\n2-Adicionar chave pix\n3-Pular (pagar pessoalmente)");
+                        int forma = Util.entrada.nextInt();
+                        Util.entrada.nextLine();
+                        while(forma <0 && forma > 3){
+                            System.out.println("Opção inválida. Tente novamente:");
+                            forma = Util.entrada.nextInt();
+                            Util.entrada.nextLine();
+                        }
+                        switch (forma) {
+                            case 1->{
+                                System.out.println("Qual o limite do cartão?");
+                                double limiteCartao = Util.entrada.nextDouble();
+                                Util.entrada.nextLine();
+                                
+                                //caso limite negativo
+                                while (limiteCartao < 0) {
+                                    System.out.println("Limite inválido. Digite o limite correto:");
+                                    limiteCartao = Util.entrada.nextDouble();  
+                                    Util.entrada.nextLine();      
+                                }
+                                //recebe numero do cartao e checa e formata com espaços
+                                System.out.println("Qual o numero do cartão? (com espaço)");
+                                String numeroCartao = Util.entrada.nextLine();
+                                
+                                //pedira o numero ate que possua apenas numeros e possua 16 digitos
+                                while (numeroCartao.length() < 16 && !numeroCartao.matches("\\d+")) {
+                                    System.out.println("Digite um número válido.");
+                                    numeroCartao = Util.entrada.nextLine();
+                                }
+                                numeroCartao = fachada.formatarCartao(numeroCartao);      
+                                
+                            }
+                            case 2->{
+                                //formas.add(cadastrarPix());
+                            }
+                            case 3 ->{
+                                System.out.println("Forma de pagamento pulada. Você pode adicionar uma forma de pagamento depois.");
+                                break;
+                            }
+                            default->{
+                                System.out.println("Opção inválida.");
+                            }
+                        }
+
+                        fachada.adicionarFormaPagamento(formas); // Implementar se aplicável
+                        try {
+                            pessoa = fachada.cadastrarCliente(formas, IDPessoa, idade, local, nome, senha);
+                        } catch (EntidadeJaExisteException e) {
+                            e.getMessage();
+                        }
+                        System.out.println("Cliente cadastrado com sucesso!");
+                    }
+                    cadastroFinalizado = true;
+                }
             }
-            return null;//apenas para fins de compilação, não deve ser chamado
         }
+        return pessoa;
+    }
+    
 
     static boolean menuLogado(Pessoa pessoa){
         //mostra uma UI diferente para cada tipo de pessoa
@@ -347,49 +461,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         }
 
     }
-    //usado na sessão mudar senha
-    //gera código de 4 dígitos e setta na interface para ser mostrada ao usuário na caixa de entrada
-    //se já houver codigo, pede ao usuario e faz checagem
-    //chama a função para criar senha, que setta a senha criada direto na pessoa
-    //se o código de recuperação for igual ao da interface, muda a senha e retorna ao menu principal
-    //se o código de recuperação for diferente, retorna ao menu principal sem mudar a senha
-    static void mudarSenha(){
-        if(codigo == null){//nao tem codigo
-            String codigoRecuperacao = String.format("%04d", Util.r.nextInt(10000));
-            setCodigo(codigoRecuperacao);//codigo armazenado na interface
-            System.out.println("Código de recuperação enviado para sua caixa de entrada, utilize-o para redefinir sua senha." );
-        } else {//tem codigo
-           System.out.println("Digite o código de 6 dígitos enviado para sua caixa de entrada");
-           String codigoRecuperacao = Util.entrada.nextLine();
-           if(codigoRecuperacao.equals(codigo)){
-                pessoa.setSenhaAcesso(criarSenha());
-                System.out.println("Senha alterada com sucesso!"); 
-            } else {
-                //retorna ao menu principal
-                System.out.println("Código de recuperação inválido. Senha não alterada.");
-            }
-        }
-    }
-    //cria senha em qualquer situação (criação de conta ou mudança de senha)
-    //verifica se a senha é válida (mínimo de 8 caracteres) e se as senhas conferem, retornando a senha criada (em loop até que a senha seja válida)
-    public static String criarSenha(){
-        System.out.println("Digite sua senha (mínimo de 8 caracteres)");
-        String senhaAcesso = Util.entrada.nextLine();
-        
-        if(senhaAcesso.isEmpty() || senhaAcesso.length() < 8){
-            System.out.println("Digite uma senha válida.");
-            criarSenha();
-        }
-        System.out.println("Confirme sua senha:");
-        while (true){ 
-            String confirmarSenha = Util.entrada.nextLine();
-            if(!senhaAcesso.equals(confirmarSenha)){
-                System.out.println("Senhas não coincidem. Digite a confirmação novamente:");
-            }else{
-                return senhaAcesso;
-            }
-        } //pede senha correta enquanto estiver errada
-    } 
+    
     
 
     public static void esperar1200(){
