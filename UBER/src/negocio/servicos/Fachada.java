@@ -76,8 +76,20 @@ public class Fachada {
 
     // Funções de GerenciadorViagens
 
-    void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
+    public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
+        viagemManager.solicitarViagemCliente(origem, destino, cliente);
+    }
+
+    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
         viagemManager.adicionarViagemCliente(origem, destino, cliente,motorista, preco);
+    }
+
+    public void solicitarViagemEntrega(Local origem, Local destino, Cliente cliente, double peso) throws EntidadeNaoEncontradaException {
+        viagemManager.solicitarViagemEntrega(origem, destino, cliente, peso);
+    }
+
+    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega) {
+        viagemManager.adicionarViagemEntrega(origem, destino, cliente,motorista, preco, pesoEntrega);
     }
 
     public List<Viagem> listarViagensCliente(int idCliente) {

@@ -43,8 +43,8 @@ public class GerenciadorPessoa {
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
             throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe motorista com o mesmo ID.");
         }
-        //instancia motorista com os atributos necessários e adiciona ao repositório
-        Motorista motorista = new Motorista(idade, veiculo, IDPessoa, idade, local, nome);
+        //instancia motorista com os atributos necessários e adiciona ao repositório;
+        Motorista motorista = new Motorista(idade, veiculo, IDPessoa, disponivel, idade, local, nome);
         repoPessoa.adicionar(motorista);//adiciona ao repositorio
         return motorista;
     }
@@ -132,5 +132,14 @@ public class GerenciadorPessoa {
         if (pessoa == null || pessoa.getCodigoRecuperacao() == null || !pessoa.getCodigoRecuperacao().equals(codigoInformado)) {
             throw new CodigoIncorretoException("Código de recuperação inválido.");
         }
+    }
+
+    public Motorista buscarMotoristaDisponivel() {
+        for (Motorista motorista : listarMotoristas()) {
+            if (motorista.isDisponivel()) {
+                return motorista;
+            }
+        }
+        return null;
     }
 }
