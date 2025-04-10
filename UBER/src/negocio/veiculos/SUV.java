@@ -9,6 +9,8 @@ public class SUV extends Veiculo {//ver isso
     public SUV(String placa, String cor, String nomeVeiculo, int ano) {
         super(placa, cor, nomeVeiculo, ano);
     }
+
+    @Override
     public double getTaxaViagem() {
         return taxaViagem;
     }

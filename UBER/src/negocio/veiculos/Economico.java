@@ -11,6 +11,7 @@ public class Economico extends Veiculo {
         super(placa, cor, nomeVeiculo, ano);                   
     }
 
+    @Override
     public double getTaxaViagem() {
         return taxaViagem;
     }

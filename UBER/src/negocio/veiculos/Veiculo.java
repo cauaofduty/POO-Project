@@ -16,16 +16,22 @@ public abstract class Veiculo implements Serializable {
         this.nomeVeiculo = nomeVeiculo;
         this.ano = ano;
     }
+
     public String getPlaca() {
         return placa;
     }
+
     public String getCor() {
         return cor;
     }
+
     public String getNomeVeiculo() {
         return nomeVeiculo;
     }
+
     public int getAno() {
         return ano;
     }
+
+    public abstract double getTaxaViagem(); // Método abstrato para obter a taxa de viagem do veículo
 }

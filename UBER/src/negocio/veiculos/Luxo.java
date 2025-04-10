@@ -10,6 +10,7 @@ public class Luxo extends Veiculo {
         super(placa, cor, nomeVeiculo, ano);
     }
 
+    @Override
     public double getTaxaViagem() {
         return taxaViagem;
     }
