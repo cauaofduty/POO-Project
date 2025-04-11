@@ -6,9 +6,8 @@ import negocio.pessoas.Motorista;
 public class ViagemCliente extends Viagem {
     private static final long serialVersionUID = 300001L;
 
-    public ViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco){
+    public ViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
         super(origem, destino, cliente, motorista, preco);
     }
-    
-    
+
 }
