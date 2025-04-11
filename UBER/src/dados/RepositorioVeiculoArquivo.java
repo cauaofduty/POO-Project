@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import negocio.pessoas.Pessoa;
 import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
@@ -42,11 +43,10 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
 
 
     @SuppressWarnings("unchecked")
-    private List<Veiculo> carregarArquivo() {
+    private ArrayList<Veiculo> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (List<Veiculo>) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
+            return (ArrayList<Veiculo>) in.readObject();
+        } catch (Exception e) {
             return new ArrayList<>();
         }
     }
