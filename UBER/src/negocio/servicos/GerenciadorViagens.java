@@ -10,6 +10,8 @@ import dados.RepositorioViagemArquivo;
 import negocio.localizacao.ViagemEntrega;
 import negocio.localizacao.Viagem;
 import negocio.localizacao.ViagemCliente;
+import negocio.veiculos.Economico;
+import negocio.veiculos.Motocicleta;
 import negocio.veiculos.Veiculo;
 
 import java.util.List;
@@ -52,17 +54,30 @@ public class GerenciadorViagens {
     }
 
     public void solicitarViagemEntrega(Local origem, Local destino, Cliente cliente, double pesoKg) throws EntidadeNaoEncontradaException {
-        Motorista motorista = pessoaManager.buscarMotoristaDisponivel();
-        if (motorista == null) {
-            throw new EntidadeNaoEncontradaException("Nenhum motorista disponível no momento.");
+    Motorista motoristaPermitido = null;
+
+    // Procura por um motorista disponível com veículo apropriado para entrega, veículos que não sejam do tipo Luxo ou SUV
+    for (Motorista motorista : pessoaManager.listarMotoristas()) {
+        if (motorista.isDisponivel()) {
+            Veiculo veiculo = motorista.getVeiculo();
+            if (veiculo instanceof Motocicleta || veiculo instanceof Economico) {
+                motoristaPermitido = motorista;
+                break;
+            }
         }
-
-        Veiculo veiculo = motorista.getVeiculo();
-        double preco = calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
-        adicionarViagemEntrega(origem, destino, cliente, motorista, preco, pesoKg);
-
-        motorista.setDisponivel(false);
     }
+
+    if (motoristaPermitido == null) {
+        throw new EntidadeNaoEncontradaException("Nenhum motorista com veículo adequado disponível para entrega.");
+    }
+
+    Veiculo veiculo = motoristaPermitido.getVeiculo();
+    double preco = calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
+    adicionarViagemEntrega(origem, destino, cliente, motoristaPermitido, preco, pesoKg);
+
+    motoristaPermitido.setDisponivel(false);
+    }  
+
 
     private double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
         return CalculadorPreco.calcularPrecoViagem(origem, destino, veiculo);
