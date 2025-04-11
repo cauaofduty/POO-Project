@@ -11,6 +11,7 @@ import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
+import negocio.localizacao.Zona;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
@@ -75,6 +76,16 @@ public class Fachada {
     }
 
     // Funções de GerenciadorViagens
+
+    //recebe string e transforma em zona se for válida
+    public Local criarLocal(String cidade, String bairro, String zona) throws EntidadeNaoEncontradaException {
+        return viagemManager.criarLocal(cidade, bairro, zona);
+    }
+
+    public void validarZona(String entrada) throws EntidadeNaoEncontradaException {
+        Zona.valueOf(entrada.trim().toUpperCase());
+    }
+
 
     public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
         viagemManager.solicitarViagemCliente(origem, destino, cliente);

@@ -39,12 +39,13 @@ public class GerenciadorPessoa {
     }
 
     public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
+        boolean disponivel = true; //motorista começa disponível
         //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
             throw new EntidadeJaExisteException("Não foi possível cadastrar, já existe motorista com o mesmo ID.");
         }
         //instancia motorista com os atributos necessários e adiciona ao repositório;
-        Motorista motorista = new Motorista(idade, veiculo, IDPessoa, disponivel, idade, local, nome);
+        Motorista motorista = new Motorista(veiculo, IDPessoa, disponivel, idade, local, nome, senhaAcesso);
         repoPessoa.adicionar(motorista);//adiciona ao repositorio
         return motorista;
     }
@@ -63,12 +64,6 @@ public class GerenciadorPessoa {
 
     //demais funções subordinadas:
 
-    public void removerCliente(Cliente cliente) throws EntidadeNaoEncontradaException {//para pessoa administrador
-        if (repoPessoa.buscarPorID(cliente.getIDPessoa()) == null) {
-            throw new EntidadeNaoEncontradaException("Cliente não encontrado.");
-        }
-        //repoPessoa.remover(cliente);>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    }
     public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
         Cartao cartao = new Cartao(limite, numero); 
         if (formas.contains(cartao)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
@@ -77,9 +72,8 @@ public class GerenciadorPessoa {
     
     public Pix cadastrarPix(ArrayList<FormaDePagamento> formas, String chave, double saldoPix)throws EntidadeJaExisteException {
         Pix pix = new Pix(chave, saldoPix);
-        
+        if(formas.contains(pix)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
         //adiciona forma de pagamento ao cliente, se já não estiver cadastrado 
-        
         formas.add(pix);
         return pix;
     }
