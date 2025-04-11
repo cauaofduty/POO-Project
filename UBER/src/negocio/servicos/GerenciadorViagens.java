@@ -1,21 +1,23 @@
 package negocio.servicos;
-
+import dados.IRepositorioViagem;
+import dados.RepositorioViagemArquivo;
+import java.util.ArrayList;
 import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.localizacao.CalculadorPreco;
 import negocio.localizacao.Local;
-import negocio.pessoas.Cliente;
-import negocio.pessoas.Motorista;
-import dados.IRepositorioViagem;
-import dados.RepositorioViagemArquivo;
-import negocio.localizacao.ViagemEntrega;
 import negocio.localizacao.Viagem;
 import negocio.localizacao.ViagemCliente;
 import negocio.veiculos.Economico;
 import negocio.veiculos.Motocicleta;
+import negocio.localizacao.ViagemEntrega;
+import negocio.localizacao.Zona;
+import negocio.pessoas.Cliente;
+import negocio.pessoas.Motorista;
+
 import negocio.veiculos.Veiculo;
 
-import java.util.List;
-
+//como cumprem a mesma função e uma é intrinsecamente ligada a outra
+//locais serão gerenciados aqui (além que não precisam ser persistidos "exclusivamente", com paga,mentos sofrendo do mesmo caso)
 public class GerenciadorViagens {
     private final IRepositorioViagem<Viagem> repoViagem;
     private final GerenciadorPessoa pessoaManager;
@@ -29,6 +31,26 @@ public class GerenciadorViagens {
     public IRepositorioViagem<Viagem> getRepoViagem(){
         return repoViagem;
     }
+
+    public Local criarLocal(String cidade, String bairro, String zona) throws EntidadeNaoEncontradaException {
+        if (cidade == null || cidade.trim().isEmpty()) throw new EntidadeNaoEncontradaException("Cidade não pode ser nula ou vazia.");
+            try {
+                Zona zonaSaida = Zona.valueOf(zona.trim().toUpperCase());
+                return new Local(cidade, bairro, zonaSaida);
+            } catch (IllegalArgumentException e) {
+                throw new EntidadeNaoEncontradaException("Zona inválida: " + zona);
+            }
+    }
+
+    public void validarZona(String entrada) throws EntidadeNaoEncontradaException {
+        try {
+            //checa se zona é válida
+            Zona.valueOf(entrada.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new EntidadeNaoEncontradaException("Zona inválida: " + entrada);
+        }
+    }
+    
 
     public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
         ViagemCliente viagem = new ViagemCliente(origem, destino, cliente, motorista, preco);
@@ -49,7 +71,6 @@ public class GerenciadorViagens {
         Veiculo veiculo = motorista.getVeiculo();
         double preco = calcularPrecoViagem(origem, destino, veiculo);
         adicionarViagemCliente(origem, destino, cliente, motorista, preco);
-
         motorista.setDisponivel(false);
     }
 
@@ -78,7 +99,7 @@ public class GerenciadorViagens {
     motoristaPermitido.setDisponivel(false);
     }  
 
-
+    //a ideia é mostrar antes da viagem e realizar pagamento antes
     private double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
         return CalculadorPreco.calcularPrecoViagem(origem, destino, veiculo);
     }
@@ -87,11 +108,11 @@ public class GerenciadorViagens {
         return CalculadorPreco.calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
     }
 
-    public List<Viagem> listarViagensCliente(int idCliente) {
+    public ArrayList<Viagem> listarViagensCliente(String idCliente) {
         return repoViagem.listarViagensCliente(idCliente);
     }
 
-    public List<Viagem> listarViagensMotorista(int idMotorista) {
+    public ArrayList<Viagem> listarViagensMotorista(String idMotorista) {
         return repoViagem.listarViagensMotorista(idMotorista);
     }
 

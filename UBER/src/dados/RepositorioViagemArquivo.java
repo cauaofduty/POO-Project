@@ -6,11 +6,13 @@ import negocio.localizacao.Viagem;
 
 public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     private final String arquivo = "viagens.bin";
-    private ArrayList<Viagem> viagens;
+    private final ArrayList<Viagem> viagens;
+
 
     public RepositorioViagemArquivo() {
         this.viagens = carregarArquivo();
     }
+
 
     // Funções declaradas na classe IRepositorioViagem
 
@@ -22,7 +24,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     public ArrayList<Viagem> listarViagensCliente(int idCliente) {
         ArrayList<Viagem> viagemCliente = new ArrayList<>();
         for (Viagem v : viagens) { 
-            if (Integer.parseInt(v.getCliente().getIDPessoa()) == idCliente) {
+            if ((v.getCliente().getIDPessoa()).equals(idCliente)) {
                 viagemCliente.add(v);
             }
         }
@@ -30,9 +32,10 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     }
 
     public ArrayList<Viagem> listarViagensMotorista(int idMotorista) {
+
         ArrayList<Viagem> viagemMotorista = new ArrayList<>();
         for (Viagem v : viagens) {
-            if (Integer.parseInt(v.getMotorista().getIDPessoa()) == idMotorista) {
+            if (v.getMotorista().getIDPessoa().equals(idMotorista)) {
                 viagemMotorista.add(v);
             }
         }
@@ -53,7 +56,8 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     private ArrayList<Viagem> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (ArrayList<Viagem>) in.readObject();
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
             return new ArrayList<>();
         }
     }

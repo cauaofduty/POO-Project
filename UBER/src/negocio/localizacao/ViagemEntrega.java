@@ -22,4 +22,16 @@ public class ViagemEntrega extends Viagem {
         if (pesoEntrega < 0) throw new IllegalArgumentException("Peso da entrega não pode ser negativo.");
         this.pesoEntrega = pesoEntrega;
     }
+
+    public String toString() {
+        return "Viagem {\nCliente: " + cliente.getNome() +
+                "\nOrigem: " + origem.getZona() + ", " + origem.getBairro() + ", " + origem.getCidade() +
+                "\nDestino: " + destino.getZona() + ", " + destino.getBairro() + ", " + destino.getCidade() +
+                "\nMotorista: " + motorista.getNome() +
+                "\nVeículo: " + motorista.getVeiculo() + ", " + "Tipo: " + motorista.getVeiculo().getClass() + ", " + "Placa: " + motorista.getVeiculo().getPlaca() +
+                "\nPeso da entrega: " + pesoEntrega + " kg" +
+                "\nValor: " + preco +
+                "\n}\n";
+    }
 }
+

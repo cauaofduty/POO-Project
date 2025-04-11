@@ -1,15 +1,20 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.FormaDePagamento;
-import negocio.localizacao.Cidade;
 import negocio.localizacao.Local;
+import negocio.localizacao.Viagem;
+import negocio.localizacao.Zona;
+import negocio.pessoas.Cliente;
 import negocio.pessoas.Pessoa;
 import negocio.servicos.Fachada;
+import negocio.servicos.GerenciadorViagens;
 import negocio.servicos.Util;
 import negocio.veiculos.Veiculo;
 
@@ -452,52 +457,253 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             System.out.println("Forma de pagamento pulada. Você pode adicionar uma forma de pagamento depois.");
         }
     }
-
-    /* static boolean menuLogado(Pessoa pessoa){
-        //mostra uma UI diferente para cada tipo de pessoa
-        if(pessoa instanceof Cliente){ 
-            //mostra UI-Cliente
-            
-            System.out.println("1- Solicitar viagem\n2- Ver histórico de viagens\n3- Alterar forma de pagamento\n4- Alterar dados pessoais\n5- Voltar ao menu principal");
-            int opcao = negocio.servicos.Util.entrada.nextInt();
-            negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
-            switch (opcao) {
-                case 1 -> {//solicitar viagem
-                    //chama a função de solicitar viagem da fachada, que retorna uma viagem ou null se não houver motorista disponível
-                    //se houver motorista, mostra o mapa e a rota, se não houver motorista, mostra mensagem de erro
-                    return true;//retorna ao menu logado
-                }
-                case 2 -> {//ver histórico de viagens
-                    //chama a função de ver histórico de viagens da fachada, que retorna o histórico de viagens do cliente
-                    return true;//retorna ao menu logado
-                }
-                case 3 -> {//alterar forma de pagamento
-                    //chama a função de alterar forma de pagamento da fachada, que altera a forma de pagamento do cliente
-                    return true;//retorna ao menu logado
-                }
-                case 4 -> {//alterar dados pessoais
-                    //chama a função de alterar dados pessoais da fachada, que altera os dados pessoais do cliente
-                    return true;//retorna ao menu logado
-                }
-                case 5 -> {
-                    limparTela();
-                    return false;
-                    //volta ao menu principal
-                }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+    private static void removerFormaPagamentoCliente(ArrayList<FormaDePagamento> formas) {
+        Fachada fachada = Fachada.getInstancia();
+    
+        if (formas.isEmpty()) {
+            System.out.println("Você não possui nenhuma forma de pagamento cadastrada.");
+            return;
+        }
+    
+        boolean continuar = true;
+    
+        while (continuar && !formas.isEmpty()) {
+            System.out.println("\nFormas de pagamento cadastradas:");
+            for (int i = 0; i < formas.size(); i++) {
+                System.out.println(i + " - " + formas.get(i));
             }
-            return true;//retorna ao menu logado
-        }else{//terminar gerenciador de mapa integrado com random que receba pessoa como parametro
-            //mostra UI-Motorista
+    
+            System.out.println("Digite o número da forma de pagamento que deseja remover:");
+            int indice = Util.entrada.nextInt();
+            Util.entrada.nextLine(); // limpar buffer
+    
+            try {
+                fachada.removerFormaPagamento(formas, indice);
+                System.out.println("Forma de pagamento removida com sucesso!");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+    
+            if (formas.isEmpty()) {
+                System.out.println("Todas as formas de pagamento foram removidas. Você poderá pagar pessoalmente.");
+                break;
+            }
+    
+            System.out.println("Deseja remover outra forma de pagamento? (s/n)");
+            String resposta = Util.entrada.nextLine();
+            if (!resposta.equalsIgnoreCase("s")) {
+                continuar = false;
+            }
+        }
+    }
+     static boolean menuLogado(Pessoa pessoa){
+        //mostra uma UI diferente para cada tipo de pessoa
+        Fachada fachada = Fachada.getInstancia();
+        if(pessoa instanceof Cliente cliente){ 
+            //mostra UI-Cliente
+            int opcao;
+            while(true) {
+                limparTela();
+                System.out.println("Olá " + cliente.getNome() + "! O que deseja fazer?");
+                System.out.println("1-Solicitar viagem\n2-Ver histórico de viagens\n3-Adicionar/remover forma de pagamento\n4-Voltar ao menu principal");
+                opcao = negocio.servicos.Util.entrada.nextInt();
+                negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                switch (opcao) {
+                    case 1 -> {//solicitar viagem
+                        Local origem = null, destino = null;
+                         // coleta dados para começar viagem
+                         System.out.println("Como somos estagiários na empresa, não pudemos utilizar uma API de mapas, então é preciso que digite manualmente sua localização.");
+                                        
+                         // Entrada da cidade
+                         System.out.println("Digite a cidade de origem:");
+                         String cidadeOrigem = negocio.servicos.Util.entrada.nextLine().trim();
+                     
+                         // Entrada do bairro
+                         System.out.println("Digite o bairro de origem:");
+                         String bairroOrigem = negocio.servicos.Util.entrada.nextLine().trim();
+                     
+                         // Entrada e validação da zona
+                         System.out.println("Digite a zona de origem (CENTRO, NORTE, SUL, LESTE, OESTE):");
+                         String zona = negocio.servicos.Util.entrada.nextLine().trim().toUpperCase();
+                         
+                         try {
+                             //valida zona 
+                            fachada.validarZona(zona); // método que converte string para enum com validação
+                            origem = fachada.criarLocal(cidadeOrigem, bairroOrigem, zona); // cria o local
+                         }catch (EntidadeNaoEncontradaException e) {
+                            System.out.println("Zona inválida. Tente novamente.");
+                            continue; // volta para o menu
+                         }
+                            //pede dados para destino
+                            System.out.println("Digite a cidade de destino:");
+                            String cidadeDestino = negocio.servicos.Util.entrada.nextLine().trim();
+                    
+                            System.out.println("Digite o bairro de destino:");
+                            String bairroDestino = negocio.servicos.Util.entrada.nextLine().trim();
+                    
+                            System.out.println("Digite a zona de destino (CENTRO, NORTE, SUL, LESTE, OESTE):");
+                            String zonaDestinoStr = negocio.servicos.Util.entrada.nextLine().trim().toUpperCase();
+
+                            try {
+                                fachada.validarZona(zonaDestinoStr);
+                                destino = fachada.criarLocal(cidadeDestino, bairroDestino, zonaDestinoStr);
+                            }catch(EntidadeNaoEncontradaException e) {
+                                System.out.println("Zona inválida. Tente novamente.");
+                                continue; // volta para o menu
+                            }
+                            //decide qual tipo de viagem solicitar
+                            System.out.println("Deseja solicitar uma viagem ou entrega de mercadoria? (1-Viagem, 2-Entrega)");
+                                int tipo = negocio.servicos.Util.entrada.nextInt();
+                                negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                while(tipo != 1 && tipo != 2) {
+                                    System.out.println("Opção inválida. Tente novamente:");
+                                    tipo = negocio.servicos.Util.entrada.nextInt();
+                                    negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                }
+                                //observar esse switch, não consigo prever seu comportamento
+                                 switch(tipo){
+                                    case 1->{
+                                        //viagem normal
+                                        try {
+                                            fachada.solicitarViagemCliente(origem, destino, cliente); //=> necessario cast
+                                        } catch (EntidadeNaoEncontradaException e) {
+                                            System.out.println("Erro: " + e.getMessage());
+                                        }
+                                        break;
+                                        //se deu certo, break
+                                    }
+                                    case 2->{
+                                        //viagem entrega
+                                        System.out.println("Digite o peso da mercadoria:");
+                                        double peso = negocio.servicos.Util.entrada.nextDouble();
+                                        negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                        try {
+                                            fachada.solicitarViagemEntrega(origem, destino, cliente, peso);
+                                        } catch (EntidadeNaoEncontradaException ex) {
+                                            System.out.println("Erro: " + ex.getMessage());
+                                        }   
+                                        //se deu certo, break
+                                        break;
+                                    }
+                                    default -> System.out.println("Opção inválida. Tente novamente.");
+                                }
+                                return true;//retorna ao menu logado
+                    } 
+                    case 2 -> {//ver histórico de viagens
+                        ArrayList<Viagem> viagens = fachada.listarViagensCliente(cliente.getIDPessoa());
+                        if (viagens.isEmpty()) {
+                            System.out.println("Nenhuma viagem encontrada.");
+                        } else {
+                            System.out.println("Histórico de viagens:");
+                            for (Viagem viagem : viagens) {
+                                System.out.println(viagem.toString());
+                            }
+                        }
+                        //chama a função de ver histórico de viagens da fachada, que retorna o histórico de viagens do cliente
+                        return true;//retorna ao menu logado
+                    } 
+                    case 3 -> {//alterar//adicionar forma de pagamento// Cadastrar ou remover formas de pagamento
+                            boolean editando = true;
+                        
+                            while (editando) {
+                                System.out.println("1 - Adicionar forma de pagamento");
+                                System.out.println("2 - Remover forma de pagamento");
+                                System.out.println("3 - Voltar");
+                        
+                                int opt = Util.entrada.nextInt();
+                                Util.entrada.nextLine();
+                        
+                                switch (opt) {
+                                    case 1 -> {
+                                        cadastrarFormasPagamentoCliente(cliente.getFormasPagamento());
+                                        return true;
+                                    }
+                                    case 2 -> {
+                                        ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
+                        
+                                        if (formas.isEmpty()) {
+                                            System.out.println("Você não possui nenhuma forma de pagamento cadastrada.");
+                                            break;
+                                        }
+                        
+                                        System.out.println("\nSuas formas de pagamento:");
+                                        for (int i = 0; i < formas.size(); i++) {
+                                            System.out.println(i +  " - " + formas.get(i));
+                                        }
+                        
+                                        System.out.println("Digite o número da forma de pagamento que deseja remover:");
+                                        int indice = Util.entrada.nextInt();
+                                        Util.entrada.nextLine();
+                        
+                                        try {
+                                            fachada.removerFormaPagamento(formas, indice);
+                                            System.out.println("Forma de pagamento removida com sucesso.");
+                                        } catch (IllegalArgumentException e) {
+                                            System.out.println("Erro: " + e.getMessage());
+                                        }
+                                    }
+                                    case 3 -> {
+                                        editando = false; // Volta para o menu principal
+                                    }
+                                    default -> {
+                                        System.out.println("Opção inválida. Tente novamente.");
+                                    }
+                                }
+                            }
+                        return true;//retorna ao menu logado
+                    }
+                    case 4 -> {
+                        //sair
+                        limparTela();
+                        return false;
+                        //volta ao menu principal
+                    }
+                    default -> System.out.println("Opção inválida. Tente novamente.");
+                }
+
+                //retorna ao menu logado
+            }
+        //mostra UI-Motorista
+        }else{
             System.out.println("Olá " + pessoa.getNome() + "! O que deseja fazer?");
-            System.out.println("1- Aceitar corrida\n2- Ver histórico de viagens\n3- Alterar dados pessoais\n4- Voltar ao menu principal");
+            System.out.println("1- Aceitar corrida\n2- Ver histórico de viagens\n3- Trocar veículo\n4- Voltar ao menu principal");
             int opcao = negocio.servicos.Util.entrada.nextInt();
-            negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+            // Limpar o buffer do scanner
+            negocio.servicos.Util.entrada.nextLine();
             switch (opcao) {
-                case 1 -> {//aceitar corrida
-                    //chama a função de aceitar corrida da fachada, que retorna uma viagem ou null se não houver corrida disponível
-                    //se houver corrida, mostra o mapa e a rota, se não houver corrida, mostra mensagem de erro
-                    return true;//retorna ao menu logado
+                case 1 -> {//aceitar corrida // Mostrar clientes online e aceitar corrida
+                    ArrayList<Cliente> clientesOnline = fachada.();
+                    if (clientesOnline.isEmpty()) {
+                        System.out.println("Nenhum cliente está online no momento.");
+                        break;
+                    }
+
+                    System.out.println("\nClientes online disponíveis para corrida:");
+                    for (int i = 0; i < clientesOnline.size(); i++) {
+                        Cliente c = clientesOnline.get(i);
+                        System.out.println(i + " - " + c.getNome() + " | Local: " + c.getLocalAtual());
+                    }
+
+                    System.out.println("Digite o número do cliente que deseja aceitar:");
+                    int indice = Util.entrada.nextInt();
+                    Util.entrada.nextLine();
+
+                    if (indice < 0 || indice >= clientesOnline.size()) {
+                        System.out.println("Índice inválido. Nenhum cliente aceito.");
+                        break;
+                    }
+
+                    Cliente clienteSelecionado = clientesOnline.get(indice);
+
+                    // Gerar destino aleatório
+                    Local destino = GerenciadorViagens.gerarLocalAleatorio(); // ou como for sua lógica
+
+                    try {
+                        fachada.criarViagem(clienteSelecionado, pessoa, destino); // precisa existir
+                        System.out.println("Corrida com " + clienteSelecionado.getNome() + " aceita com sucesso!");
+                    } catch (Exception e) {
+                        System.out.println("Erro ao aceitar corrida: " + e.getMessage());
+                    }
                 }
                 case 2 -> {//ver histórico de viagens
                     //chama a função de ver histórico de viagens da fachada, que retorna o histórico de viagens do motorista
@@ -517,8 +723,8 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             return true;//retorna ao menu logado
         }
 
-    } */
-    
+    } 
+
     
 
     public static void esperar1200(){
@@ -538,6 +744,6 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         esperar1200();
         System.out.println("Bem vindo ao sistema de transporte H&C!");
     }
-}    
+} 
 
    

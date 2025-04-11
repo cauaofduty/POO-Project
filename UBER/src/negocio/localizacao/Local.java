@@ -1,33 +1,29 @@
 package negocio.localizacao;
 
-import java.io.Serializable;
-
-public class Local implements Serializable {
-    private static final long serialVersionUID = 400000L;
-    private final Cidade cidade;
-    private final Bairro bairro;
+public class Local {
+    private final String cidade;
+    private final String bairro;
     private final Zona zona;
     
 
     //construtor completo
-    public Local (Cidade cidade, Bairro bairro, Zona zona) {
+    public Local(String cidade, String bairro, Zona zona) {
         this.cidade = cidade;
         this.bairro = bairro;
         this.zona = zona;
     }
 
 
-    //construtor para cadastro (so com cidade)
-    public Local(Cidade cidade) {
+    //construtor cadastro (so com cidade)
+    public Local(String cidade) {
         this(cidade, null, null);
     }
     
-
-    public Cidade getCidade() {
+    
+    public String getCidade() {
         return cidade;
     }
-
-    public Bairro getBairro() {
+    public String getBairro() {
         return bairro;
     }
 
@@ -35,3 +31,4 @@ public class Local implements Serializable {
         return zona;
     }
 }
+

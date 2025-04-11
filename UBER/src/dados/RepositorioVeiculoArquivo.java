@@ -46,7 +46,8 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
     private ArrayList<Veiculo> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (ArrayList<Veiculo>) in.readObject();
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
             return new ArrayList<>();
         }
     }
