@@ -21,15 +21,16 @@ public class PessoasRandom {
     private static final Random r = new Random();
     private final ArrayList<Pessoa> pessoasAleatorias;//para armazenar pessoas
     
+    public PessoasRandom(Pessoa pessoa) {//gera já no construtor para o gerenciador de locais
+        this.pessoasAleatorias = gerarPessoasPara(pessoa);
+    }
 
     public static int geraInteirosRandom(int limMin, int limMax){//gera inteiros limitados para numero de pessoas
         int valor = r.nextInt(limMax - limMin) + limMin;
         return valor;
     }
 
-    public PessoasRandom(Pessoa pessoa) {//gera já nop construtor para o gerenciador de locais
-        this.pessoasAleatorias = gerarPessoasPara(pessoa);
-    }
+   
 
     public final ArrayList<Pessoa> gerarPessoasPara(Pessoa pessoa){
        
@@ -48,7 +49,9 @@ public class PessoasRandom {
                 Local local = gerarLocal(pessoa);
                 Veiculo veiculo = gerarVeiculo(veiculos);
                 veiculos.add(veiculo);
-                pessoasAleatorias.add(new Motorista(0, veiculo, IDPessoa, idade, local, nome));
+                boolean disponivel = true;
+                double saldo = 0.0;
+                pessoasAleatorias.add(new Motorista(saldo, veiculo, IDPessoa,disponivel, idade, local, nome));
             }
         }else{//ESSE PROJETO E UM FILHO PRA MIM
             for(int i = 0; i < indice; i++){
@@ -103,7 +106,7 @@ public class PessoasRandom {
     private static Local gerarLocal(Pessoa pessoa){
         //setando valores estaticos como "base de dados"
         //pega nome da cidade da pessoa online
-        String cidadePessoaAtual = pessoa.getLocalAtual().getCidade().getNome();
+        String cidade = pessoa.getLocalAtual().getCidade();
         String[] bairrosRandom = {
             "Centro", "Cohab I", "Cohab II", "Boa Vista", "São José",
             "Heliópolis", "Magano", "Aluísio Pinto", "Dom Thiago Postma", "Francisco Figueira",
@@ -116,13 +119,8 @@ public class PessoasRandom {
         int indexZona = r.nextInt(zonas.length);
        
         //criando atributos
-        ArrayList<Bairro> bairros = new ArrayList<>();
-        String nomeBairro = bairrosRandom[indexBairro];
-
-        //instanciando classes
+        String bairro = bairrosRandom[indexBairro];
         Zona zona = zonas[indexZona];
-        Bairro bairro = new Bairro(nomeBairro, zona);
-        Cidade cidade = new Cidade(cidadePessoaAtual, bairros, bairro);
         Local local = new Local(cidade, bairro, zona);
         return local;
     }
@@ -233,6 +231,11 @@ public class PessoasRandom {
         if(veiculos.stream().anyMatch(v -> v.getPlaca().equalsIgnoreCase(placa))) //caso placa ja exista
             return gerarPlacaAleatoria(veiculos);
         return placa;
+    }
+    public Viagem gerarViagem(Motorista motorista, Local localAtual, Local localDestino){
+        
+        //cria viagem com os locais e preco gerados
+        return new Viagem(localAtual, localDestino, pessoa, preco);
     }
 
     public ArrayList<Pessoa> getPessoasAleatorias() {

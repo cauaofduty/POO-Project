@@ -78,6 +78,18 @@ public class GerenciadorPessoa {
         return pix;
     }
 
+    public void removerFormaPagamento(ArrayList<FormaDePagamento> formas, int indice) {
+        if (formas == null || formas.isEmpty()) {
+            throw new IllegalArgumentException("Não há formas de pagamento cadastradas.");
+        }
+    
+        if (indice < 0 || indice >= formas.size()) {
+            throw new IllegalArgumentException("Índice inválido. Nenhuma forma de pagamento removida.");
+        }
+    
+        formas.remove(indice);
+    }
+
     public String formatarCartao(String numeroCartao) {
         //para adicionar os espacos manualmente para evitar mais complexidade
         return numeroCartao.substring(0, 4) + " " +

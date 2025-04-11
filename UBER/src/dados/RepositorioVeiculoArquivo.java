@@ -3,7 +3,6 @@ package dados;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
@@ -14,11 +13,13 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         this.veiculos = carregarArquivo();
     }
 
+    @Override
     public void adicionar(Veiculo veiculo) {
         veiculos.add(veiculo);
         salvarArquivo();
     }
 
+    @Override
     public Veiculo buscarPorPlaca(String placa) { //removi o throws pois estava dando conflito com outra exception
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
@@ -28,7 +29,8 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         return null;
     }
 
-    public List<Veiculo> listarVeiculos() {//apenas para o adm, o motorista so precisa ver seus veiculos
+    @Override
+    public ArrayList<Veiculo> listarVeiculos() {//apenas para o adm, o motorista so precisa ver seus veiculos
         return new ArrayList<>(veiculos);
     }
 
@@ -42,9 +44,9 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
 
 
     @SuppressWarnings("unchecked")
-    private List<Veiculo> carregarArquivo() {
+    private ArrayList<Veiculo> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (List<Veiculo>) in.readObject();
+            return (ArrayList<Veiculo>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
             return new ArrayList<>();

@@ -1,7 +1,7 @@
 package negocio.servicos;
 import dados.IRepositorioViagem;
 import dados.RepositorioViagemArquivo;
-import java.util.List;
+import java.util.ArrayList;
 import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.localizacao.CalculadorPreco;
 import negocio.localizacao.Local;
@@ -14,7 +14,7 @@ import negocio.pessoas.Motorista;
 import negocio.veiculos.Veiculo;
 
 //como cumprem a mesma função e uma é intrinsecamente ligada a outra
-//locais serão gerenciados aqui (além que não precisam ser persistidos exclusivamente)
+//locais serão gerenciados aqui (além que não precisam ser persistidos "exclusivamente", com paga,mentos sofrendo do mesmo caso)
 public class GerenciadorViagens {
     private final IRepositorioViagem<Viagem> repoViagem;
     private final GerenciadorPessoa pessoaManager;
@@ -93,11 +93,11 @@ public class GerenciadorViagens {
         return CalculadorPreco.calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
     }
 
-    public List<Viagem> listarViagensCliente(int idCliente) {
+    public ArrayList<Viagem> listarViagensCliente(String idCliente) {
         return repoViagem.listarViagensCliente(idCliente);
     }
 
-    public List<Viagem> listarViagensMotorista(int idMotorista) {
+    public ArrayList<Viagem> listarViagensMotorista(String idMotorista) {
         return repoViagem.listarViagensMotorista(idMotorista);
     }
 

@@ -103,11 +103,11 @@ public class Fachada {
         viagemManager.adicionarViagemEntrega(origem, destino, cliente,motorista, preco, pesoEntrega);
     }
 
-    public List<Viagem> listarViagensCliente(int idCliente) {
+    public ArrayList<Viagem> listarViagensCliente(String idCliente) {
         return viagemManager.listarViagensCliente(idCliente);
     }
 
-    public List<Viagem> listarViagensMotorista(int idMotorista) {
+    public ArrayList<Viagem> listarViagensMotorista(String idMotorista) {
         return viagemManager.listarViagensMotorista(idMotorista);
     }
 
@@ -141,6 +141,10 @@ public class Fachada {
     }
     public Pix cadastrarPix(ArrayList<FormaDePagamento> formas,String chave, double saldoPix) throws EntidadeJaExisteException {
         return pessoaManager.cadastrarPix(formas, chave, saldoPix);
+    }
+
+    public void removerFormaPagamento(ArrayList<FormaDePagamento> formas, int indice) {
+        pessoaManager.removerFormaPagamento(formas, indice);
     }
 
 }
