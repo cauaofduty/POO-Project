@@ -1,13 +1,10 @@
 package dados;
 
 import java.util.List;
-
-import negocio.pessoas.Cliente;
-import negocio.pessoas.Motorista;
-import negocio.pessoas.Pessoa;
+import negocio.pessoas.*;
 
 public interface IRepositorioPessoa <P extends Pessoa> {
-    void adicionar(Pessoa pessoa);//mesmo efeito
+    void adicionar(Pessoa pessoa);
     Pessoa buscarPorID(String IDPessoa);
     List<Cliente> listarClientes();
     List<Motorista> listarMotoristas();

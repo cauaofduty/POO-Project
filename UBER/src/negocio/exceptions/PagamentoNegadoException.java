@@ -1,4 +1,4 @@
-package negocio.financeiro;
+package negocio.exceptions;
 
 public class PagamentoNegadoException extends Exception{
     private final String tipo;
@@ -7,8 +7,8 @@ public class PagamentoNegadoException extends Exception{
         super(message);
         this.tipo = tipo;
     }
+
     public String getTipo() {
         return tipo;
     }
-
 }

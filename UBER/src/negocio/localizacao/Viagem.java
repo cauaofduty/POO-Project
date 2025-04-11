@@ -10,9 +10,8 @@ public abstract class Viagem implements Serializable {
     protected final Local destino;
     protected final Cliente cliente;
     protected final Motorista motorista;
-    protected  final double preco;//o calculo do preco vai ser colocado aqui?
-    // Talvez fosse útil criar um campo com status da viagem, com um enum (Pendente, Em andamento, Concluída, Cancelada) (Hugo)
-    //como elas são concluidas em tempo de execção, creio que não seja necessário 
+    protected  final double preco;
+
   
     public Viagem(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
         this.origem = origem;
@@ -21,17 +20,21 @@ public abstract class Viagem implements Serializable {
         this.motorista = motorista;
         this.preco = preco;
     }
+
+    
     public Local getOrigem() {
         return origem;
     }
+
     public Local getDestino() {
         return destino;
     }
+
     public Cliente getCliente() {
         return cliente;
     }
+
     public Motorista getMotorista() {
         return motorista;
     }
-    
 }

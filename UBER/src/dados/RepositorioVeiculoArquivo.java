@@ -2,25 +2,24 @@ package dados;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
     private final String arquivo = "veiculos.bin";
-    private final List<Veiculo> veiculos;
+    private final ArrayList<Veiculo> veiculos;
 
     public RepositorioVeiculoArquivo() {
         this.veiculos = carregarArquivo();
     }
 
-    @Override
+    // Funções declaradas na classe IRepositorioVeiculo
+
     public void adicionar(Veiculo veiculo) {
         veiculos.add(veiculo);
         salvarArquivo();
     }
 
-    @Override
-    public Veiculo buscarPorPlaca(String placa) { //removi o throws pois estava dando conflito com outra exception
+    public Veiculo buscarPorPlaca(String placa) {
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
                 return v;
@@ -29,10 +28,11 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         return null;
     }
 
-    @Override
-    public ArrayList<Veiculo> listarVeiculos() {//apenas para o adm, o motorista so precisa ver seus veiculos
+    public ArrayList<Veiculo> listarVeiculos() {
         return new ArrayList<>(veiculos);
     }
+
+    // Funções para persistência de dados
 
     private void salvarArquivo() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(arquivo))) {
@@ -41,7 +41,6 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
         }
     }
-
 
     @SuppressWarnings("unchecked")
     private ArrayList<Veiculo> carregarArquivo() {
