@@ -1,6 +1,8 @@
 package negocio.localizacao;
+import java.io.Serializable;
 
-public class Bairro { 
+public class Bairro implements Serializable {
+    private static final long serialVersionUID = 400002L;
     private final String nome;
     private final Zona zona;
     private final Zona[] zonas = Zona.values();//constante

@@ -1,6 +1,7 @@
 package dados;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import negocio.localizacao.Viagem;
+import negocio.pessoas.Pessoa;
 
 public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     private final String arquivo = "viagens.bin";
@@ -51,11 +53,10 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
     }
   
     @SuppressWarnings("unchecked")
-    private List<Viagem> carregarArquivo() {
+    private ArrayList<Viagem> carregarArquivo() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (List<Viagem>) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
+            return (ArrayList<Viagem>) in.readObject();
+        } catch (Exception e) {
             return new ArrayList<>();
         }
     }

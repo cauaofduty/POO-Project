@@ -1,8 +1,10 @@
 package negocio.localizacao;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cidade {
+public class Cidade implements Serializable {
+    private static final long serialVersionUID = 400001L;
     private final String nome;
     private final Bairro bairro;//bairro da localizacao atual
     private final ArrayList<Bairro> bairros;//bairros da cidade

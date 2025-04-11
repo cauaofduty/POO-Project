@@ -1,8 +1,11 @@
 package negocio.localizacao;
+import java.io.Serializable;
+
 import negocio.veiculos.Veiculo;
 
-public class CalculadorPreco {
-
+public class CalculadorPreco implements Serializable {
+    private static final long serialVersionUID = 400003L;
+    
     public static double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
         if (origem == null || destino == null || veiculo == null) {
             throw new IllegalArgumentException("Origem, destino ou veículo não podem ser nulos.");
