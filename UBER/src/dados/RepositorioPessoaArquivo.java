@@ -14,11 +14,13 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
 
     // Funções declaradas na classe IRepositorioPessoa
 
+    @Override
     public void adicionar(Pessoa pessoa) {
         pessoas.add(pessoa);
         salvarArquivo();
     }
 
+    @Override
     public Pessoa buscarPorID(String IDPessoa) {
         for (Pessoa p : pessoas) {
             if (p.getIDPessoa().equals(IDPessoa)) {
@@ -28,6 +30,7 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         return null;
     }
 
+    @Override
     public ArrayList<Cliente> listarClientes() {
         ArrayList<Cliente> clientes = new ArrayList<>();
         for (Pessoa p : pessoas) {
@@ -39,6 +42,7 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         return clientes;
     }
 
+    @Override
     public ArrayList<Motorista> listarMotoristas() {
         ArrayList<Motorista> motoristas = new ArrayList<>();
         for (Pessoa p : pessoas) {

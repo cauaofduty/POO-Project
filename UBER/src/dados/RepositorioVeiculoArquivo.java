@@ -14,11 +14,13 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
 
     // Funções declaradas na classe IRepositorioVeiculo
 
+    @Override
     public void adicionar(Veiculo veiculo) {
         veiculos.add(veiculo);
         salvarArquivo();
     }
 
+    @Override
     public Veiculo buscarPorPlaca(String placa) {
         for (Veiculo v : veiculos) {
             if (v.getPlaca().equalsIgnoreCase(placa)) {
@@ -27,7 +29,8 @@ public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {
         }
         return null;
     }
-
+    
+    @Override
     public ArrayList<Veiculo> listarVeiculos() {
         return new ArrayList<>(veiculos);
     }
