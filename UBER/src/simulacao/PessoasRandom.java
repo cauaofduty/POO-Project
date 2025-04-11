@@ -8,14 +8,8 @@ import negocio.financeiro.Dinheiro;
 import negocio.financeiro.FormaDePagamento;
 import negocio.financeiro.Pix;
 import negocio.localizacao.*;
-import negocio.pessoas.Cliente;
-import negocio.pessoas.Motorista;
-import negocio.pessoas.Pessoa;
-import negocio.veiculos.Economico;
-import negocio.veiculos.Luxo;
-import negocio.veiculos.Motocicleta;
-import negocio.veiculos.SUV;
-import negocio.veiculos.Veiculo;
+import negocio.pessoas.*;
+import negocio.veiculos.*;
 
 public class PessoasRandom {
     private static final Random r = new Random();
