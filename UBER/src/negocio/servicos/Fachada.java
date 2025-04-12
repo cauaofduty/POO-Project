@@ -136,8 +136,8 @@ public class Fachada {
         pessoaManager.gerarCodigoRecuperacao(IDPessoa);
     }
 
-    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
-        return pessoaManager.cadastrarCartao(formas,numero, limite);
+    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas, String numero, double limite) throws EntidadeJaExisteException {
+        return pessoaManager.cadastrarCartao(formas, numero, limite);
     }
     public Pix cadastrarPix(ArrayList<FormaDePagamento> formas,String chave, double saldoPix) throws EntidadeJaExisteException {
         return pessoaManager.cadastrarPix(formas, chave, saldoPix);
@@ -147,4 +147,8 @@ public class Fachada {
         pessoaManager.removerFormaPagamento(formas, indice);
     }
 
+    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas, FormaDePagamento forma) throws EntidadeJaExisteException {
+        pessoaManager.adicionarFormaPagamento(formas, forma);
+    }
+    
 }

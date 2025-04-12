@@ -9,6 +9,7 @@ import negocio.localizacao.Local;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.servicos.GerenciadorViagens;
+import negocio.localizacao.Viagem; 
 
 public class SimuladorViagens {
     private final GerenciadorViagens viagemManager;
@@ -59,7 +60,7 @@ public class SimuladorViagens {
     motorista.setSaldoMotorista(motorista.getSaldoMotorista() + preco);
 }
 
-    public void simularViagemCliente(Cliente cliente, Motorista motorista, Local origem, Local destino) throws Exception {
+    public Viagem simularViagemCliente(Cliente cliente, Motorista motorista, Local origem, Local destino) throws Exception {
         double preco = viagemManager.calcularPrecoViagem(origem, destino, motorista.getVeiculo());
         ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
         boolean pagamentoRealizado = false;
@@ -91,10 +92,12 @@ public class SimuladorViagens {
             throw new Exception("Nenhuma forma de pagamento válida. Pagamento será feito em dinheiro.");
         }
         boolean simulacao = true;
-        viagemManager.adicionarViagemCliente(origem, destino, cliente, motorista, preco, simulacao);
+        Viagem viagem = viagemManager.adicionarViagemCliente(origem, destino, cliente, motorista, preco, simulacao);
         motorista.setSaldoMotorista(motorista.getSaldoMotorista() + preco);
+        return viagem;
     }
-    public void simularViagemEntrega(Cliente cliente, Motorista motorista, Local origem, Local destino, double peso) throws Exception {
+
+    public Viagem simularViagemEntrega(Cliente cliente, Motorista motorista, Local origem, Local destino, double peso) throws Exception {
         double preco = viagemManager.calcularPrecoEntrega(origem, destino, motorista.getVeiculo(), peso);
         ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
         boolean pagamentoRealizado = false;
@@ -133,8 +136,9 @@ public class SimuladorViagens {
         }
 
             boolean simulacao = true;
-            viagemManager.adicionarViagemEntrega(origem, destino, cliente, motorista, preco, peso, simulacao);
+            Viagem viagem = viagemManager.adicionarViagemEntrega(origem, destino, cliente, motorista, preco, peso, simulacao);
             motorista.setSaldoMotorista(motorista.getSaldoMotorista() + preco);
-        
+            return viagem;
+
     }
 }

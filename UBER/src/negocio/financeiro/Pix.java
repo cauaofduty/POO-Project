@@ -1,12 +1,11 @@
 package negocio.financeiro;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
-public class Pix implements FormaDePagamento, Serializable {
+public class Pix extends FormaDePagamento {
     private static final long serialVersionUID = 400003L;
     private final ArrayList<String> chaves;
     private double saldoPix;
@@ -56,6 +55,11 @@ public class Pix implements FormaDePagamento, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(chaves);
+    }
+
+    @Override
+    public String toString() {
+        return "Pix: " + chaves;
     }
 
     public void addChave(String chave) {

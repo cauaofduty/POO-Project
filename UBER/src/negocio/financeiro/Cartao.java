@@ -1,11 +1,10 @@
 package negocio.financeiro;
 
-import java.io.Serializable;
 import java.util.Objects;
 import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
-public class Cartao implements FormaDePagamento, Serializable {
+public class Cartao extends FormaDePagamento {
     private static final long serialVersionUID = 400002L;
     private double limiteCartao; 
     private final String numeroCartao;
@@ -46,6 +45,11 @@ public class Cartao implements FormaDePagamento, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(numeroCartao);
+    }
+
+    @Override
+    public String toString() {
+        return "Cartão (" + numeroCartao + ") - Limite: R$" + String.format("%.2f", limiteCartao);
     }
 
     public double getLimiteCartao() {

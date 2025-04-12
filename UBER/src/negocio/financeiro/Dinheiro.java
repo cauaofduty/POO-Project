@@ -1,10 +1,9 @@
 package negocio.financeiro;
 
-import java.io.Serializable;
 import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
-public class Dinheiro implements FormaDePagamento, Serializable {
+public class Dinheiro extends FormaDePagamento{
     private static final long serialVersionUID = 400001L;
     private double saldo;
     private final String tipo = "Dinheiro";
