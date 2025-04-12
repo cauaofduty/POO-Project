@@ -22,7 +22,7 @@ public  class Motocicleta extends Veiculo {
 
     @Override
     public String toString() {
-        return "Motocicleta {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
+        return super.toString();
     }
 
 }

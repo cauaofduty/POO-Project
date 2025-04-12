@@ -21,7 +21,7 @@ public class Luxo extends Veiculo {
     }
     @Override
     public String toString() {
-        return "Luxo {" + super.toString()  + this.getTaxaViagem() +"}";
+        return super.toString();
     }
     
 }

@@ -1,13 +1,13 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
 import negocio.exceptions.SenhaIncorretaException;
+import negocio.financeiro.Cartao;
 import negocio.financeiro.FormaDePagamento;
+import negocio.financeiro.Pix;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
 import negocio.pessoas.Cliente;
@@ -15,10 +15,8 @@ import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
 import negocio.servicos.Fachada;
 import negocio.servicos.Util;
-import negocio.veiculos.Veiculo;
-import negocio.financeiro.Cartao; // Added import for Cartao
-import negocio.financeiro.Pix; // Added import for Pix
-import simulacao.PessoasRandom;
+import negocio.veiculos.Veiculo; // Added import for Cartao
+import simulacao.PessoasRandom; // Added import for Pix
 import simulacao.SimuladorViagens;
 
 class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
@@ -105,7 +103,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     
         try {
             Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
-            System.out.println("Bem-vindo de volta " + pessoa.getNome() + "! Digite sua senha:");
+            System.out.println("\nBem-vindo de volta " + pessoa.getNome() + "! Digite sua senha:");
             String senha = Util.entrada.nextLine();
     
             try {
@@ -120,7 +118,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                 return true;
     
             } catch (SenhaIncorretaException e) {
-                System.out.println("Senha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
+                System.out.println("\nSenha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
                 String resposta = Util.entrada.nextLine();
     
                 if (resposta.equalsIgnoreCase("1")) {
@@ -132,7 +130,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             }
     
         } catch (EntidadeNaoEncontradaException e) {
-            System.out.println("ID não encontrado. Deseja cadastrar-se? (1-Sim, Qualquer tecla-Não)");
+            System.out.println("\nID não encontrado. Deseja cadastrar-se? (1-Sim, Qualquer tecla-Não)");
             String resposta = Util.entrada.nextLine();
     
             if (resposta.equalsIgnoreCase("1")) {
@@ -244,11 +242,11 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                     etapa++;
                 }
                 case 2 -> {// idade (retorna exception caso menor de idade)
-                    System.out.println("Qual sua idade? (18 anos ou mais)");
-                    idade = Util.entrada.nextInt();
-                    Util.entrada.nextLine();
+                    System.out.println("\nQual sua idade? (18 anos ou mais)");
                     try {
-                        if (idade < 18) throw new IllegalArgumentException("Digite uma idade válida.");
+                        idade = Util.entrada.nextInt();
+                        Util.entrada.nextLine();
+                        if (idade < 18) throw new IllegalArgumentException("\nDigite uma idade válida.");
                         //caso idade seja valida, incrementa etapa
                         etapa++;
                     } catch (IllegalArgumentException e) {
@@ -257,35 +255,34 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                     }
                 }
                 case 3 -> {// criação e confirmação de senha
-                    System.out.println("Digite sua senha:");
+                    System.out.println("\nDigite sua senha:");
                     senha = Util.entrada.nextLine();
-                     if (senha.length() < 8) {
+                    System.out.println("\nConfirme sua senha:");
+                    confirmarSenha = Util.entrada.nextLine();
+                    if (!senha.equals(confirmarSenha)) {
+                        System.out.println("As senhas não coincidem.");
+                    } else if (senha.length() < 8) {
                         System.out.println("A senha deve ter pelo menos 8 caracteres.");
-                    }else {
-                        System.out.println("Confirme sua senha:");
-                        confirmarSenha = Util.entrada.nextLine();
-                        if (!senha.equals(confirmarSenha)) {
-                            System.out.println("As senhas não coincidem.");
-                        } else{
-                            etapa++;
-                        }
+                    } else {
+                        etapa++;
                     }
                 }
                 case 4 -> {//nome da cidade
-                    System.out.println("Digite o nome da sua cidade:");
+                    System.out.println("\nDigite o nome da sua cidade:");
                     cidade = Util.entrada.nextLine();
                     etapa++;
                 }
                 case 5 -> {
                     //decisão de cadastro
-                    System.out.println("Como quer se cadastrar?");
+                    System.out.println("\nComo quer se cadastrar?");
                     System.out.println("1 - Motorista\n2 - Cliente");
+                    System.out.print("Opção: ");
                     
                     tipoCadastro = Util.entrada.nextInt();
                     Util.entrada.nextLine();
                     
                     while(tipoCadastro != 1 && tipoCadastro != 2) {
-                        System.out.println("Opção inválida. Tente novamente:");
+                        System.out.println("\nOpção inválida. Tente novamente:");
                         tipoCadastro = Util.entrada.nextInt();
                     }
                     etapa++;
@@ -301,7 +298,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                         if(veiculo != null){
                             try {
                                 pessoa = fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senha);
-                                System.out.println("Motorista cadastrado com sucesso!");
+                                System.out.println("\nMotorista cadastrado com sucesso!");
                                 return pessoa;
                             } catch (EntidadeJaExisteException e ) {//nao ira cair nesse cath mas por segurança esta ai
                                 System.out.println("Erro: " + e.getMessage());
@@ -428,35 +425,35 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     }
     public static Veiculo criarVeiculo() {
         Fachada fachada = Fachada.getInstancia();
-        System.out.println("Digite a placa do veículo:");
+        System.out.println("\nDigite a placa do veículo:");
         String placa = Util.entrada.nextLine();
         while (placa.length() != 7) {
-            System.out.println("Placa inválida. Digite novamente:");
+            System.out.println("\nPlaca inválida. Digite novamente:");
             placa = Util.entrada.nextLine();
         }
     
         // Se a placa já existir, retorna null para o menu tratar
         if (fachada.buscarVeiculo(placa) != null) {
-            System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente.");
+            System.out.println("\nJá existe um veículo cadastrado com essa placa. Tente novamente.");
             return null;
         }
     
-        System.out.println("Digite a cor do veículo:");
+        System.out.println("\nDigite a cor do veículo:");
         String cor = Util.entrada.nextLine();
     
-        System.out.println("Digite o ano do veículo:");
+        System.out.println("\nDigite o ano do veículo:");
         int ano = Util.entrada.nextInt();
         Util.entrada.nextLine();
     
-        System.out.println("Digite o modelo:");
+        System.out.println("\nDigite o modelo:");
         String modelo = Util.entrada.nextLine();
     
-        System.out.println("Tipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta):");
+        System.out.println("\nTipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta):");
         int tipoVeiculo = Util.entrada.nextInt();
         Util.entrada.nextLine();
     
         while (tipoVeiculo < 1 || tipoVeiculo > 4) {
-            System.out.println("Tipo inválido. Tente novamente:");
+            System.out.println("\nTipo inválido. Tente novamente:");
             tipoVeiculo = Util.entrada.nextInt();
             Util.entrada.nextLine();
         }
@@ -730,6 +727,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             case Motorista motorista -> {
                 System.out.println("Olá " + motorista.getNome() + "! O que deseja fazer?");
                 System.out.println("1- Aceitar corrida\n2- Ver histórico de viagens\n3- Trocar veículo\n4- Voltar ao menu principal");
+                System.out.print("Opção: ");
                 int opcao = negocio.servicos.Util.entrada.nextInt();
                 // Limpar o buffer do scanner
                 negocio.servicos.Util.entrada.nextLine();
@@ -785,13 +783,13 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                         System.out.println("Digite qualquer tecla para voltar ao menu");
                         Util.entrada.nextLine();
                         limparTela();
-                        return true;//retorna ao menu logado
+                        break; //retorna ao menu logado
                     }
                     case 3 -> { // trocar veículo
                         System.out.println("\nVeículo atual:");
                         System.out.println(motorista.getVeiculo());
                         
-                        System.out.println("Deseja trocar de veículo? (1 - Sim | Qualquer tecla - Não)");
+                        System.out.println("\nDeseja trocar de veículo? (1 - Sim | Qualquer tecla - Não)");
                         String opt = Util.entrada.nextLine();
                         
                         if (!opt.equals("1")) {
@@ -804,10 +802,12 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                             
                             if (novoVeiculo != null) {
                                 motorista.setVeiculo(novoVeiculo);
-                                System.out.println("Veículo alterado com sucesso!");
+                                System.out.println("\nVeículo alterado com sucesso!\n");
                                 trocando = false;
+                                esperar1200();
+                                limparTela();
                             } else {
-                                System.out.println("Erro ao cadastrar esse veículo. Deseja tentar novamente? (1 - Sim | Qualquer tecla - Não)");
+                                System.out.println("\nErro ao cadastrar esse veículo. Deseja tentar novamente? (1 - Sim | Qualquer tecla - Não)");
                                 String resp = Util.entrada.nextLine();
                                 if (!resp.equals("1")) {
                                     trocando = false;
