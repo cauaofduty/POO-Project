@@ -66,9 +66,10 @@ public class GerenciadorPessoa {
 
     //demais funções subordinadas:
 
-    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
+    public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas, String numero, double limite) throws EntidadeJaExisteException {
         Cartao cartao = new Cartao(limite, numero); 
         if (formas.contains(cartao)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
+        formas.add(cartao);
         return cartao;
     }
     
@@ -90,6 +91,13 @@ public class GerenciadorPessoa {
         }
     
         formas.remove(indice);
+    }
+
+    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas, FormaDePagamento forma) throws EntidadeJaExisteException {
+        if (formas.contains(forma)) {
+            throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
+        }
+        formas.add(forma);
     }
 
     public String formatarCartao(String numeroCartao) {

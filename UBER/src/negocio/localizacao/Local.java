@@ -1,13 +1,16 @@
 package negocio.localizacao;
 
-public class Local {
+import java.io.Serializable;
+
+public class Local implements Serializable {
+    private static final long serialVersionUID = 300003L;
     private final String cidade;
     private final String bairro;
     private final Zona zona;
     
 
     //construtor completo
-    public Local(String cidade, String bairro, Zona zona) {
+    public Local (String cidade, String bairro, Zona zona) {
         this.cidade = cidade;
         this.bairro = bairro;
         this.zona = zona;

@@ -39,6 +39,10 @@ public abstract class Viagem implements Serializable {
         return motorista;
     }
 
+    public double getPreco() {
+        return preco;
+    }
+
     public boolean isIsSimulacao() {
         return isSimulacao;
     }

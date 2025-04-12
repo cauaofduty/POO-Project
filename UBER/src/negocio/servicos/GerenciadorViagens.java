@@ -48,14 +48,16 @@ public class GerenciadorViagens {
     }
     
 
-    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, boolean simulacao) {
+    public Viagem adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, boolean simulacao) {
         ViagemCliente viagem = new ViagemCliente(origem, destino, cliente, motorista, preco, simulacao);
         repoViagem.adicionar(viagem);
+        return viagem;
     }
 
-    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
+    public Viagem adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
         ViagemEntrega viagem = new ViagemEntrega(origem, destino, cliente, motorista, preco, pesoEntrega, simulacao);
         repoViagem.adicionar(viagem);
+        return viagem;
     }
 
     /* public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {

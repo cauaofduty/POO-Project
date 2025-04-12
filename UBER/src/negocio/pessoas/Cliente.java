@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import negocio.financeiro.FormaDePagamento;
 import negocio.localizacao.Local;
 
-public class Cliente extends Pessoa {
+public class Cliente extends Pessoa{
     private static final long serialVersionUID = 100001L;
     private final ArrayList<FormaDePagamento> formasPagamento;
     

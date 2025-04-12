@@ -3,7 +3,7 @@ package negocio.veiculos;
 public class Luxo extends Veiculo {
     private static final long serialVersionUID = 200003L;
     private final double taxaViagem = 2.0;;
-    private final String tipo = "luxo"; //caso necessite identificar o tipo de veiculo, pode ser utilizado no repositorio de veiculos
+    private final String tipo = "Luxo"; //caso necessite identificar o tipo de veiculo, pode ser utilizado no repositorio de veiculos
     
 
     public Luxo(String placa, String cor, String nomeVeiculo, int ano) {

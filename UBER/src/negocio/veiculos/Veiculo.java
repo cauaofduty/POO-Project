@@ -36,14 +36,14 @@ public abstract class Veiculo implements Serializable {
 
     public abstract double getTaxaViagem(); // Método abstrato para obter a taxa de viagem do veículo
 
+    public String getTipo() {
+        return getClass().getSimpleName();
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(", \nModelo=").append(nomeVeiculo);
-        sb.append(", \nAno=").append(ano);
-        sb.append(", \nCor=").append(cor);
-        sb.append("Placa=").append(placa);
-        sb.append('\n');
-        return sb.toString();
+        return String.format("Tipo: %s | Modelo: %s | Ano: %d | Cor: %s | Placa: %s",
+            getTipo(), nomeVeiculo, ano, cor, placa);
     }
+    
 }
