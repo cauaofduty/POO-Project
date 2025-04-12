@@ -42,8 +42,11 @@ public abstract class Veiculo implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Tipo: %s | Modelo: %s | Ano: %d | Cor: %s | Placa: %s",
-            getTipo(), nomeVeiculo, ano, cor, placa);
+        return "Tipo: " + getTipo() +
+            " | Modelo: " + nomeVeiculo +
+            " | Ano: " + ano +
+            " | Cor: " + cor +
+            " | Placa: " + placa;
     }
-    
+
 }

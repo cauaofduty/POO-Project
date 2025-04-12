@@ -22,7 +22,7 @@ public class Economico extends Veiculo {
     
     @Override//VER NO QUE ESTE OVERRIDE DA
     public String toString(){
-        return "Economico {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
+        return super.toString();
     }
 
     

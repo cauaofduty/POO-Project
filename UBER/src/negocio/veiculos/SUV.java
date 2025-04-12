@@ -22,7 +22,7 @@ public class SUV extends Veiculo {//ver isso
 
     @Override
     public String toString() {
-        return "SUV {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
+        return super.toString();
     }
     
 }
