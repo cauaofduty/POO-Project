@@ -20,6 +20,7 @@ public  class Motocicleta extends Veiculo {
         return tipo;
     }
 
+    @Override
     public String toString() {
         return "Motocicleta {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
     }

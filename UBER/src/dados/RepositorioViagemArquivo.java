@@ -22,22 +22,20 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         salvarArquivo();
     }
 
-    @Override
-    public ArrayList<Viagem> listarViagensCliente(int idCliente) {
+    public ArrayList<Viagem> listarViagensCliente(String IDPessoa) {
         ArrayList<Viagem> viagemCliente = new ArrayList<>();
         for (Viagem v : viagens) { 
-            if ((v.getCliente().getIDPessoa()).equals(idCliente)) {
+            if ((v.getCliente().getIDPessoa()).equals(IDPessoa)) {
                 viagemCliente.add(v);
             }
         }
         return viagemCliente;
     }
 
-    @Override
-    public ArrayList<Viagem> listarViagensMotorista(int idMotorista) {
+    public ArrayList<Viagem> listarViagensMotorista(String IDPessoa) {
         ArrayList<Viagem> viagemMotorista = new ArrayList<>();
         for (Viagem v : viagens) {
-            if (v.getMotorista().getIDPessoa().equals(idMotorista)) {
+            if (v.getMotorista().getIDPessoa().equals(IDPessoa)) {
                 viagemMotorista.add(v);
             }
         }
@@ -62,5 +60,15 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
             System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public ArrayList<Viagem> listarViagensCliente(int idCliente) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ArrayList<Viagem> listarViagensMotorista(int idMotorista) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

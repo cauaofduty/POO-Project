@@ -86,21 +86,21 @@ public class Fachada {
         Zona.valueOf(entrada.trim().toUpperCase());
     }
 
-
+/* 
     public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
         viagemManager.solicitarViagemCliente(origem, destino, cliente);
     }
-
-    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
-        viagemManager.adicionarViagemCliente(origem, destino, cliente,motorista, preco);
+ */
+    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, boolean simulacao) {
+        viagemManager.adicionarViagemCliente(origem, destino, cliente,motorista, preco, simulacao );
     }
-
+/* 
     public void solicitarViagemEntrega(Local origem, Local destino, Cliente cliente, double peso) throws EntidadeNaoEncontradaException {
         viagemManager.solicitarViagemEntrega(origem, destino, cliente, peso);
     }
-
-    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega) {
-        viagemManager.adicionarViagemEntrega(origem, destino, cliente,motorista, preco, pesoEntrega);
+ */
+    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
+        viagemManager.adicionarViagemEntrega(origem, destino, cliente,motorista, preco, pesoEntrega, simulacao);
     }
 
     public ArrayList<Viagem> listarViagensCliente(String idCliente) {

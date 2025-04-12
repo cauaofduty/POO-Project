@@ -20,6 +20,7 @@ public class SUV extends Veiculo {//ver isso
         return tipo;
     }
 
+    @Override
     public String toString() {
         return "SUV {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
     }
