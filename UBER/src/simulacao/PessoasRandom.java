@@ -13,11 +13,6 @@ import negocio.veiculos.*;
 
 public class PessoasRandom {
     private static final Random r = new Random();
-    private final ArrayList<Pessoa> pessoasAleatorias;//para armazenar pessoas
-    
-    public PessoasRandom(Pessoa pessoa) {//gera já no construtor para o gerenciador de locais
-        this.pessoasAleatorias = gerarPessoasPara(pessoa);
-    }
 
     public static int geraInteirosRandom(int limMin, int limMax){//gera inteiros limitados para numero de pessoas
         int valor = r.nextInt(limMax - limMin) + limMin;
@@ -26,8 +21,8 @@ public class PessoasRandom {
 
    
 
-    public final ArrayList<Pessoa> gerarPessoasPara(Pessoa pessoa){
-       
+    public static final ArrayList<Pessoa> gerarPessoasPara(Pessoa pessoa){
+       ArrayList<Pessoa> pessoasAleatorias = new ArrayList<>();//cria lista de pessoas aleatorias
         //comeca criando tamanho para lista de pessoas
         int indice = geraInteirosRandom(5, 11);//intenção de criar entre 5 e 10 pessoas
         
@@ -97,7 +92,7 @@ public class PessoasRandom {
         return idade;
     }
  
-    private static Local gerarLocal(Pessoa pessoa){
+    public static Local gerarLocal(Pessoa pessoa){
         //setando valores estaticos como "base de dados"
         //pega nome da cidade da pessoa online
         String cidade = pessoa.getLocalAtual().getCidade();
@@ -226,13 +221,5 @@ public class PessoasRandom {
             return gerarPlacaAleatoria(veiculos);
         return placa;
     }
-    public Viagem gerarViagem(Motorista motorista, Local localAtual, Local localDestino){
-        
-        //cria viagem com os locais e preco gerados
-        return new Viagem(localAtual, localDestino, pessoa, preco);
-    }
 
-    public ArrayList<Pessoa> getPessoasAleatorias() {
-        return pessoasAleatorias;
-    }
 }

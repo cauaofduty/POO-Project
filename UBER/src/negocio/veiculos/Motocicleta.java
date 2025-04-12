@@ -16,7 +16,7 @@ public  class Motocicleta extends Veiculo {
 
     @Override//VER NO QUE ESTE OVERRIDE DA
     public String toString() {
-        return "Motocicleta {" + super.toString()  + this.getTaxaViagem() +"}";
+        return "Motocicleta {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
     }
 
     public String getTipo() {

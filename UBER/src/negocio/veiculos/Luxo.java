@@ -17,7 +17,7 @@ public class Luxo extends Veiculo {
 
     @Override//VER NO QUE ESTE OVERRIDE DA
     public String toString() {
-        return "Luxo {" + super.toString()  + this.getTaxaViagem() +"}";
+        return "Luxo {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
     }
 
     public static long getSerialversionuid() {

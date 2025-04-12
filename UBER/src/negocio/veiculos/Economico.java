@@ -18,7 +18,7 @@ public class Economico extends Veiculo {
 
     @Override//VER NO QUE ESTE OVERRIDE DA
     public String toString(){
-        return "Economico {" + super.toString()  + this.getTaxaViagem() +"}";
+        return "Economico {\n" + super.toString()  + this.getTaxaViagem() +"\n}";
     }
 
     public String getTipo() {

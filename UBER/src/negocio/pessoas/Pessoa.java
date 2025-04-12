@@ -14,6 +14,8 @@ public abstract class Pessoa implements Serializable {
     protected Local localAtual;
     protected String senhaAcesso;
     protected String codigoRecuperacao;
+    protected ArrayList<Integer> avaliacoes;//quantidade de avaliacoes que a pessoa recebeu
+    protected double nota;// media de avaliacoes que a pessoa recebeu
     
     
     //construtor completo
@@ -23,6 +25,8 @@ public abstract class Pessoa implements Serializable {
         this.localAtual = localAtual;
         this.nome = nome;
         this.senhaAcesso = null;//vazio para criacao random
+        this.nota = 0;
+        this. avaliacoes = new ArrayList<>();//inicializa com 5 estrelas
     } 
 
     //construtor para simulacao
@@ -30,7 +34,7 @@ public abstract class Pessoa implements Serializable {
         this(IDPessoa, idade, localAtual, nome);
         this.senhaAcesso = senhaAcesso;    
     }
-
+    //nao quero nem procurar onde se localiza a utilidade desse construtor
     public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso) {
         this.IDPessoa = IDPessoa;
         this.idade = idade;
@@ -77,4 +81,28 @@ public abstract class Pessoa implements Serializable {
     public void setCodigoRecuperacao(String codigoRecuperacao) {
         this.codigoRecuperacao = codigoRecuperacao;
     }
+
+    public ArrayList<Integer> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    //adiciona avaliacao e atualiza a nota
+    public void setAvaliacoes(int avaliacao) {
+        this.avaliacoes.add(avaliacao);
+        setNota();
+    }
+
+    public double getNota() {
+        return nota;
+    }
+    //faz a media das avaliacoes
+    public void setNota() {
+        int soma = 0;
+        for (int i = 0; i < avaliacoes.size(); i++) {
+            soma += avaliacoes.get(i);
+        }
+        this.nota = (double) soma / avaliacoes.size();
+    }
+
+
 }

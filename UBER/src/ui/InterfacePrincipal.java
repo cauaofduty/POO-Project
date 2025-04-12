@@ -1,8 +1,6 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import negocio.exceptions.CodigoIncorretoException;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.exceptions.EntidadeNaoEncontradaException;
@@ -10,13 +8,14 @@ import negocio.exceptions.SenhaIncorretaException;
 import negocio.financeiro.FormaDePagamento;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
-import negocio.localizacao.Zona;
 import negocio.pessoas.Cliente;
+import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
 import negocio.servicos.Fachada;
-import negocio.servicos.GerenciadorViagens;
 import negocio.servicos.Util;
 import negocio.veiculos.Veiculo;
+import simulacao.PessoasRandom;
+import simulacao.SimuladorViagens;
 
 class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
 
@@ -74,10 +73,10 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                                 System.out.println("Menu logado abaixo");
                                 esperar1200();
                                 limparTela();
-                                /* boolean continuar = menuLogado(pessoa);
+                                boolean continuar = menuLogado(pessoa);
                                 while (continuar) {
                                     continuar = menuLogado(pessoa);
-                                } */
+                                }
                                 return true;//retorna ao menu principal
                                 
                             // Se a senha estiver incorreta, lança uma exceção
@@ -234,11 +233,10 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         Fachada fachada = Fachada.getInstancia();
         
         //variaveis para receber os dados do cadastro
-        String nome = null, senha = null, confirmarSenha, cidade = null, placa, cor, modelo, IDPessoa = null;
+        String nome = null, senha = null, confirmarSenha, cidade = null, placa = null, cor = null, modelo = null, IDPessoa = null;
         int idade = 0, tipoCadastro = 0, tipoVeiculo, ano;
         Pessoa pessoa = null;
         Local local = null;
-        Veiculo veiculo;
         ArrayList<FormaDePagamento> formas = new ArrayList<>();
 
         boolean cadastroFinalizado = false;
@@ -297,51 +295,24 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                     etapa++;
                 }
                 case 6 -> {
-                    Cidade cidadeObj = new Cidade(cidade);
-                    local = new Local(cidadeObj);
+                    local = new Local(cidade);
                     IDPessoa = fachada.gerarIDPessoa();
                     etapa++;
                 }
                 case 7 -> {
                     if (tipoCadastro == 1) {
-                        System.out.println("Digite a placa do veículo:");
-                        placa = Util.entrada.nextLine();
-                        while (placa.length() != 7) {
-                            System.out.println("Placa inválida. Digite novamente:");
-                            placa = Util.entrada.nextLine();
-                        }
-                        //placa nao existe na base, cadastra
-                        if(fachada.buscarVeiculo(placa) == null){
-                            //demais dados do veículo
-                            System.out.println("Digite a cor do veículo:");
-                            cor = Util.entrada.nextLine();
-                            System.out.println("Digite o ano do veículo:");
-                            ano = Util.entrada.nextInt();
-                            Util.entrada.nextLine();
-                            System.out.println("Digite o modelo:");
-                            modelo = Util.entrada.nextLine(); 
-                            
-                            //intância de veículo
-                            System.out.println("Tipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta):");
-                            tipoVeiculo = Util.entrada.nextInt();
-                            Util.entrada.nextLine();
-                            
-                            while (tipoVeiculo < 1 || tipoVeiculo > 4) {
-                                System.out.println("Tipo inválido. Tente novamente:");
-                                tipoVeiculo = Util.entrada.nextInt();
-                                Util.entrada.nextLine();
-                            }
+                        Veiculo veiculo = criarVeiculo();
+                        if(veiculo != null){
                             try {
-                                veiculo = fachada.cadastrarVeiculo(placa, cor, ano, modelo, tipoVeiculo);
-
                                 pessoa = fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senha);
                                 System.out.println("Motorista cadastrado com sucesso!");
                                 return pessoa;
                             } catch (EntidadeJaExisteException e ) {//nao ira cair nesse cath mas por segurança esta ai
                                 System.out.println("Erro: " + e.getMessage());
                             }
-                        //placa ja existe, volta ao inicio da etapa
-                        } else {
+                        }
+                        //caso veiculo null (placa ja existe)  
+                        else {
                             System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente");
                         }
                     //cadastro de cliente
@@ -457,83 +428,92 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             System.out.println("Forma de pagamento pulada. Você pode adicionar uma forma de pagamento depois.");
         }
     }
-    private static void removerFormaPagamentoCliente(ArrayList<FormaDePagamento> formas) {
+    public static Veiculo criarVeiculo() {
         Fachada fachada = Fachada.getInstancia();
-    
-        if (formas.isEmpty()) {
-            System.out.println("Você não possui nenhuma forma de pagamento cadastrada.");
-            return;
+        System.out.println("Digite a placa do veículo:");
+        String placa = Util.entrada.nextLine();
+        while (placa.length() != 7) {
+            System.out.println("Placa inválida. Digite novamente:");
+            placa = Util.entrada.nextLine();
         }
     
-        boolean continuar = true;
-    
-        while (continuar && !formas.isEmpty()) {
-            System.out.println("\nFormas de pagamento cadastradas:");
-            for (int i = 0; i < formas.size(); i++) {
-                System.out.println(i + " - " + formas.get(i));
-            }
-    
-            System.out.println("Digite o número da forma de pagamento que deseja remover:");
-            int indice = Util.entrada.nextInt();
-            Util.entrada.nextLine(); // limpar buffer
-    
-            try {
-                fachada.removerFormaPagamento(formas, indice);
-                System.out.println("Forma de pagamento removida com sucesso!");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Erro: " + e.getMessage());
-            }
-    
-            if (formas.isEmpty()) {
-                System.out.println("Todas as formas de pagamento foram removidas. Você poderá pagar pessoalmente.");
-                break;
-            }
-    
-            System.out.println("Deseja remover outra forma de pagamento? (s/n)");
-            String resposta = Util.entrada.nextLine();
-            if (!resposta.equalsIgnoreCase("s")) {
-                continuar = false;
-            }
+        // Se a placa já existir, retorna null para o menu tratar
+        if (fachada.buscarVeiculo(placa) != null) {
+            System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente.");
+            return null;
         }
+    
+        System.out.println("Digite a cor do veículo:");
+        String cor = Util.entrada.nextLine();
+    
+        System.out.println("Digite o ano do veículo:");
+        int ano = Util.entrada.nextInt();
+        Util.entrada.nextLine();
+    
+        System.out.println("Digite o modelo:");
+        String modelo = Util.entrada.nextLine();
+    
+        System.out.println("Tipo do veículo (1-Econômico, 2-Luxo, 3-SUV, 4-Motocicleta):");
+        int tipoVeiculo = Util.entrada.nextInt();
+        Util.entrada.nextLine();
+    
+        while (tipoVeiculo < 1 || tipoVeiculo > 4) {
+            System.out.println("Tipo inválido. Tente novamente:");
+            tipoVeiculo = Util.entrada.nextInt();
+            Util.entrada.nextLine();
+        }
+        Veiculo veiculo = null;
+        try {
+            veiculo = fachada.cadastrarVeiculo(placa, cor, ano, modelo, tipoVeiculo);
+        } catch (EntidadeJaExisteException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+        return veiculo;
     }
+
      static boolean menuLogado(Pessoa pessoa){
         //mostra uma UI diferente para cada tipo de pessoa
         Fachada fachada = Fachada.getInstancia();
-        if(pessoa instanceof Cliente cliente){ 
-            //mostra UI-Cliente
-            int opcao;
-            while(true) {
-                limparTela();
-                System.out.println("Olá " + cliente.getNome() + "! O que deseja fazer?");
-                System.out.println("1-Solicitar viagem\n2-Ver histórico de viagens\n3-Adicionar/remover forma de pagamento\n4-Voltar ao menu principal");
-                opcao = negocio.servicos.Util.entrada.nextInt();
-                negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
-                switch (opcao) {
-                    case 1 -> {//solicitar viagem
-                        Local origem = null, destino = null;
-                         // coleta dados para começar viagem
-                         System.out.println("Como somos estagiários na empresa, não pudemos utilizar uma API de mapas, então é preciso que digite manualmente sua localização.");
-                                        
-                         // Entrada da cidade
-                         System.out.println("Digite a cidade de origem:");
-                         String cidadeOrigem = negocio.servicos.Util.entrada.nextLine().trim();
-                     
-                         // Entrada do bairro
-                         System.out.println("Digite o bairro de origem:");
-                         String bairroOrigem = negocio.servicos.Util.entrada.nextLine().trim();
-                     
-                         // Entrada e validação da zona
-                         System.out.println("Digite a zona de origem (CENTRO, NORTE, SUL, LESTE, OESTE):");
-                         String zona = negocio.servicos.Util.entrada.nextLine().trim().toUpperCase();
-                         
-                         try {
-                             //valida zona 
-                            fachada.validarZona(zona); // método que converte string para enum com validação
-                            origem = fachada.criarLocal(cidadeOrigem, bairroOrigem, zona); // cria o local
-                         }catch (EntidadeNaoEncontradaException e) {
-                            System.out.println("Zona inválida. Tente novamente.");
-                            continue; // volta para o menu
-                         }
+        SimuladorViagens sim = new SimuladorViagens();
+        //menu para cliente
+        switch (pessoa) {
+            case Cliente cliente -> { 
+                //mostra UI-Cliente
+                int opcao;
+                //while para menu cliente
+                while(true) {
+                    limparTela();
+                    System.out.println("Olá " + cliente.getNome() + "! O que deseja fazer?");
+                    System.out.println("1-Solicitar viagem\n2-Ver histórico de viagens\n3-Adicionar/remover forma de pagamento\n4-Voltar ao menu principal");
+                    opcao = negocio.servicos.Util.entrada.nextInt();
+                    // Limpar o buffer do scanner
+                    negocio.servicos.Util.entrada.nextLine();
+                    switch (opcao) {
+                        case 1 -> {//solicitar viagem
+                            Local origem, destino;
+                            // coleta dados para começar viagem
+                            System.out.println("Como somos estagiários na empresa, não pudemos utilizar uma API de mapas, então é preciso que digite manualmente sua localização.");
+                            
+                            // Entrada da cidade
+                            System.out.println("Digite a cidade de origem:");
+                            String cidadeOrigem = negocio.servicos.Util.entrada.nextLine().trim();
+                            
+                            // Entrada do bairro
+                            System.out.println("Digite o bairro de origem:");
+                            String bairroOrigem = negocio.servicos.Util.entrada.nextLine().trim();
+                            
+                            // Entrada e validação da zona
+                            System.out.println("Digite a zona de origem (CENTRO, NORTE, SUL, LESTE, OESTE):");
+                            String zona = negocio.servicos.Util.entrada.nextLine().trim().toUpperCase();
+                            
+                            try {
+                                //valida zona
+                                fachada.validarZona(zona); // método que converte string para enum com validação
+                                origem = fachada.criarLocal(cidadeOrigem, bairroOrigem, zona); // cria o local
+                            }catch (EntidadeNaoEncontradaException e) {
+                                System.out.println("Zona inválida. Tente novamente.");
+                                continue; // volta para o menu
+                            }
                             //pede dados para destino
                             System.out.println("Digite a cidade de destino:");
                             String cidadeDestino = negocio.servicos.Util.entrada.nextLine().trim();
@@ -553,56 +533,123 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                             }
                             //decide qual tipo de viagem solicitar
                             System.out.println("Deseja solicitar uma viagem ou entrega de mercadoria? (1-Viagem, 2-Entrega)");
-                                int tipo = negocio.servicos.Util.entrada.nextInt();
+                            int tipo = negocio.servicos.Util.entrada.nextInt();
+                            negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                            while(tipo != 1 && tipo != 2) {
+                                System.out.println("Opção inválida. Tente novamente:");
+                                tipo = negocio.servicos.Util.entrada.nextInt();
                                 negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
-                                while(tipo != 1 && tipo != 2) {
-                                    System.out.println("Opção inválida. Tente novamente:");
-                                    tipo = negocio.servicos.Util.entrada.nextInt();
-                                    negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
-                                }
-                                //observar esse switch, não consigo prever seu comportamento
-                                 switch(tipo){
-                                    case 1->{
-                                        //viagem normal
-                                        try {
-                                            fachada.solicitarViagemCliente(origem, destino, cliente); //=> necessario cast
-                                        } catch (EntidadeNaoEncontradaException e) {
-                                            System.out.println("Erro: " + e.getMessage());
-                                        }
-                                        break;
-                                        //se deu certo, break
-                                    }
-                                    case 2->{
-                                        //viagem entrega
-                                        System.out.println("Digite o peso da mercadoria:");
-                                        double peso = negocio.servicos.Util.entrada.nextDouble();
-                                        negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
-                                        try {
-                                            fachada.solicitarViagemEntrega(origem, destino, cliente, peso);
-                                        } catch (EntidadeNaoEncontradaException ex) {
-                                            System.out.println("Erro: " + ex.getMessage());
-                                        }   
-                                        //se deu certo, break
-                                        break;
-                                    }
-                                    default -> System.out.println("Opção inválida. Tente novamente.");
-                                }
-                                return true;//retorna ao menu logado
-                    } 
-                    case 2 -> {//ver histórico de viagens
-                        ArrayList<Viagem> viagens = fachada.listarViagensCliente(cliente.getIDPessoa());
-                        if (viagens.isEmpty()) {
-                            System.out.println("Nenhuma viagem encontrada.");
-                        } else {
-                            System.out.println("Histórico de viagens:");
-                            for (Viagem viagem : viagens) {
-                                System.out.println(viagem.toString());
                             }
+
+                            //observar esse switch, não consigo prever seu comportamento  E ADICIOANR A ESCOLHA DE MORTORISTA
+                            switch(tipo){
+                                case 1->{//viagem normal
+                                    System.out.println("Motoristas disponíveis: ");
+                                    //cria lista de3 motoristas random
+                                    ArrayList<Pessoa> motoristasDisponiveis = PessoasRandom.gerarPessoasPara(cliente);
+
+                                    for (int i = 0; i < motoristasDisponiveis.size(); i++) {
+                                        Motorista motorista = (Motorista) motoristasDisponiveis.get(i);
+                                        System.out.println(i + " - " + motorista.getNome()  + motorista.getVeiculo().toString() + " | Nota: " + motorista. getNota());
+                                    }
+
+                                    // user escolhe um motorista:
+                                    System.out.println("Escolha o número do motorista desejado:");
+                                    int escolha = Util.entrada.nextInt();
+                                    Util.entrada.nextLine(); // limpar o buffer
+
+                                    while (escolha < 0 || escolha >= motoristasDisponiveis.size()) {
+                                        System.out.println("Digite uma escolha válida.");
+                                        escolha = Util.entrada.nextInt();
+                                        Util.entrada.nextLine();
+                                    }
+                                    //enfim
+                                    Motorista motoristaEscolhido = (Motorista) motoristasDisponiveis.get(escolha);
+                                    
+                                    try {
+                                        sim.simularViagemCliente(cliente, motoristaEscolhido, origem, destino);
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
+                                    System.out.println("Corrida realizada com sucesso! Qual sua avaliação para o motorista? (1-5)");
+                                    int avaliacao = Util.entrada.nextInt();
+                                    Util.entrada.nextLine();
+                                    while (avaliacao < 1 || avaliacao > 5) {
+                                        System.out.println("Avaliação inválida. Tente novamente:");
+                                        avaliacao = Util.entrada.nextInt();
+                                        Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                    }
+                                    motoristaEscolhido.setAvaliacoes(avaliacao);
+                                    negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                    //se deu certo, break
+                                    break;
+                                }
+                                case 2->{
+                                    //viagem entrega
+                                    System.out.println("Digite o peso da mercadoria:");
+                                    //sem limite ou exception, pois estamos muito proximos da entrega
+                                    double peso = negocio.servicos.Util.entrada.nextDouble();
+                                    
+                                    System.out.println("Motoristas disponíveis: ");
+                                    //cria lista de3 motoristas random
+                                    ArrayList<Pessoa> motoristasDisponiveis = PessoasRandom.gerarPessoasPara(cliente);
+
+                                    for (int i = 0; i < motoristasDisponiveis.size(); i++) {
+                                        Motorista motorista = (Motorista) motoristasDisponiveis.get(i);
+                                        System.out.println(i + " - " + motorista.getNome()  + motorista.getVeiculo().toString() + " | Nota: " + motorista. getNota());
+                                    }
+
+                                    // user escolhe um motorista:
+                                    System.out.println("Escolha o número do motorista desejado:");
+                                    int escolha = Util.entrada.nextInt();
+                                    Util.entrada.nextLine(); // limpar o buffer
+
+                                    while (escolha < 0 || escolha >= motoristasDisponiveis.size()) {
+                                        System.out.println("Digite uma escolha válida.");
+                                        escolha = Util.entrada.nextInt();
+                                        Util.entrada.nextLine();
+                                    }
+                                    //enfim
+                                    Motorista motoristaEscolhido = (Motorista) motoristasDisponiveis.get(escolha);
+                                    
+                                    try {
+                                        sim.simularViagemEntrega(cliente, motoristaEscolhido, origem, destino, peso);
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
+                                    System.out.println("Corrida realizada com sucesso! Qual sua avaliação para o motorista? (1-5)");
+                                    int avaliacao = Util.entrada.nextInt();
+                                    Util.entrada.nextLine();
+                                    while (avaliacao < 1 || avaliacao > 5) {
+                                        System.out.println("Avaliação inválida. Tente novamente:");
+                                        avaliacao = Util.entrada.nextInt();
+                                        Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                    }
+                                    motoristaEscolhido.setAvaliacoes(avaliacao);
+                                    negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
+                                    //se deu certo, break
+                                    break;
+                                }
+                                default -> System.out.println("Opção inválida. Tente novamente.");
+                            }
+                            return true;//retorna ao menu logado
                         }
-                        //chama a função de ver histórico de viagens da fachada, que retorna o histórico de viagens do cliente
-                        return true;//retorna ao menu logado
-                    } 
-                    case 3 -> {//alterar//adicionar forma de pagamento// Cadastrar ou remover formas de pagamento
+                        case 2 -> {//ver histórico de viagens
+                            ArrayList<Viagem> viagens = fachada.listarViagensCliente(cliente.getIDPessoa());
+                            if (viagens.isEmpty()) {
+                                System.out.println("Nenhuma viagem encontrada.");
+                            } else {
+                                System.out.println("Histórico de viagens:");
+                                for (Viagem viagem : viagens) {
+                                    System.out.println(viagem.toString());
+                                }
+                            }
+                            System.out.println("Digite qualquer tela para voltar ao menu");
+                            Util.entrada.nextLine();
+                            limparTela();
+                            return true;//retorna ao menu logado
+                        }
+                        case 3 -> {//alterar//adicionar forma de pagamento// Cadastrar ou remover formas de pagamento
                             boolean editando = true;
                         
                             while (editando) {
@@ -650,79 +697,123 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                                     }
                                 }
                             }
+                            return true;//retorna ao menu logado
+                        }
+                        case 4 -> {
+                            //sair
+                            limparTela();
+                            return false;
+                            //volta ao menu principal
+                        }
+                        default -> System.out.println("Opção inválida. Tente novamente.");
+                    }
+                    
+                    //retorna ao menu logado
+                }
+            }
+            //mostra UI-Motorista
+            case Motorista motorista -> {
+                System.out.println("Olá " + motorista.getNome() + "! O que deseja fazer?");
+                System.out.println("1- Aceitar corrida\n2- Ver histórico de viagens\n3- Trocar veículo\n4- Voltar ao menu principal");
+                int opcao = negocio.servicos.Util.entrada.nextInt();
+                // Limpar o buffer do scanner
+                negocio.servicos.Util.entrada.nextLine();
+                switch (opcao) {
+                    case 1 -> {//aceitar corrida // Mostrar clientes online e aceitar corrida
+                        //fiz apenas no "modo" simulação
+                        System.out.println("Nenhum cliente está online no momento. Simulando clientes:");
+                        //array com pessoas aleatorias
+                        ArrayList<Pessoa> clientesRandom = PessoasRandom.gerarPessoasPara(motorista);
+                        //arraylist para gerar locais aleatorios de destino para cada cliente e mostrar no loop
+                        ArrayList<Local> destinosRandom = new ArrayList<>(); 
+                        for (int i = 0; i < clientesRandom.size(); i++) {
+                            //cria um destino aleatorio para cada cliente adicionando a um arraylist para aparecer para o motorista
+                            destinosRandom.add(PessoasRandom.gerarLocal(pessoa));
+                            Cliente c = (Cliente) clientesRandom.get(i);
+                            System.out.println(i + " - " + c.getNome() + " \n|Origem: " + c.getLocalAtual() + "\n|Destino: " + destinosRandom.get(i) + "\n\n");//mostra locais na mesma cidade do motorista
+                        }
+                        System.out.println("Digite o número do cliente que deseja aceitar:");
+                        int indice = Util.entrada.nextInt();
+                        Util.entrada.nextLine();
+
+                        if (indice < 0 || indice >= clientesRandom.size()) {
+                            System.out.println("Índice inválido. Nenhum cliente aceito.");
+                            break;
+                        }
+                        //seleciona cliente e seu respectivo destino
+                        Cliente clienteSelecionado = (Cliente) clientesRandom.get(indice);
+                        Local destino = destinosRandom.get(indice);
+                        //simula e adiciona nas viagens
+                        sim.simularViagemMotorista(clienteSelecionado, motorista, clienteSelecionado.getLocalAtual(), destino);
+                        System.out.println("Corrida realizada com sucesso! Qual sua avaliação para o cliente? (1-5)");
+                        int avaliacao = Util.entrada.nextInt();
+                        Util.entrada.nextLine();
+                        while (avaliacao < 1 || avaliacao > 5) {
+                            System.out.println("Avaliação inválida. Tente novamente:");
+                            avaliacao = Util.entrada.nextInt();
+                            Util.entrada.nextLine(); // Limpar o buffer do scanner
+                        }
+                        clienteSelecionado.setAvaliacoes(avaliacao);
+                        break;
+
+                    }
+                    case 2 -> {//ver histórico de viagens
+                        ArrayList<Viagem> viagens = fachada.listarViagensCliente(motorista.getIDPessoa());
+                        if (viagens.isEmpty()) {
+                            System.out.println("Nenhuma viagem encontrada.");
+                        } else {
+                            System.out.println("Histórico de viagens:");
+                            for (Viagem viagem : viagens) {
+                                System.out.println(viagem.toString());
+                            }
+                        }
+                        System.out.println("Digite qualquer tela para voltar ao menu");
+                        Util.entrada.nextLine();
+                        limparTela();
                         return true;//retorna ao menu logado
                     }
+                    case 3 -> { // trocar veículo
+                        System.out.println("\nVeículo atual:");
+                        System.out.println(motorista.getVeiculo());
+                        
+                        System.out.println("Deseja trocar de veículo? (1 - Sim | Qualquer tecla - Não)");
+                        String opt = Util.entrada.nextLine();
+                        
+                        if (!opt.equals("1")) {
+                            return true;
+                        }
+                        
+                        boolean trocando = true;
+                        while (trocando) {
+                            Veiculo novoVeiculo = criarVeiculo();
+                            
+                            if (novoVeiculo != null) {
+                                motorista.setVeiculo(novoVeiculo);
+                                System.out.println("Veículo alterado com sucesso!");
+                                trocando = false;
+                            } else {
+                                System.out.println("Erro ao cadastrar esse veículo. Deseja tentar novamente? (1 - Sim | Qualquer tecla - Não)");
+                                String resp = Util.entrada.nextLine();
+                                if (!resp.equals("1")) {
+                                    trocando = false;
+                                }
+                            }
+                        }
+                        
+                        return true; // retorna ao menu logado
+                    }
                     case 4 -> {
-                        //sair
                         limparTela();
                         return false;
                         //volta ao menu principal
                     }
                     default -> System.out.println("Opção inválida. Tente novamente.");
                 }
-
-                //retorna ao menu logado
             }
-        //mostra UI-Motorista
-        }else{
-            System.out.println("Olá " + pessoa.getNome() + "! O que deseja fazer?");
-            System.out.println("1- Aceitar corrida\n2- Ver histórico de viagens\n3- Trocar veículo\n4- Voltar ao menu principal");
-            int opcao = negocio.servicos.Util.entrada.nextInt();
-            // Limpar o buffer do scanner
-            negocio.servicos.Util.entrada.nextLine();
-            switch (opcao) {
-                case 1 -> {//aceitar corrida // Mostrar clientes online e aceitar corrida
-                    ArrayList<Cliente> clientesOnline = fachada.();
-                    if (clientesOnline.isEmpty()) {
-                        System.out.println("Nenhum cliente está online no momento.");
-                        break;
-                    }
-
-                    System.out.println("\nClientes online disponíveis para corrida:");
-                    for (int i = 0; i < clientesOnline.size(); i++) {
-                        Cliente c = clientesOnline.get(i);
-                        System.out.println(i + " - " + c.getNome() + " | Local: " + c.getLocalAtual());
-                    }
-
-                    System.out.println("Digite o número do cliente que deseja aceitar:");
-                    int indice = Util.entrada.nextInt();
-                    Util.entrada.nextLine();
-
-                    if (indice < 0 || indice >= clientesOnline.size()) {
-                        System.out.println("Índice inválido. Nenhum cliente aceito.");
-                        break;
-                    }
-
-                    Cliente clienteSelecionado = clientesOnline.get(indice);
-
-                    // Gerar destino aleatório
-                    Local destino = GerenciadorViagens.gerarLocalAleatorio(); // ou como for sua lógica
-
-                    try {
-                        fachada.criarViagem(clienteSelecionado, pessoa, destino); // precisa existir
-                        System.out.println("Corrida com " + clienteSelecionado.getNome() + " aceita com sucesso!");
-                    } catch (Exception e) {
-                        System.out.println("Erro ao aceitar corrida: " + e.getMessage());
-                    }
-                }
-                case 2 -> {//ver histórico de viagens
-                    //chama a função de ver histórico de viagens da fachada, que retorna o histórico de viagens do motorista
-                    return true;//retorna ao menu logado
-                }
-                case 3 -> {//alterar dados pessoais
-                    //chama a função de alterar dados pessoais da fachada, que altera os dados pessoais do motorista
-                    return true;//retorna ao menu logado
-                }
-                case 4 -> {
-                    limparTela();
-                    return false;
-                    //volta ao menu principal
-                }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+            default -> {
             }
-            return true;//retorna ao menu logado
         }
-
+        return true;
     } 
 
     

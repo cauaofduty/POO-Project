@@ -7,8 +7,8 @@ public class ViagemEntrega extends Viagem {
     private static final long serialVersionUID = 300002L;
     private double pesoEntrega;
 
-    public ViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega) {
-        super(origem, destino, cliente, motorista, preco);
+    public ViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
+        super(origem, destino, cliente, motorista, preco, simulacao);
         this.pesoEntrega = pesoEntrega;
     }
     
@@ -32,6 +32,7 @@ public class ViagemEntrega extends Viagem {
                 "\nMotorista: " + motorista.getNome() +
                 "\nVeículo: " + motorista.getVeiculo() + ", " + "Tipo: " + motorista.getVeiculo().getClass() + ", " + "Placa: " + motorista.getVeiculo().getPlaca() +
                 "\nPeso da entrega: " + pesoEntrega + " kg" +
+                "\nSimulação: " + isSimulacao +
                 "\nValor: " + preco +
                 "\n}\n";
     }

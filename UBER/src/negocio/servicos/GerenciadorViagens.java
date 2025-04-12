@@ -17,11 +17,9 @@ import negocio.veiculos.Veiculo;
 //locais serão gerenciados aqui (além que não precisam ser persistidos "exclusivamente", com paga,mentos sofrendo do mesmo caso)
 public class GerenciadorViagens {
     private final IRepositorioViagem<Viagem> repoViagem;
-    private final GerenciadorPessoa pessoaManager;
 
     public GerenciadorViagens() {
         this.repoViagem = new RepositorioViagemArquivo();
-        this.pessoaManager = new GerenciadorPessoa();
     }
     
 
@@ -49,16 +47,16 @@ public class GerenciadorViagens {
     }
     
 
-    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco) {
-        ViagemCliente viagem = new ViagemCliente(origem, destino, cliente, motorista, preco);
+    public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, boolean simulacao) {
+        ViagemCliente viagem = new ViagemCliente(origem, destino, cliente, motorista, preco, simulacao);
         repoViagem.adicionar(viagem);
     }
 
-    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega) {
-        ViagemEntrega viagem = new ViagemEntrega(origem, destino, cliente, motorista, preco, pesoEntrega);
+    public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
+        ViagemEntrega viagem = new ViagemEntrega(origem, destino, cliente, motorista, preco, pesoEntrega, simulacao);
         repoViagem.adicionar(viagem);
     }
-
+/* 
     public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
         Motorista motorista = pessoaManager.buscarMotoristaDisponivel();
         if (motorista == null) {
@@ -75,21 +73,21 @@ public class GerenciadorViagens {
         Motorista motorista = pessoaManager.buscarMotoristaDisponivel();
         if (motorista == null) {
             throw new EntidadeNaoEncontradaException("Nenhum motorista disponível no momento.");
-        }
+        } 
 
         Veiculo veiculo = motorista.getVeiculo();
         double preco = calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
         adicionarViagemEntrega(origem, destino, cliente, motorista, preco, pesoKg);
 
         motorista.setDisponivel(false);
-    }
+    }*/
 
-    //a ideia é mostrar antes da viageme realizar pagamento antes
-    private double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
+    //a ideia é mostrar antes da viagem e realizar pagamento antes
+    public double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
         return CalculadorPreco.calcularPrecoViagem(origem, destino, veiculo);
     }
 
-    private double calcularPrecoEntrega(Local origem, Local destino, Veiculo veiculo, double pesoKg) {
+    public double calcularPrecoEntrega(Local origem, Local destino, Veiculo veiculo, double pesoKg) {
         return CalculadorPreco.calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
     }
 
