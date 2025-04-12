@@ -7,8 +7,6 @@ import negocio.localizacao.CalculadorPreco;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
 import negocio.localizacao.ViagemCliente;
-import negocio.veiculos.Economico;
-import negocio.veiculos.Motocicleta;
 import negocio.localizacao.ViagemEntrega;
 import negocio.localizacao.Zona;
 import negocio.pessoas.Cliente;

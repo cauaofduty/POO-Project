@@ -22,6 +22,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         salvarArquivo();
     }
 
+    @Override
     public ArrayList<Viagem> listarViagensCliente(String IDPessoa) {
         ArrayList<Viagem> viagemCliente = new ArrayList<>();
         for (Viagem v : viagens) { 
@@ -32,6 +33,7 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         return viagemCliente;
     }
 
+    @Override
     public ArrayList<Viagem> listarViagensMotorista(String IDPessoa) {
         ArrayList<Viagem> viagemMotorista = new ArrayList<>();
         for (Viagem v : viagens) {
@@ -62,13 +64,4 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         }
     }
 
-    @Override
-    public ArrayList<Viagem> listarViagensCliente(int idCliente) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ArrayList<Viagem> listarViagensMotorista(int idMotorista) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

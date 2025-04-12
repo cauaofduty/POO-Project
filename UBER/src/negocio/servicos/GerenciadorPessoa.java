@@ -51,6 +51,8 @@ public class GerenciadorPessoa {
     }
 
     public Pessoa buscarPessoa(String IDPessoa) throws EntidadeNaoEncontradaException {//busca por ID, retorna pessoa ou Exception
+        //caso null = não encontrado
+        if(repoPessoa.buscarPorID(IDPessoa) == null) throw new EntidadeNaoEncontradaException("ID não encontrado na base de dados.");
         return repoPessoa.buscarPorID(IDPessoa);
     }
 

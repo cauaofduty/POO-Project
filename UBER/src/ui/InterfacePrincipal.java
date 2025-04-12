@@ -23,7 +23,6 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         
         //função apenas para legibilidade da UI
         mensagemInicial();
-        esperar1200();
         limparTela(); 
         //main menu chamado nesse loop para permitir navegação
         //com flag para continuar rodando o menu
@@ -32,202 +31,188 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         //FIM DA MAIN!
     }
 
-    static boolean menu(){//todos os menus retonam boolean para permitir navegação entre eles
-        //finally
-        Pessoa pessoaOnline = null;//variavel para receber a pessoa logada
-        Fachada fachada = Fachada.getInstancia(); 
+    static boolean menu() {
+        Fachada fachada = Fachada.getInstancia();
+    
         while (true) {
-
             System.out.println("Escolha uma opção");
             System.out.println("1- Login");
             System.out.println("2- Registre-se");
-            System.out.println("3- Esqueci minha senha");//mudar senha
-            System.out.println("4- Caixa de entrada");//"notificações"-> so serve para codigo de recuperação
+            System.out.println("3- Esqueci minha senha");
+            System.out.println("4- Caixa de entrada");
             System.out.println("5- Sair");
-            
-            //Recebe opcao do usuario e limpa o buffer do scanner
-            int opcao = negocio.servicos.Util.entrada.nextInt(); 
-            negocio.servicos.Util.entrada.nextLine(); 
-
-            //while para permitir navegação entre opções no switch
-            //começa limpando tela
-            while (true) {
-                limparTela();
-                switch (opcao) {
-                    //login
-                    case 1 -> {
-                        System.out.println("Qual seu ID?");
-                        String IDPessoa = negocio.servicos.Util.entrada.nextLine();
-
-                        //fara tratamento de duas exceptions
-                        try {
-                            Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
-                            System.out.println("Bem-vindo de volta " + pessoa.getNome() + "! Digite sua senha (lembrando limite mínimo de 8 caracteres):");
-                            String senha = negocio.servicos.Util.entrada.nextLine();
-                            //preparado para tratar exceptions de senha
-                            try {
-                                fachada.receberSenhaLogin(senha, IDPessoa);
-                                // Tenta validar a senha
-                                // Se a senha estiver correta, entra no menu logado
-                                System.out.println("Olá " + pessoa.getNome() + "! O que deseja fazer?");
-                                System.out.println("Menu logado abaixo");
-                                esperar1200();
-                                limparTela();
-                                boolean continuar = menuLogado(pessoa);
-                                while (continuar) {
-                                    continuar = menuLogado(pessoa);
-                                }
-                                return true;//retorna ao menu principal
-                                
-                            // Se a senha estiver incorreta, lança uma exceção
-                            } catch (SenhaIncorretaException e) {
-                                // Senha incorreta tratada aqui
-                                System.out.println("Senha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
-                                String resposta = negocio.servicos.Util.entrada.nextLine();
-                                //caso sim, pessoa recebe codigo para ir a sessao redefinir senha
-                                if (resposta.equalsIgnoreCase("1")) {
-                                    fachada.gerarCodigoRecuperacao(IDPessoa);
-                                    System.out.println("Código de recuperação enviado para sua caixa de entrada, utilize-o para redefinir sua senha.");
-                                }
-                                //caso não, retorna ao menu principal
-                                System.out.println("Retornando ao menu principal...");
-                                esperar1200();
-                                limparTela();
-                                return true;
-                            }
-
-                        } catch (EntidadeNaoEncontradaException e) {
-                            // Trata o caso de pessoa não encontrada
-                            System.out.println("ID não encontrado. Deseja cadastrar-se? (1-Sim, Qualquer tecla-Não)");
-                            String resposta = negocio.servicos.Util.entrada.nextLine();
-                            //caso sim, vai para cadastro no switch
-                            if (resposta.equalsIgnoreCase("1")) {
-                                limparTela();
-                                opcao = 2;//vai para opção de cadastro no switch
-                                continue;
-                            } else {
-                                System.out.println("Retornando ao menu principal...");
-                                esperar1200();
-                                limparTela();
-                                return true;
-                            }
-                        }
-                    }
-                    case 2 -> {//cadastro + login
-                        //Recebe tipo para qual cadastrar e limpa o buffer do scanner
-                        System.out.println("Forneça seus dados, mas primeiro, quer realizar cadastro como motorista ou cliente?");
-                        System.out.println("1- Motorista\n2- Cliente");
-                        int tipo = negocio.servicos.Util.entrada.nextInt();
-                        negocio.servicos.Util.entrada.nextLine();
-                        
-                        //garante opção válida
-                        while(tipo != 1 && tipo != 2){
-                            System.out.println("Opção inválida. Tente novamente.");
-                            tipo = negocio.servicos.Util.entrada.nextInt();
-                            negocio.servicos.Util.entrada.nextLine();
-                        }
-                        
-                        //chama menuCadastro, que retorna a pessoa cadastrada (motorista ou cliente) e mostra menu logado
-                        pessoaOnline = menuCadastro();
-                        System.out.println("Cadastro realizado com sucesso! Seu ID é\n<" + pessoaOnline.getIDPessoa() + ">\nLogando...");
+    
+            int opcao = Util.entrada.nextInt();
+            Util.entrada.nextLine(); // limpar buffer
+            limparTela();
+    
+            switch (opcao) {
+                case 1 -> {
+                   //função de login
+                    if (login()) return true;
+                }
+                case 2 -> {
+                    //cadastro de pessoa
+                    Pessoa novaPessoa = menuCadastro();
+                    //caso id nao exista na base de dados esta cadastrada
+                    if (novaPessoa != null) {
+                        System.out.println("Cadastro realizado! Seu ID: <" + novaPessoa.getIDPessoa() + ">");
                         esperar1200();
                         limparTela();
-                        //menuLogado(pessoaOnline);
-                        System.out.println("menu logado abaixo");
-                        esperar1200();
-                        limparTela();
-                    }
-                    case 3 -> {//mudar senha
-                        System.out.println("Deseja mudar sua senha? (1-Sim, Qualquer tecla-Não)");
-                        String resposta = Util.entrada.nextLine();
-                    
-                        if (resposta.equalsIgnoreCase("1")) {
-                            System.out.println("Digite seu ID:");
-                            String IDPessoa = Util.entrada.nextLine();
-                    
-                            try {
-                                // Verifica se a pessoa existe
-                                Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
-                    
-                                System.out.println("Digite seu código:");
-                                String codigo = Util.entrada.nextLine();
-                    
-                                // Valida o código de recuperação
-                                fachada.validarCodigoRecuperacao(codigo, pessoa);
-                    
-                                // Solicita nova senha
-                                System.out.println("Digite sua nova senha:");
-                                String novaSenha = Util.entrada.nextLine();
-                    
-                                fachada.mudarSenha(novaSenha, pessoa); // altera de fato
-                                System.out.println("Senha alterada com sucesso!");
-                    
-                                System.out.println("Você precisa fazer login...");
-                                esperar1200();
-                                limparTela();
-                    
-                                // Volta para o menu de login
-                                opcao = 1;
-                                continue;
-                    
-                            } catch (EntidadeNaoEncontradaException | CodigoIncorretoException e) {
-                                System.out.println("Erro: " + e.getMessage());
-                                System.out.println("Tente novamente.");
-                                esperar1200();
-                                limparTela();
-                                opcao = 3; // volta ao case 3
-                                continue;
-                            }
-                        //nao quer mudar senha
-                        } else {
-                            System.out.println("Retornando ao menu principal...");
-                            esperar1200();
-                            limparTela();
-                            opcao = -1; // menu principal
-                        }
-                    }
-                    case 4 -> {
-                        if (pessoaOnline == null) {
-                            System.out.println("Nenhum usuário logado no momento.");
-                            esperar1200();
-                            return true;
-                        }
-                        //se existir pessoa online realiza isto:
-                        String codigo = pessoaOnline.getCodigoRecuperacao();
-                    
-                        if (codigo == null || codigo.isBlank()) {
-                            System.out.println("Não há nada na sua caixa de entrada... Retornando ao menu...");
-                            esperar1200();
-                        //mostra codigo e oferece ir direto mudar senha
-                        } else {
-                            System.out.println("Código de redefinição de senha recebido: " + codigo + "\nUtilize-o para redefinir sua senha.");
-                            System.out.println("Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
-                            String resposta = Util.entrada.nextLine();
-                            if (resposta.equalsIgnoreCase("1")) {
-                                opcao = 3; // vai para mudar senha
-                                continue;
-                            } else {
-                                System.out.println("Retornando ao menu principal...");
-                                esperar1200();
-                            }
-                        }
+                        menuLogado(novaPessoa);
                         return true;
                     }
-                    case 5 -> {//sair do sistema
-                        System.out.println("H*&C Transportes agradece a sua preferência!");
-                        esperar1200();
-                        limparTela();
-                        return false;//sai do loop e finaliza o programa
-                    }
-                    default -> {
-                        System.out.println("Digite uma opção válida");
-                        esperar1200();  
-                        limparTela();
-                    }
-                }    
+                }
+                case 3 -> {
+                    //fica nessa subtela até pessoa sair
+                    if (!mudarSenha()) return true;
+                }
+                case 4 -> {
+                    //para codigo de alteração de senha
+                    consultarCaixaEntrada();
+                    return true;
+                }
+                case 5 -> {
+                    System.out.println("H&C Transportes agradece a sua preferência!");
+                    esperar1200();
+                    System.out.println("Finalizando...");
+                    esperar1800();
+                    limparTela();
+                    return false;
+                }
+                default -> {
+                    System.out.println("Digite uma opção válida.");
+                    esperar1800();
+                    limparTela();
+                }
             }
         }
-    } 
+    }
+    private static boolean login() {
+        Fachada fachada = Fachada.getInstancia();
+    
+        System.out.println("Qual seu ID?");
+        String IDPessoa = Util.entrada.nextLine();
+    
+        try {
+            Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
+            System.out.println("Bem-vindo de volta " + pessoa.getNome() + "! Digite sua senha:");
+            String senha = Util.entrada.nextLine();
+    
+            try {
+                fachada.receberSenhaLogin(senha, IDPessoa);
+                esperar1200();
+                limparTela();
+    
+                boolean continuar = menuLogado(pessoa);
+                while (continuar) {
+                    continuar = menuLogado(pessoa);
+                }
+                return true;
+    
+            } catch (SenhaIncorretaException e) {
+                System.out.println("Senha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
+                String resposta = Util.entrada.nextLine();
+    
+                if (resposta.equalsIgnoreCase("1")) {
+                    fachada.gerarCodigoRecuperacao(IDPessoa);
+                    System.out.println("Código enviado para a caixa de entrada.");
+                }
+                esperar1200();
+                limparTela();
+            }
+    
+        } catch (EntidadeNaoEncontradaException e) {
+            System.out.println("ID não encontrado. Deseja cadastrar-se? (1-Sim, Qualquer tecla-Não)");
+            String resposta = Util.entrada.nextLine();
+    
+            if (resposta.equalsIgnoreCase("1")) {
+                Pessoa novaPessoa = menuCadastro();
+                if (novaPessoa != null) {
+                    menuLogado(novaPessoa);
+                    return true;
+                }
+            }
+            esperar1200();
+            limparTela();
+        }
+    
+        return false;
+    }
+
+    private static boolean mudarSenha() {
+        Fachada fachada = Fachada.getInstancia();
+    
+        System.out.println("Deseja mudar sua senha? (1-Sim, Qualquer tecla-Não)");
+        String resposta = Util.entrada.nextLine();
+    
+        if (resposta.equalsIgnoreCase("1")) {
+            System.out.println("Digite seu ID:");
+            String IDPessoa = Util.entrada.nextLine();
+            
+            Pessoa pessoa;
+            try {
+                pessoa = fachada.buscarPessoa(IDPessoa);
+            }catch (EntidadeNaoEncontradaException e) {
+                System.out.println("Erro: " + e.getMessage());
+                esperar1800();
+                limparTela();
+                return true;
+            }
+                System.out.println("Digite seu código:");
+                String codigo = Util.entrada.nextLine();
+            try {
+                fachada.validarCodigoRecuperacao(codigo, pessoa);
+            }catch (CodigoIncorretoException c){
+                System.out.println("Erro: " + c.getMessage());
+                esperar1200();
+                limparTela();
+                return true; // volta para o menu "esqueci senha"
+            }
+                System.out.println("Digite sua nova senha:");
+                String novaSenha = Util.entrada.nextLine();
+    
+                fachada.mudarSenha(novaSenha, pessoa);
+                System.out.println("Senha alterada com sucesso!");
+                esperar1200();
+                limparTela();
+              
+        } else {
+            System.out.println("Retornando ao menu principal...");
+            esperar1200();
+            limparTela();
+        }
+    
+        return false;
+    }
+
+    private static void consultarCaixaEntrada() {
+        Fachada fachada = Fachada.getInstancia();
+    
+        System.out.println("Digite seu ID para acessar a caixa de entrada:");
+        String IDPessoa = Util.entrada.nextLine();
+    
+        try {
+            Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
+            String codigo = pessoa.getCodigoRecuperacao();
+    
+            if (codigo == null || codigo.isBlank()) {
+                System.out.println("Caixa vazia.");
+            } else {
+                System.out.println("Código: " + codigo);
+                System.out.println("Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
+                String resposta = Util.entrada.nextLine();
+                if (resposta.equalsIgnoreCase("1")) {
+                    mudarSenha(); // já reaproveita a função
+                }
+            }
+        } catch (EntidadeNaoEncontradaException e) {
+            System.out.println("ID não encontrado.");
+        }
+    
+        esperar1200();
+        limparTela();
+    }
     
     static Pessoa menuCadastro() { // falta limpar tela aqui e colocar delay
         Fachada fachada = Fachada.getInstancia();
@@ -818,9 +803,16 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
 
     
 
+    public static void  esperar1800(){
+        try {
+            Thread.sleep(2050);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public static void esperar1200(){
         try {
-            Thread.sleep(1650);
+            Thread.sleep(1250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -830,10 +822,13 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         System.out.flush();
     }
     public static void mensagemInicial(){//apenas para legibilidade da UI
+        esperar1200();
         System.out.println("\tH&C TRANSPORTES");
         System.out.println("TE LEVANDO ONDE VOCÊ QUER IR");
-        esperar1200();
-        System.out.println("Bem vindo ao sistema de transporte H&C!");
+        esperar1800();
+        limparTela();
+        System.out.println("Bem vindo ao sistema de transportes H&C!");
+        esperar1800();
     }
 } 
 

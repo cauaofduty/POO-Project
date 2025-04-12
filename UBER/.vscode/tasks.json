@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Compilar e rodar Java (Terminal externo)",
+        "type": "shell",
+        "command": "start cmd /k \"javac Main.java && java Main\"",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
