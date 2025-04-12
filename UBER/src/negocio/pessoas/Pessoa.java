@@ -1,6 +1,5 @@
 package negocio.pessoas;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import negocio.localizacao.Local;
@@ -8,8 +7,8 @@ import negocio.localizacao.Viagem;
 
 public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 100000L;
-    protected final String nome;//apenas nome de usuario
-    protected final String IDPessoa;//imutavel apos criacao
+    protected final String nome;
+    protected final String IDPessoa;
     protected final int idade;
     protected Local localAtual;
     protected String senhaAcesso;
@@ -29,12 +28,14 @@ public abstract class Pessoa implements Serializable {
         this. avaliacoes = new ArrayList<>();//inicializa com 5 estrelas
     } 
 
+
     //construtor para simulacao
-    public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico){
+    public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso, ArrayList<Viagem> viagensHistorico) {
         this(IDPessoa, idade, localAtual, nome);
         this.senhaAcesso = senhaAcesso;    
     }
-    //nao quero nem procurar onde se localiza a utilidade desse construtor
+
+
     public Pessoa(String IDPessoa, int idade, Local localAtual, String nome, String senhaAcesso) {
         this.IDPessoa = IDPessoa;
         this.idade = idade;
@@ -44,13 +45,11 @@ public abstract class Pessoa implements Serializable {
     }
 
 
-    //getters default abaixo
-    public String getNome(){
+    public String getNome() {
         return this.nome;
     }
-
     
-    public String getIDPessoa(){
+    public String getIDPessoa() {
         return this.IDPessoa;
     }
 

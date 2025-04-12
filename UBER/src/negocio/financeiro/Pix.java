@@ -3,38 +3,40 @@ package negocio.financeiro;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
+import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
 public class Pix implements FormaDePagamento, Serializable {
     private static final long serialVersionUID = 400003L;
     private final ArrayList<String> chaves;
-    private double saldoPix;//saldo deve ser uma classe??
+    private double saldoPix;
     private final String tipo = "Pix";
     
-    public Pix(String chave, double saldoPix){//apenas cadastra a primeira chave pix
+
+    public Pix(String chave, double saldoPix) { //cadastra apenas a primeira chave pix
         this.chaves = new ArrayList<>();
         this.chaves.add(chave);
         this.saldoPix = saldoPix;
     }
-    public void setSaldoPix(double saldoPix){
-        this.saldoPix = saldoPix;
-    }
-    public double getSaldoPix(){
-        return this.saldoPix;
-    }
-    public void addChave(String chave){
-        if (!this.chaves.contains(chave)) {  // Adicionei a verificação para evitar chaves duplicadas (Hugo)
-            this.chaves.add(chave);
+
+
+    @Override
+    public void pagar(double valor) throws Exception {
+        if(valor > saldoPix){
+            throw new PagamentoNegadoException("Pagamento recusado.", tipo);
         }
+        this.saldoPix -= valor;
     }
-    
-    public ArrayList<String> getChaves(){
-        return this.chaves;
+
+    //TERMINAR
+    @Override
+    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(chaves);
+    public String getTipo() {
+        return this.tipo;
     }
 
     @Override
@@ -48,25 +50,29 @@ public class Pix implements FormaDePagamento, Serializable {
                 return true; // pelo menos uma chave em comum
             }
         }
-
         return false; // nenhuma chave em comum
     }
-    
+
     @Override
-    public String getTipo(){
-        return this.tipo;
+    public int hashCode() {
+        return Objects.hash(chaves);
     }
-    @Override
-    public void pagar(double valor) throws Exception{
-        if(valor > saldoPix){
-            throw new PagamentoNegadoException("pagamento recusado.", tipo);
+
+    public void addChave(String chave) {
+        if (!this.chaves.contains(chave)) {
+            this.chaves.add(chave);
         }
-        this.saldoPix -= valor;//o recebimento sera feito ao motorista e isso
-        //tipo isso aqui
     }
-    //TERMINAR
-    @Override
-    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public double getSaldoPix() {
+        return this.saldoPix;
+    }
+
+    public void setSaldoPix(double saldoPix) {
+        this.saldoPix = saldoPix;
+    }
+    
+    public ArrayList<String> getChaves() {
+        return this.chaves;
     }
 }

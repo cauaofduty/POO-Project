@@ -8,11 +8,14 @@ import negocio.pessoas.Pessoa;
 
 public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
     private final String arquivo = "pessoas.bin";
-    private final ArrayList<Pessoa> pessoas;//mudei pois usei no codigo todo este tipo
+    private final ArrayList<Pessoa> pessoas;
 
     public RepositorioPessoaArquivo() {
         this.pessoas = carregarArquivo();
     }
+
+    // Funções declaradas na classe IRepositorioPessoa
+
     @Override
     public void adicionar(Pessoa pessoa) {
         pessoas.add(pessoa);
@@ -50,6 +53,8 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         return motoristas;
     }
 
+    // Funções para persistência de dados
+
     private void salvarArquivo() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(arquivo))) {
             out.writeObject(pessoas);
@@ -67,7 +72,9 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         }
     }
 
-    public ArrayList<Pessoa> getPessoas() {//precisei para adicao de certos atributos (id por exemplo)
+    // Função auxiliar
+
+    public ArrayList<Pessoa> getPessoas() {
         return pessoas;
     }
 }

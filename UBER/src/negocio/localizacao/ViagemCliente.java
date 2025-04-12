@@ -22,5 +22,4 @@ public class ViagemCliente extends Viagem {
                 "\n}\n";
     }
     
-    
 }

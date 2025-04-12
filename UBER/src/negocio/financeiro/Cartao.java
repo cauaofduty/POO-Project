@@ -2,11 +2,11 @@ package negocio.financeiro;
 
 import java.io.Serializable;
 import java.util.Objects;
+import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
-public class Cartao implements FormaDePagamento,Serializable {
+public class Cartao implements FormaDePagamento, Serializable {
     private static final long serialVersionUID = 400002L;
-
     private double limiteCartao; 
     private final String numeroCartao;
     private final String tipo = "Cartão";
@@ -20,29 +20,21 @@ public class Cartao implements FormaDePagamento,Serializable {
 
     @Override
     public void pagar(double valor) throws Exception {
-        if(valor > this.limiteCartao) throw new PagamentoNegadoException("pagamento negado.",tipo);
+        if(valor > this.limiteCartao) throw new PagamentoNegadoException("Pagamento negado.", tipo);
         this.limiteCartao -= valor;
     }
 
-    public double getLimiteCartao() {
-        return limiteCartao;
-    }
-
-
-    public void setLimiteCartao(double limiteCartao) {
-        this.limiteCartao = limiteCartao;
-    }
-
-
-    public String getNumeroCartao() {
-        return numeroCartao;
+    //TERMINAR
+    @Override
+    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
+        throw new UnsupportedOperationException("Unimplemented method 'registrarPagamento'");
     }
 
     @Override
     public String getTipo() {
         return this.tipo;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -56,11 +48,15 @@ public class Cartao implements FormaDePagamento,Serializable {
         return Objects.hash(numeroCartao);
     }
 
-    //TERMINAR
-    @Override
-    public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
-        throw new UnsupportedOperationException("Unimplemented method 'registrarPagamento'");
+    public double getLimiteCartao() {
+        return limiteCartao;
     }
-    
-    
+
+    public void setLimiteCartao(double limiteCartao) {
+        this.limiteCartao = limiteCartao;
+    }
+
+    public String getNumeroCartao() {
+        return numeroCartao;
+    }
 }

@@ -1,7 +1,7 @@
 package negocio.financeiro;
 
 import java.io.Serializable;
-
+import negocio.exceptions.PagamentoNegadoException;
 import negocio.pessoas.Pessoa;
 
 public class Dinheiro implements FormaDePagamento, Serializable {
@@ -9,32 +9,34 @@ public class Dinheiro implements FormaDePagamento, Serializable {
     private double saldo;
     private final String tipo = "Dinheiro";
 
-    public Dinheiro(double saldo){
-        this.saldo = saldo;
-    }
-    public double getSaldo() {
-        return saldo;
-    }
 
-    public void setSaldo(double saldo) {
+    public Dinheiro(double saldo) {
         this.saldo = saldo;
     }
 
 
     @Override
-        public void pagar(double valor) throws Exception {
-            if(valor > saldo) throw new PagamentoNegadoException("pagamento recusado.", tipo);
-            this.saldo -= valor; 
-        }
-
-    @Override
-    public String getTipo() {
-        throw new UnsupportedOperationException("Unimplemented method 'getTipo'");
+    public void pagar(double valor) throws Exception {
+        if(valor > saldo) throw new PagamentoNegadoException("Pagamento recusado.", tipo);
+        this.saldo -= valor; 
     }
 
     //TERMINAR
     @Override
     public void registrarPagamento(Pessoa cliente, Pessoa motorista, double valor) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getTipo() {
+        return this.tipo;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
     }
 }

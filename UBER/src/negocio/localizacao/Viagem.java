@@ -12,8 +12,6 @@ public abstract class Viagem implements Serializable {
     protected final Motorista motorista;
     protected  final double preco;
     protected boolean isSimulacao;
-    // Talvez fosse útil criar um campo com status da viagem, com um enum (Pendente, Em andamento, Concluída, Cancelada) (Hugo)
-    //como elas são concluidas em tempo de execção, creio que não seja necessário 
   
     public Viagem(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco , boolean simulacao){
         this.origem = origem;
@@ -23,15 +21,20 @@ public abstract class Viagem implements Serializable {
         this.preco = preco;
         this.isSimulacao = simulacao;
     }
+
+    
     public Local getOrigem() {
         return origem;
     }
+
     public Local getDestino() {
         return destino;
     }
+
     public Cliente getCliente() {
         return cliente;
     }
+
     public Motorista getMotorista() {
         return motorista;
     }

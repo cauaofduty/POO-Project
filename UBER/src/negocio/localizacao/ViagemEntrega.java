@@ -12,6 +12,7 @@ public class ViagemEntrega extends Viagem {
         this.pesoEntrega = pesoEntrega;
     }
     
+
     public double getPesoEntrega() {
         return pesoEntrega;
     }
@@ -20,11 +21,8 @@ public class ViagemEntrega extends Viagem {
         if (pesoEntrega < 0) throw new IllegalArgumentException("Peso da entrega não pode ser negativo.");
         this.pesoEntrega = pesoEntrega;
     }
-    
 
-    // Adicionar toString() para a classe ViagemEntrega, se necessário
-
-     @Override
+    @Override
     public String toString() {
         return "Viagem {\nCliente: " + cliente.getNome() +
                 "\nOrigem: " + origem.getZona() + ", " + origem.getBairro() + ", " + origem.getCidade() +
@@ -37,3 +35,4 @@ public class ViagemEntrega extends Viagem {
                 "\n}\n";
     }
 }
+

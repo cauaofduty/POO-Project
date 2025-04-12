@@ -7,10 +7,13 @@ import negocio.localizacao.CalculadorPreco;
 import negocio.localizacao.Local;
 import negocio.localizacao.Viagem;
 import negocio.localizacao.ViagemCliente;
+import negocio.veiculos.Economico;
+import negocio.veiculos.Motocicleta;
 import negocio.localizacao.ViagemEntrega;
 import negocio.localizacao.Zona;
 import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
+
 import negocio.veiculos.Veiculo;
 
 //como cumprem a mesma função e uma é intrinsecamente ligada a outra
@@ -56,8 +59,8 @@ public class GerenciadorViagens {
         ViagemEntrega viagem = new ViagemEntrega(origem, destino, cliente, motorista, preco, pesoEntrega, simulacao);
         repoViagem.adicionar(viagem);
     }
-/* 
-    public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
+
+    /* public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
         Motorista motorista = pessoaManager.buscarMotoristaDisponivel();
         if (motorista == null) {
             throw new EntidadeNaoEncontradaException("Nenhum motorista disponível no momento.");
@@ -70,17 +73,29 @@ public class GerenciadorViagens {
     }
 
     public void solicitarViagemEntrega(Local origem, Local destino, Cliente cliente, double pesoKg) throws EntidadeNaoEncontradaException {
-        Motorista motorista = pessoaManager.buscarMotoristaDisponivel();
-        if (motorista == null) {
-            throw new EntidadeNaoEncontradaException("Nenhum motorista disponível no momento.");
-        } 
+    Motorista motoristaPermitido = null;
 
-        Veiculo veiculo = motorista.getVeiculo();
-        double preco = calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
-        adicionarViagemEntrega(origem, destino, cliente, motorista, preco, pesoKg);
+    // Procura por um motorista disponível com veículo apropriado para entrega, veículos que não sejam do tipo Luxo ou SUV
+    for (Motorista motorista : pessoaManager.listarMotoristas()) {
+        if (motorista.isDisponivel()) {
+            Veiculo veiculo = motorista.getVeiculo();
+            if (veiculo instanceof Motocicleta || veiculo instanceof Economico) {
+                motoristaPermitido = motorista;
+                break;
+            }
+        }
+    }
 
-        motorista.setDisponivel(false);
-    }*/
+    if (motoristaPermitido == null) {
+        throw new EntidadeNaoEncontradaException("Nenhum motorista com veículo adequado disponível para entrega.");
+    }
+
+    Veiculo veiculo = motoristaPermitido.getVeiculo();
+    double preco = calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
+    adicionarViagemEntrega(origem, destino, cliente, motoristaPermitido, preco, pesoKg);
+
+    motoristaPermitido.setDisponivel(false);
+    }   */
 
     //a ideia é mostrar antes da viagem e realizar pagamento antes
     public double calcularPrecoViagem(Local origem, Local destino, Veiculo veiculo) {
@@ -91,12 +106,12 @@ public class GerenciadorViagens {
         return CalculadorPreco.calcularPrecoEntrega(origem, destino, veiculo, pesoKg);
     }
 
-    public ArrayList<Viagem> listarViagensCliente(String idCliente) {
-        return repoViagem.listarViagensCliente(idCliente);
+    public ArrayList<Viagem> listarViagensCliente(String IDPessoa) {
+        return repoViagem.listarViagensCliente(IDPessoa);
     }
 
-    public ArrayList<Viagem> listarViagensMotorista(String idMotorista) {
-        return repoViagem.listarViagensMotorista(idMotorista);
+    public ArrayList<Viagem> listarViagensMotorista(String IDPessoa) {
+        return repoViagem.listarViagensMotorista(IDPessoa);
     }
 
 }

@@ -5,6 +5,7 @@ public class Local {
     private final String bairro;
     private final Zona zona;
     
+
     //construtor completo
     public Local(String cidade, String bairro, Zona zona) {
         this.cidade = cidade;
@@ -12,10 +13,12 @@ public class Local {
         this.zona = zona;
     }
 
+
     //construtor cadastro (so com cidade)
-    public Local(String cidade){
+    public Local(String cidade) {
         this(cidade, null, null);
     }
+    
     
     public String getCidade() {
         return cidade;
@@ -23,6 +26,7 @@ public class Local {
     public String getBairro() {
         return bairro;
     }
+
     public Zona getZona() {
         return zona;
     }
