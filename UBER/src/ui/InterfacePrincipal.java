@@ -32,6 +32,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     }
 
     static boolean menu() {
+        @SuppressWarnings("unused")//implicando com a fachada mas não teria como eu instanciá-la no loop
         Fachada fachada = Fachada.getInstancia();
     
         while (true) {
@@ -54,7 +55,7 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                 case 2 -> {
                     //cadastro de pessoa
                     Pessoa novaPessoa = menuCadastro();
-                    //caso id nao exista na base de dados esta cadastrada
+                    //caso id nao exista na base de dados, será cadastrada
                     if (novaPessoa != null) {
                         System.out.println("Cadastro realizado! Seu ID: <" + novaPessoa.getIDPessoa() + ">");
                         esperar1200();
@@ -236,9 +237,9 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                 }
                 case 2 -> {// idade (retorna exception caso menor de idade)
                     System.out.println("Qual sua idade? (18 anos ou mais)");
+                    idade = Util.entrada.nextInt();
+                    Util.entrada.nextLine();
                     try {
-                        idade = Util.entrada.nextInt();
-                        Util.entrada.nextLine();
                         if (idade < 18) throw new IllegalArgumentException("Digite uma idade válida.");
                         //caso idade seja valida, incrementa etapa
                         etapa++;
@@ -250,14 +251,16 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                 case 3 -> {// criação e confirmação de senha
                     System.out.println("Digite sua senha:");
                     senha = Util.entrada.nextLine();
-                    System.out.println("Confirme sua senha:");
-                    confirmarSenha = Util.entrada.nextLine();
-                    if (!senha.equals(confirmarSenha)) {
-                        System.out.println("As senhas não coincidem.");
-                    } else if (senha.length() < 8) {
+                     if (senha.length() < 8) {
                         System.out.println("A senha deve ter pelo menos 8 caracteres.");
-                    } else {
-                        etapa++;
+                    }else {
+                        System.out.println("Confirme sua senha:");
+                        confirmarSenha = Util.entrada.nextLine();
+                        if (!senha.equals(confirmarSenha)) {
+                            System.out.println("As senhas não coincidem.");
+                        } else{
+                            etapa++;
+                        }
                     }
                 }
                 case 4 -> {//nome da cidade

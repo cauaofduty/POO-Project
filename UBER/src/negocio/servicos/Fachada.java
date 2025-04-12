@@ -112,7 +112,7 @@ public class Fachada {
     }
 
     //funções subordinadas da UI
-    public void criarSenha(String senhaAcesso, Pessoa pessoa) throws EntidadeNaoEncontradaException {
+    public void criarSenha(String senhaAcesso, Pessoa pessoa) throws EntidadeNaoEncontradaException, IllegalArgumentException {
         pessoaManager.criarSenha(senhaAcesso, pessoa);
     }
 

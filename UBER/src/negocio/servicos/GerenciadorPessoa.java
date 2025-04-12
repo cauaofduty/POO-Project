@@ -26,7 +26,7 @@ public class GerenciadorPessoa {
     public IRepositorioPessoa<Pessoa> getRepoPessoa() {
         return repoPessoa;
     }
-
+    //funcoes de cadastro e auxiliares>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
         //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {
@@ -36,6 +36,16 @@ public class GerenciadorPessoa {
         Cliente cliente = new Cliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
         repoPessoa.adicionar(cliente);//adiciona ao repositorio
         return cliente;
+    }
+    
+    public void criarSenha(String senha, Pessoa pessoa) throws EntidadeNaoEncontradaException, IllegalArgumentException {
+        Pessoa encontrada = repoPessoa.buscarPorID(pessoa.getIDPessoa());
+        //caso pessoa não exista
+        if (encontrada == null) throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
+        //caso senha fora do padrão
+        if(senha.length() < 8) throw new IllegalArgumentException("Senha não pode ter menos de 8 caracteres.");
+
+        encontrada.setSenhaAcesso(senha);
     }
 
     public Motorista cadastrarMotorista(Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
@@ -55,23 +65,11 @@ public class GerenciadorPessoa {
         if(repoPessoa.buscarPorID(IDPessoa) == null) throw new EntidadeNaoEncontradaException("ID não encontrado na base de dados.");
         return repoPessoa.buscarPorID(IDPessoa);
     }
-
-    public ArrayList<Cliente> listarClientes() {
-        return repoPessoa.listarClientes();
-    }
-
-    public ArrayList<Motorista> listarMotoristas() {
-        return repoPessoa.listarMotoristas();
-    }
-
-    //demais funções subordinadas:
-
     public Cartao cadastrarCartao(ArrayList<FormaDePagamento> formas,String numero, double limite) throws EntidadeJaExisteException {
         Cartao cartao = new Cartao(limite, numero); 
         if (formas.contains(cartao)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
         return cartao;
     }
-    
     public Pix cadastrarPix(ArrayList<FormaDePagamento> formas, String chave, double saldoPix)throws EntidadeJaExisteException {
         Pix pix = new Pix(chave, saldoPix);
         if(formas.contains(pix)) throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
@@ -80,6 +78,25 @@ public class GerenciadorPessoa {
         return pix;
     }
 
+    public String formatarCartao(String numeroCartao) {
+        //para adicionar os espacos manualmente para evitar mais complexidade
+        return numeroCartao.substring(0, 4) + " " +
+                numeroCartao.substring(4, 8) + " " +
+                numeroCartao.substring(8, 12) + " " +
+                numeroCartao.substring(12, 16);
+    }
+    
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    //funcões para UI>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    public void receberSenhaLogin(String senhaEsperada, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
+        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
+        //se pessoa for null ou se senha estiver incorreta, lança exceção 
+        if (pessoa == null) {
+            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
+        } else if (!pessoa.getSenhaAcesso().equals(senhaEsperada)) {
+            throw new SenhaIncorretaException("Senha incorreta");
+        }
+    }
     public void removerFormaPagamento(ArrayList<FormaDePagamento> formas, int indice) {
         if (formas == null || formas.isEmpty()) {
             throw new IllegalArgumentException("Não há formas de pagamento cadastradas.");
@@ -91,35 +108,9 @@ public class GerenciadorPessoa {
     
         formas.remove(indice);
     }
-
-    public String formatarCartao(String numeroCartao) {
-        //para adicionar os espacos manualmente para evitar mais complexidade
-        return numeroCartao.substring(0, 4) + " " +
-                numeroCartao.substring(4, 8) + " " +
-                numeroCartao.substring(8, 12) + " " +
-                numeroCartao.substring(12, 16);
-    }
-
-    //funcões para login, criar senha e mudar senha
-    public void receberSenhaLogin(String senhaEsperada, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
-        Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
-        //se pessoa for null ou se senha estiver incorreta, lança exceção 
-        if (pessoa == null) {
-            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
-        } else if (!pessoa.getSenhaAcesso().equals(senhaEsperada)) {
-            throw new SenhaIncorretaException("Senha incorreta");
-        }
-    }
-
-    public void criarSenha(String senha, Pessoa pessoa) throws EntidadeNaoEncontradaException {
-        Pessoa encontrada = repoPessoa.buscarPorID(pessoa.getIDPessoa());
-    
-        if (encontrada == null) {
-            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
-        }
-        encontrada.setSenhaAcesso(senha);
-    }
-    public void mudarSenha(Pessoa pessoa, String novaSenha) {
+    //usados no menu mudar senha>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    public void mudarSenha(Pessoa pessoa, String novaSenha) throws IllegalArgumentException {
+        if(novaSenha.length() < 8) throw new IllegalArgumentException("Senha não pode ter menos de 8 caracteres.");
         pessoa.setSenhaAcesso(novaSenha);
     }
     public void gerarCodigoRecuperacao(String IDPessoa){//nao necessita lançar exceção pois é garantido que pessoa existe
@@ -141,13 +132,24 @@ public class GerenciadorPessoa {
             throw new CodigoIncorretoException("Código de recuperação inválido.");
         }
     }
+    public ArrayList<Cliente> listarClientes() {
+        return repoPessoa.listarClientes();
+    }
 
-    public Motorista buscarMotoristaDisponivel() {
+    public ArrayList<Motorista> listarMotoristas() {
+        return repoPessoa.listarMotoristas();
+    }
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /* public Motorista buscarMotoristaDisponivel() {
         for (Motorista motorista : listarMotoristas()) {
             if (motorista.isDisponivel()) {
                 return motorista;
             }
         }
         return null;
-    }
+    } */
 }
