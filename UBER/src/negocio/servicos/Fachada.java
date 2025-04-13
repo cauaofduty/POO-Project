@@ -33,8 +33,9 @@ public class Fachada {
         if (instancia == null) instancia = new Fachada();
         return instancia;
     }
-
-    // Funções de GerenciadorPessoa (TALVEZ SOLTAR EXCEPTION DE SEGUNDA SENHA INCORRETA???????)
+    public void salvarEAtualizarPessoa(Pessoa pessoa){
+        pessoaManager.salvarPessoa(pessoa);
+    }
 
     public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {
         return pessoaManager.cadastrarCliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);

@@ -18,9 +18,20 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
 
     @Override
     public void adicionar(Pessoa pessoa) {
-        pessoas.add(pessoa);
+        //caso de atualizar pessoa
+        boolean adicionou = false;
+        for (int i = 0; i < pessoas.size(); i++) {
+            if (pessoas.get(i).getIDPessoa().equals(pessoa.getIDPessoa())) {
+                pessoas.set(i, pessoa);
+                adicionou = true;
+                break;
+            }
+        }
+        //caso de pessoa não existente
+        if(!adicionou) pessoas.add(pessoa);
         salvarArquivo();
     }
+
     @Override
     public Pessoa buscarPorID(String IDPessoa) {
         for (Pessoa p : pessoas) {
