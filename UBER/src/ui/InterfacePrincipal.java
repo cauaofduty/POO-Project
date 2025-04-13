@@ -77,8 +77,14 @@ class InterfacePrincipal {
                     return true;
                 }
                 case 3 -> {
-                    //fica nessa subtela até pessoa sair
-                    if (!mudarSenha()) return true;
+                    System.out.println("Deseja mudar sua senha? (1-Sim, Qualquer tecla-Não)");
+                    String resposta = Util.entrada.nextLine();
+                    if (resposta.equalsIgnoreCase("1")) {
+                        if (!mudarSenha()) return true;    
+                    }
+                    System.out.println("Retornando ao menu principal...");
+                    esperar1200();
+                    limparTela();
                 }
                 case 4 -> {
                     //para codigo de alteração de senha
@@ -161,7 +167,7 @@ class InterfacePrincipal {
                 } catch (SenhaIncorretaException e) {
                 //captura senha errada e pergunta por redefinição
                 System.out.println("Erro: " + e.getMessage());
-                System.out.println("\nSenha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
+                System.out.println("\nSenha incorreta.");
                 
                 String resposta = Util.entrada.nextLine();
                 if (resposta.equalsIgnoreCase("1")) {
@@ -183,10 +189,6 @@ class InterfacePrincipal {
     private static boolean mudarSenha() {
         Fachada fachada = Fachada.getInstancia();
     
-        System.out.println("Deseja mudar sua senha? (1-Sim, Qualquer tecla-Não)");
-        String resposta = Util.entrada.nextLine();
-    
-        if (resposta.equalsIgnoreCase("1")) {
             System.out.println("Digite seu ID:");
             String IDPessoa = Util.entrada.nextLine();
             
@@ -199,6 +201,17 @@ class InterfacePrincipal {
                 limparTela();
                 return true;
             }
+                if(pessoa.getCodigoRecuperacao() == null){
+                    System.out.println("Não há código na sua caixa de entrada. enviando um...");
+                    esperar1800();
+                    limparTela();
+                    fachada.gerarCodigoRecuperacao(IDPessoa);
+                    System.out.println("Codigo recebido! Veja ele a seguir: " + pessoa.getCodigoRecuperacao());
+                    
+                    System.out.println("Utilize-o a seguir para redefinir sua senha. Digite qualquer tecla para continuar");
+                    Util.entrada.nextLine();
+                    limparTela();
+                }
                 System.out.println("Digite seu código:");
                 String codigo = Util.entrada.nextLine();
             try {
@@ -216,13 +229,7 @@ class InterfacePrincipal {
                 System.out.println("Senha alterada com sucesso!");
                 esperar1200();
                 limparTela();
-              
-        } else {
-            System.out.println("Retornando ao menu principal...");
-            esperar1200();
-            limparTela();
-        }
-        return false;
+                return true;
     }
 
     private static void consultarCaixaEntrada() {
@@ -788,6 +795,7 @@ class InterfacePrincipal {
                                         System.out.println("Opção inválida. Tente novamente.");
                                     }
                                 }
+                                fachada.salvarPessoa(pessoa);
                             }
                             return true;//retorna ao menu logado
                         }

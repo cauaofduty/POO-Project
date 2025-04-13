@@ -50,5 +50,13 @@ public abstract class Viagem implements Serializable {
     public void setIsSimulacao(boolean isSimulacao) {
         this.isSimulacao = isSimulacao;
     }
+
+    @Override
+    public String toString() {
+        return " | Cliente: " + cliente.getNome() + " | Motorista: " + motorista.getNome() + 
+               " | Origem: " + origem.getZona() + ", " + origem.getBairro() + ", " + origem. getCidade() +
+               " | Destino: " + destino.getZona() + ", " + destino.getBairro() + ", " + destino. getCidade() +
+               " | Preço: R$ " + String.format("%.2f", preco);
+    }
     
 }

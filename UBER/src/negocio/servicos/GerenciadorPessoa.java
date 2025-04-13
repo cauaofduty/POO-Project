@@ -27,6 +27,11 @@ public class GerenciadorPessoa {
         return repoPessoa;
     }
     //funcoes de cadastro e auxiliares>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    public void salvarPessoa(Pessoa pessoa){
+        repoPessoa.adicionar(pessoa);
+    }
+
     public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {//separado pois tratam atributos diferentes
         //exception caso IDPessoa ja exista no repositório
         if (repoPessoa.buscarPorID(IDPessoa) != null) {

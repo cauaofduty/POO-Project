@@ -10,16 +10,5 @@ public class ViagemCliente extends Viagem {
         super(origem, destino, cliente, motorista, preco, simulacao);
     }
 
-    @Override
-    public String toString() {
-        return "Viagem {\nCliente: " + cliente.getNome() +
-                "\nOrigem: " + origem.getZona() + ", " + origem.getBairro() + ", " + origem.getCidade() +
-                "\nDestino: " + destino.getZona() + ", " + destino.getBairro() + ", " + destino.getCidade() +
-                "\nMotorista: " + motorista.getNome() +
-                "\nVeículo: " + motorista.getVeiculo() + ", " + "Tipo: " + motorista.getVeiculo().getClass() + ", " + "Placa: " + motorista.getVeiculo().getPlaca() +
-                "\nSimulação: " + isSimulacao +
-                "\nValor: " + preco +
-                "\n}\n";
-    }
-    
+
 }

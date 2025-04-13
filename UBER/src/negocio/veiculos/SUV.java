@@ -16,6 +16,7 @@ public class SUV extends Veiculo {//ver isso
         return taxaViagem;
     }
 
+    @Override
     public String getTipo() {
         return tipo;
     }

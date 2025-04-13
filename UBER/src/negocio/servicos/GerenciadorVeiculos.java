@@ -1,8 +1,7 @@
 package negocio.servicos;
 
-import java.util.List;
-
 import dados.RepositorioVeiculoArquivo;
+import java.util.List;
 import negocio.exceptions.EntidadeJaExisteException;
 import negocio.veiculos.Economico;
 import negocio.veiculos.Luxo;
@@ -16,6 +15,10 @@ public class GerenciadorVeiculos {
 
     public GerenciadorVeiculos() {
         this.repoVeiculo = new RepositorioVeiculoArquivo();
+    }
+
+    public void salvarVeiculo(Veiculo veiculo){
+        repoVeiculo.adicionar(veiculo);
     }
 
     public Veiculo cadastrarVeiculo(String placa, String cor, int ano, String nome, int tipoVeiculo) throws EntidadeJaExisteException {//adiciona qualquer tipo de veículo ao repositorio, e deve ser adicionado ao histórico de veículos do motorista

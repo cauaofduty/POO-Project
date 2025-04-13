@@ -24,15 +24,7 @@ public class ViagemEntrega extends Viagem {
 
     @Override
     public String toString() {
-        return "Viagem {\nCliente: " + cliente.getNome() +
-                "\nOrigem: " + origem.getZona() + ", " + origem.getBairro() + ", " + origem.getCidade() +
-                "\nDestino: " + destino.getZona() + ", " + destino.getBairro() + ", " + destino.getCidade() +
-                "\nMotorista: " + motorista.getNome() +
-                "\nVeículo: " + motorista.getVeiculo() + ", " + "Tipo: " + motorista.getVeiculo().getClass() + ", " + "Placa: " + motorista.getVeiculo().getPlaca() +
-                "\nPeso da entrega: " + pesoEntrega + " kg" +
-                "\nSimulação: " + isSimulacao +
-                "\nValor: " + preco +
-                "\n}\n";
+        return super.toString() + " | Peso da Entrega: " + String.format("%.2f", pesoEntrega) + " kg";
     }
 }
 
