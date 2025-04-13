@@ -86,12 +86,10 @@ public class GerenciadorPessoa {
     
     
     //funcões para UI>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    public void receberSenhaLogin(String senhaEsperada, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
+    public void receberSenhaLogin(String senhaEsperada, String IDPessoa) throws SenhaIncorretaException {
         Pessoa pessoa = repoPessoa.buscarPorID(IDPessoa);
         //se pessoa for null ou se senha estiver incorreta, lança exceção 
-        if (pessoa == null) {
-            throw new EntidadeNaoEncontradaException("Pessoa não encontrada.");
-        } else if (!pessoa.getSenhaAcesso().equals(senhaEsperada)) {
+        if (!pessoa.getSenhaAcesso().equals(senhaEsperada)) {
             throw new SenhaIncorretaException("Senha incorreta");
         }
     }

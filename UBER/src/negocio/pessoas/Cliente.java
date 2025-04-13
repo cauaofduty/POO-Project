@@ -30,6 +30,27 @@ public class Cliente extends Pessoa{
         this.formasPagamento.add(formaPagamento);
     }
 
+    @Override
+    public String toString() {
+    return super.toString() +
+        " | Formas de pagamento: " + listarFormasPagamento();
+    }
+
+    private String listarFormasPagamento() {
+    if (formasPagamento.isEmpty()) {
+        return "Nenhuma";
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < formasPagamento.size(); i++) {
+        sb.append(formasPagamento.get(i).toString());
+        if (i < formasPagamento.size() - 1) {
+            sb.append(", ");
+        }
+    }
+    return sb.toString();
+    }
+
 }
 
 

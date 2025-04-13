@@ -86,19 +86,10 @@ public class Fachada {
         Zona.valueOf(entrada.trim().toUpperCase());
     }
 
-/* 
-    public void solicitarViagemCliente(Local origem, Local destino, Cliente cliente) throws EntidadeNaoEncontradaException {
-        viagemManager.solicitarViagemCliente(origem, destino, cliente);
-    }
- */
     public void adicionarViagemCliente(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, boolean simulacao) {
         viagemManager.adicionarViagemCliente(origem, destino, cliente,motorista, preco, simulacao );
     }
-/* 
-    public void solicitarViagemEntrega(Local origem, Local destino, Cliente cliente, double peso) throws EntidadeNaoEncontradaException {
-        viagemManager.solicitarViagemEntrega(origem, destino, cliente, peso);
-    }
- */
+
     public void adicionarViagemEntrega(Local origem, Local destino, Cliente cliente, Motorista motorista, double preco, double pesoEntrega, boolean simulacao) {
         viagemManager.adicionarViagemEntrega(origem, destino, cliente,motorista, preco, pesoEntrega, simulacao);
     }
@@ -110,13 +101,17 @@ public class Fachada {
     public ArrayList<Viagem> listarViagensMotorista(String idMotorista) {
         return viagemManager.listarViagensMotorista(idMotorista);
     }
+    
+    public ArrayList<Viagem> listarViagensGeral() {
+        return viagemManager.listarViagensGeral();
+    }
 
     //funções subordinadas da UI
     public void criarSenha(String senhaAcesso, Pessoa pessoa) throws EntidadeNaoEncontradaException, IllegalArgumentException {
         pessoaManager.criarSenha(senhaAcesso, pessoa);
     }
 
-    public void receberSenhaLogin(String senha, String IDPessoa) throws SenhaIncorretaException, EntidadeNaoEncontradaException {
+    public void receberSenhaLogin(String senha, String IDPessoa) throws SenhaIncorretaException{
         pessoaManager.receberSenhaLogin(senha, IDPessoa);
     }
 

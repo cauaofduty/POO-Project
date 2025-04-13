@@ -57,10 +57,6 @@ public class Pix extends FormaDePagamento {
         return Objects.hash(chaves);
     }
 
-    @Override
-    public String toString() {
-        return "Pix: " + chaves;
-    }
 
     public void addChave(String chave) {
         if (!this.chaves.contains(chave)) {
@@ -79,4 +75,25 @@ public class Pix extends FormaDePagamento {
     public ArrayList<String> getChaves() {
         return this.chaves;
     }
+    @Override
+public String toString() {
+    return "Tipo: " + tipo +
+           " | Saldo: R$ " + String.format("%.2f", saldoPix) +
+           " | Chaves: " + listarChaves();
+}
+
+private String listarChaves() {
+    if (chaves.isEmpty()) {
+        return "Nenhuma";
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < chaves.size(); i++) {
+        sb.append(chaves.get(i));
+        if (i < chaves.size() - 1) {
+            sb.append(", ");
+        }
+    }
+    return sb.toString();
+}
 }

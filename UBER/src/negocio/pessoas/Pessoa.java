@@ -103,5 +103,13 @@ public abstract class Pessoa implements Serializable {
         this.nota = (double) soma / avaliacoes.size();
     }
 
+    @Override
+    public String toString() {
+        return "Nome: " + nome +
+            " | ID: " + IDPessoa +
+            " | Idade: " + idade +
+            " | Nota média: " + String.format("%.2f", nota);
+    }
+
 
 }

@@ -47,10 +47,7 @@ public class Cartao extends FormaDePagamento {
         return Objects.hash(numeroCartao);
     }
 
-    @Override
-    public String toString() {
-        return "Cartão (" + numeroCartao + ") - Limite: R$" + String.format("%.2f", limiteCartao);
-    }
+
 
     public double getLimiteCartao() {
         return limiteCartao;
@@ -63,4 +60,11 @@ public class Cartao extends FormaDePagamento {
     public String getNumeroCartao() {
         return numeroCartao;
     }
+
+    @Override
+    public String toString() {
+    return "Tipo: " + tipo +
+           " | Número: " + numeroCartao +
+           " | Limite: R$ " + String.format("%.2f", limiteCartao);
+}
 }

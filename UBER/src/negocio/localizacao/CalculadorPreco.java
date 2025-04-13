@@ -1,6 +1,5 @@
 package negocio.localizacao;
 import java.io.Serializable;
-
 import negocio.veiculos.Veiculo;
 
 public class CalculadorPreco implements Serializable {
@@ -69,12 +68,12 @@ public class CalculadorPreco implements Serializable {
         preco = preco + (preco * taxa); // Aplicando modificação com a taxa do veículo
 
         //acrescimo para bairro diferente, como nao é sabido distância real e é caro        
-        if(!origem.getBairro().equals(destino.getBairro())) {
+        if(!origem.getBairro().toUpperCase().equals(destino.getBairro().toUpperCase())) {
             preco += 3.0; 
         }
         
         //acrescimo para cidade diferente, como nao é sabido distância real e é caro
-        if(!origem.getCidade().equals(destino.getCidade())) {
+        if(!origem.getCidade().toUpperCase().equals(destino.getCidade().toUpperCase())) {
             preco += 30.0; 
         }
     

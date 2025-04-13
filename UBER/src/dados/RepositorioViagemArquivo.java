@@ -22,6 +22,10 @@ public class RepositorioViagemArquivo implements IRepositorioViagem<Viagem> {
         salvarArquivo();
     }
 
+    public ArrayList<Viagem> listarTodasViagens() {
+        return viagens;
+    }
+
     @Override
     public ArrayList<Viagem> listarViagensCliente(String IDPessoa) {
         ArrayList<Viagem> viagemCliente = new ArrayList<>();

@@ -19,7 +19,7 @@ import negocio.veiculos.Veiculo; // Added import for Cartao
 import simulacao.PessoasRandom; // Added import for Pix
 import simulacao.SimuladorViagens;
 
-class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
+class InterfacePrincipal {
 
     public static void main(final String[] args) throws Exception {
         
@@ -47,7 +47,8 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             System.out.print("Opção: ");
     
             int opcao = Util.entrada.nextInt();
-            Util.entrada.nextLine(); // limpar buffer
+            //limpar buffer
+            Util.entrada.nextLine(); 
             limparTela();
     
             switch (opcao) {
@@ -62,13 +63,18 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                     if (novaPessoa != null) {
                         System.out.println("Seu ID: <" + novaPessoa.getIDPessoa() + ">");
                         System.out.println("Guarde-o, ele é importante para o login!");
-                        System.out.println("Pressione ENTER para continuar...");
+                        System.out.println("Pressione qualquer tecla para continuar");
                         Util.entrada.nextLine();
                         esperar1200();
                         limparTela();
-                        menuLogado(novaPessoa);
+                        boolean logado = menuLogado(novaPessoa);
+                        while(logado) logado = menuLogado(novaPessoa);
                         return true;
                     }
+                    //caso não cadastrado
+                    esperar1200();
+                    limparTela();
+                    return true;
                 }
                 case 3 -> {
                     //fica nessa subtela até pessoa sair
@@ -100,51 +106,78 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
     
         System.out.println("Qual seu ID?");
         String IDPessoa = Util.entrada.nextLine();
-    
-        try {
-            Pessoa pessoa = fachada.buscarPessoa(IDPessoa);
-            System.out.println("\nBem-vindo de volta " + pessoa.getNome() + "! Digite sua senha:");
+        
+        //CHECAGEM DO ADMIN
+        if(IDPessoa.equals("admin") ){
+            System.out.println("Digite sua senha: ");
             String senha = Util.entrada.nextLine();
-    
-            try {
-                fachada.receberSenhaLogin(senha, IDPessoa);
-                esperar1200();
-                limparTela();
-    
-                boolean continuar = menuLogado(pessoa);
-                while (continuar) {
-                    continuar = menuLogado(pessoa);
+            while(!senha.equals("admin")){
+                System.out.println("Senha incorreta. 1- Tentar novamente | Qualquer tecla- Sair");
+                String opt = Util.entrada.nextLine();
+                if(!opt.equals("1")){
+                    return true;
                 }
-                return true;
-    
-            } catch (SenhaIncorretaException e) {
-                System.out.println("\nSenha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
-                String resposta = Util.entrada.nextLine();
-    
-                if (resposta.equalsIgnoreCase("1")) {
-                    fachada.gerarCodigoRecuperacao(IDPessoa);
-                    System.out.println("Código enviado para a caixa de entrada.");
-                }
-                esperar1200();
-                limparTela();
+                //caso 1 recebe senha
+                senha = Util.entrada.next();
             }
-    
+                menuAdmin();
+                limparTela();
+                return true; 
+            }
+
+        Pessoa pessoa = null; 
+        try {
+            pessoa = fachada.buscarPessoa(IDPessoa);
         } catch (EntidadeNaoEncontradaException e) {
             System.out.println("\nID não encontrado. Deseja cadastrar-se? (1-Sim, Qualquer tecla-Não)");
             String resposta = Util.entrada.nextLine();
     
             if (resposta.equalsIgnoreCase("1")) {
+                limparTela();
+                esperar1200();
                 Pessoa novaPessoa = menuCadastro();
                 if (novaPessoa != null) {
                     menuLogado(novaPessoa);
                     return true;
                 }
+                System.out.println("Retornando ao menu...");
+                esperar1800();
+                limparTela();
+                return true;
+            } else{
+                System.out.println("Retornando ao menu...");
+                esperar1800();
+                limparTela();
+                return true;
             }
-            esperar1200();
-            limparTela();
         }
-    
-        return false;
+        
+        
+        System.out.println("Bem-Vindo(a) de volta "+ pessoa.getNome() + ". Digite sua senha: ");
+        String senha = Util.entrada.nextLine();
+            try {
+                //tenta receber senha ou lançar exception
+                fachada.receberSenhaLogin(senha, IDPessoa);
+                } catch (SenhaIncorretaException e) {
+                //captura senha errada e pergunta por redefinição
+                System.out.println("Erro: " + e.getMessage());
+                System.out.println("\nSenha incorreta. Deseja redefinir sua senha? (1-Sim, Qualquer tecla-Não)");
+                
+                String resposta = Util.entrada.nextLine();
+                if (resposta.equalsIgnoreCase("1")) {
+                    fachada.gerarCodigoRecuperacao(IDPessoa);
+                    System.out.println("Código enviado para a caixa de entrada. Retorne ao menu para vê-lo utilizando seu ID.");
+                }
+                esperar1800();
+                limparTela();
+                return true;
+            }
+            //caso de senha correta, abre menuLogado ou menuAdmin
+            boolean continuar = menuLogado(pessoa);
+            while (continuar) {
+                continuar = menuLogado(pessoa);
+            }
+            return true;//volta ao menu
     }
 
     private static boolean mudarSenha() {
@@ -189,7 +222,6 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
             esperar1200();
             limparTela();
         }
-    
         return false;
     }
 
@@ -231,10 +263,8 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         Local local = null;
         ArrayList<FormaDePagamento> formas = new ArrayList<>();
 
-        boolean cadastroFinalizado = false;
-        //usado para navegar entre etapas em caso de erros
         int etapa = 1;
-        while (!cadastroFinalizado) {
+        while (true) {
             switch (etapa) {
                 case 1 -> { //apenas nome
                     System.out.println("Qual seu nome?");
@@ -293,37 +323,87 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
                     etapa++;
                 }
                 case 7 -> {
-                    if (tipoCadastro == 1) {
+                    if (tipoCadastro == 1) { // Motorista
                         Veiculo veiculo = criarVeiculo();
-                        if(veiculo != null){
-                            try {
-                                pessoa = fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senha);
+                        if (veiculo != null) {
+                            pessoa = cadastrarMotoristaComVeiculo(fachada, veiculo, IDPessoa, idade, local, nome, senha);
+                            if (pessoa != null) {
                                 System.out.println("\nMotorista cadastrado com sucesso!");
                                 return pessoa;
-                            } catch (EntidadeJaExisteException e ) {//nao ira cair nesse cath mas por segurança esta ai
-                                System.out.println("Erro: " + e.getMessage());
+                            } else {
+                                System.out.println("Falha ao cadastrar motorista.");
                             }
+                        } else {
+                            System.out.println("Já existe um veículo cadastrado com essa placa.");
                         }
-                        //caso veiculo null (placa ja existe)  
-                        else {
-                            System.out.println("Já existe um veículo cadastrado com essa placa. Tente novamente");
+                    } else { // Cliente
+                        cadastrarFormasPagamentoCliente(formas);
+                        pessoa = cadastrarClienteComFormas(fachada, formas, IDPessoa, idade, local, nome, senha);
+                        if (pessoa != null) {
+                            System.out.println("Cliente cadastrado com sucesso!");
+                            System.out.println("Fazendo login...");
+                            esperar1800();
+                            return pessoa;
+                        } else {
+                            System.out.println("Falha ao cadastrar cliente.");
                         }
-                    //cadastro de cliente
-                    } else  {
-                        cadastrarFormasPagamentoCliente(formas); //por ficar muito grande fiz função separada
-                        try {
-                            pessoa = fachada.cadastrarCliente(formas, IDPessoa, idade, local, nome, senha);
-                        } catch (EntidadeJaExisteException e) {
-                            System.out.println("Erro: " + e.getMessage());
-                        }
-                        System.out.println("Cliente cadastrado com sucesso!");
                     }
-                    cadastroFinalizado = true;
+                
+                    // Menu de decisão após falha no cadastro
+                    System.out.println("\nO que deseja fazer?");
+                    System.out.println("1 - Refazer a etapa anterior");
+                    System.out.println("2 - Voltar ao início do cadastro");
+                    System.out.println("3 - Tentar novamente esta etapa");
+                    System.out.println("4 - Cancelar cadastro");
+                
+                    String escolha = Util.entrada.nextLine();
+                    switch (escolha) {
+                        case "1" -> {
+                            etapa = 6;
+                            continue;
+                        }
+                        case "2" -> {
+                            etapa = 1;
+                            continue;
+                        }
+                        case "3" -> {
+                            etapa = 7;
+                            continue;
+                        }
+                        case "4" -> {
+                            System.out.println("Cadastro cancelado.");
+                            return null;
+                        }
+                        default -> {
+                            System.out.println("Opção inválida. Retornando à etapa 7.");
+                            etapa = 7;
+                            continue;
+                        }
+                    }
                 }
+                 
             }
         }
-        return pessoa;// ENFIM
     }
+
+    private static Pessoa cadastrarMotoristaComVeiculo(Fachada fachada, Veiculo veiculo, String IDPessoa, int idade, Local local, String nome, String senha) {
+        try {
+            return fachada.cadastrarMotorista(veiculo, IDPessoa, idade, local, nome, senha);
+        } catch (EntidadeJaExisteException e) {
+            System.out.println("Erro ao cadastrar motorista: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    private static Pessoa cadastrarClienteComFormas(Fachada fachada, ArrayList<FormaDePagamento> formas, String IDPessoa, int idade, Local local, String nome, String senha) {
+        try {
+            return fachada.cadastrarCliente(formas, IDPessoa, idade, local, nome, senha);
+        } catch (EntidadeJaExisteException e) {
+            System.out.println("Erro ao cadastrar cliente: " + e.getMessage());
+            return null;
+        }
+    }
+    
     
     private static void cadastrarFormasPagamentoCliente(ArrayList<FormaDePagamento> formas) {
         Fachada fachada = Fachada.getInstancia();
@@ -831,7 +911,37 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         return true;
     } 
 
+    static void menuAdmin() {
+        limparTela();
+        Fachada fachada = Fachada.getInstancia();
+        
+        System.out.println("\n=== Painel Administrativo (Read-Only) ===");
     
+        System.out.println("\n--- Clientes ---");
+        for (Cliente cliente : fachada.listarClientes()) {
+            System.out.println(cliente);
+        }
+    
+        System.out.println("\n--- Motoristas ---");
+        for (Motorista motorista : fachada.listarMotoristas()) {
+            System.out.println(motorista);
+        }
+    
+        System.out.println("\n--- Veículos ---");
+        for (Veiculo veiculo : fachada.listarVeiculos()) {
+            System.out.println(veiculo);
+        }
+    
+        System.out.println("\n--- Viagens ---");
+        for (Viagem viagem : fachada.listarViagensGeral()) {
+            System.out.println(viagem);
+        }
+    
+        System.out.println("\n=============================\n");
+
+        System.out.println("Digite qualquer tecla para sair ");
+        Util.entrada.nextLine();
+    }
 
     public static void  esperar1800(){
         try {
@@ -852,12 +962,11 @@ class InterfacePrincipal {//destaquei com >>>>> a linha de algo que falta
         System.out.flush();
     }
     public static void mensagemInicial(){//apenas para legibilidade da UI
-        esperar1200();
-        System.out.println("      H&C TRANSPORTES");
-        System.out.println("TE LEVANDO ONDE VOCÊ QUER IR");
-        esperar1800();
         limparTela();
-        System.out.println("Bem vindo ao sistema de transportes H&C!");
+        esperar1200();
+        System.out.println("\t\tH&C TRANSPORTES\n\tTE LEVANDO AONDE VOCÊ QUER IR");
+        esperar1800();
+        System.out.println("\n\tBem vindo ao sistema de transportes H&C!");
         esperar1800();
     }
 } 
