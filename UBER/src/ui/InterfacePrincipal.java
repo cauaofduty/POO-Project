@@ -207,7 +207,7 @@ class InterfacePrincipal {
                     limparTela();
                     fachada.gerarCodigoRecuperacao(IDPessoa);
                     System.out.println("Codigo recebido! Veja ele a seguir: " + pessoa.getCodigoRecuperacao());
-                    
+                    fachada.salvarEAtualizarPessoa(pessoa);
                     System.out.println("Utilize-o a seguir para redefinir sua senha. Digite qualquer tecla para continuar");
                     Util.entrada.nextLine();
                     limparTela();
@@ -227,6 +227,8 @@ class InterfacePrincipal {
     
                 fachada.mudarSenha(novaSenha, pessoa);
                 System.out.println("Senha alterada com sucesso!");
+                //atualiza no repositório
+                fachada.salvarEAtualizarPessoa(pessoa);
                 esperar1200();
                 limparTela();
                 return true;
@@ -255,7 +257,6 @@ class InterfacePrincipal {
         } catch (EntidadeNaoEncontradaException e) {
             System.out.println("ID não encontrado.");
         }
-    
         esperar1200();
         limparTela();
     }
@@ -550,6 +551,7 @@ class InterfacePrincipal {
         } catch (EntidadeJaExisteException e) {
             System.out.println("Erro: " + e.getMessage());
         }
+        fachada.salvarEAtualizarVeiculo(veiculo);
         return veiculo;
     }
 
@@ -624,7 +626,6 @@ class InterfacePrincipal {
                                 negocio.servicos.Util.entrada.nextLine(); // Limpar o buffer do scanner
                             }
 
-                            //observar esse switch, não consigo prever seu comportamento  E ADICIOANR A ESCOLHA DE MORTORISTA
                             switch(tipo){
                                 case 1->{//viagem normal
                                     System.out.println("\nMotoristas disponíveis:");
@@ -762,13 +763,14 @@ class InterfacePrincipal {
                                 switch (opt) {
                                     case 1 -> {
                                         cadastrarFormasPagamentoCliente(cliente.getFormasPagamento());
-                                        return true;
+                                        break;
                                     }
                                     case 2 -> {
                                         ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
                         
                                         if (formas.isEmpty()) {
                                             System.out.println("Você não possui nenhuma forma de pagamento cadastrada.");
+                                            esperar1800();
                                             break;
                                         }
                         
@@ -784,9 +786,11 @@ class InterfacePrincipal {
                                         try {
                                             fachada.removerFormaPagamento(formas, indice);
                                             System.out.println("Forma de pagamento removida com sucesso.");
+                                            
                                         } catch (IllegalArgumentException e) {
                                             System.out.println("Erro: " + e.getMessage());
                                         }
+                                        break;
                                     }
                                     case 3 -> {
                                         editando = false; // Volta para o menu principal
@@ -795,8 +799,8 @@ class InterfacePrincipal {
                                         System.out.println("Opção inválida. Tente novamente.");
                                     }
                                 }
-                                fachada.salvarPessoa(pessoa);
                             }
+                            fachada.salvarEAtualizarPessoa(pessoa);
                             return true;//retorna ao menu logado
                         }
                         case 4 -> {
@@ -890,6 +894,7 @@ class InterfacePrincipal {
                             
                             if (novoVeiculo != null) {
                                 motorista.setVeiculo(novoVeiculo);
+                                fachada.salvarEAtualizarVeiculo(novoVeiculo);
                                 System.out.println("\nVeículo alterado com sucesso!\n");
                                 trocando = false;
                                 esperar1200();

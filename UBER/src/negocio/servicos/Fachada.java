@@ -37,6 +37,10 @@ public class Fachada {
         pessoaManager.salvarPessoa(pessoa);
     }
 
+    public void salvarEAtualizarVeiculo(Veiculo veiculo){
+        veiculoManager.salvarVeiculo(veiculo);
+    }
+
     public Cliente cadastrarCliente(ArrayList<FormaDePagamento> formaDePagamentos, String IDPessoa, int idade, Local local, String nome, String senhaAcesso) throws EntidadeJaExisteException {
         return pessoaManager.cadastrarCliente(formaDePagamentos, IDPessoa, idade, local, nome, senhaAcesso);
     }
