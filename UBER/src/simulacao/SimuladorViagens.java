@@ -60,8 +60,7 @@ public class SimuladorViagens {
     motorista.setSaldoMotorista(motorista.getSaldoMotorista() + preco);
 }
 
-    public Viagem simularViagemCliente(Cliente cliente, Motorista motorista, Local origem, Local destino) throws Exception {
-        double preco = viagemManager.calcularPrecoViagem(origem, destino, motorista.getVeiculo());
+    public Viagem simularViagemCliente(Cliente cliente, Motorista motorista, Local origem, Local destino, double preco) throws Exception {
         ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
         boolean pagamentoRealizado = false;
 
@@ -72,7 +71,6 @@ public class SimuladorViagens {
                         cartao.setLimiteCartao(cartao.getLimiteCartao() - preco);
                         pagamentoRealizado = true;
                         System.out.println("Pagamento realizado via cartão.");
-                        break;
                     }
                 }
                 case Pix pix -> {
@@ -86,6 +84,8 @@ public class SimuladorViagens {
                 default -> {
                 }
             }
+            //sai do loop caso pagamento já realizado
+            if(pagamentoRealizado) break;
         }
         //checa se as formas de pagamento foram válidas
         if (!pagamentoRealizado) {
@@ -97,8 +97,7 @@ public class SimuladorViagens {
         return viagem;
     }
 
-    public Viagem simularViagemEntrega(Cliente cliente, Motorista motorista, Local origem, Local destino, double peso) throws Exception {
-        double preco = viagemManager.calcularPrecoEntrega(origem, destino, motorista.getVeiculo(), peso);
+    public Viagem simularViagemEntrega(Cliente cliente, Motorista motorista, Local origem, Local destino, double peso, double preco) throws Exception {
         ArrayList<FormaDePagamento> formas = cliente.getFormasPagamento();
         boolean pagamentoRealizado = false;
     

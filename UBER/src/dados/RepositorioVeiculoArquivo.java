@@ -2,6 +2,7 @@ package dados;
 
 import java.io.*;
 import java.util.ArrayList;
+
 import negocio.veiculos.Veiculo;
 
 public class RepositorioVeiculoArquivo implements IRepositorioVeiculo<Veiculo> {

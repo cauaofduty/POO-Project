@@ -33,5 +33,12 @@ public class Local implements Serializable {
     public Zona getZona() {
         return zona;
     }
+
+    @Override
+public String toString() {
+    return " | Cidade: " + (cidade != null ? cidade : "Não informada") + 
+           " | Bairro: " + (bairro != null ? bairro : "Não informado") + 
+           " | Zona: " + (zona != null ? zona : "Não informada");
+}
 }
 

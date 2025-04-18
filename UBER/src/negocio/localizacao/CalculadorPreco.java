@@ -1,5 +1,6 @@
 package negocio.localizacao;
 import java.io.Serializable;
+
 import negocio.veiculos.Veiculo;
 
 public class CalculadorPreco implements Serializable {

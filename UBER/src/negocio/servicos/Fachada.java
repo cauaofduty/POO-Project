@@ -53,7 +53,6 @@ public class Fachada {
         return pessoaManager.buscarPessoa(IDPessoa);
     }
 
-    // Parando para pensar, as funções de listarClientes e listarMotoristas não existem em um aplicativo como o UBER né? Seriam funções de admin, talves fosse útil perguntar no inicio quem esta acessando o sistema //CAua-> mesmo assim ele quer, e a implementação vao ficar pro final, com remoção de usuarios e tudo
     public ArrayList<Cliente> listarClientes() {
         return pessoaManager.listarClientes();
     }
@@ -142,13 +141,11 @@ public class Fachada {
     public Pix cadastrarPix(ArrayList<FormaDePagamento> formas,String chave, double saldoPix) throws EntidadeJaExisteException {
         return pessoaManager.cadastrarPix(formas, chave, saldoPix);
     }
-
+    
     public void removerFormaPagamento(ArrayList<FormaDePagamento> formas, int indice) {
         pessoaManager.removerFormaPagamento(formas, indice);
     }
 
-    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas, FormaDePagamento forma) throws EntidadeJaExisteException {
-        pessoaManager.adicionarFormaPagamento(formas, forma);
-    }
+    
     
 }

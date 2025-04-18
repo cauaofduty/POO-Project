@@ -15,6 +15,7 @@ import negocio.pessoas.Cliente;
 import negocio.pessoas.Motorista;
 import negocio.pessoas.Pessoa;
 import negocio.veiculos.Veiculo;
+import ui.Util;
 
 public class GerenciadorPessoa {
     private final RepositorioPessoaArquivo repoPessoa;
@@ -110,13 +111,6 @@ public class GerenciadorPessoa {
         formas.remove(indice);
     }
 
-    public void adicionarFormaPagamento(ArrayList<FormaDePagamento> formas, FormaDePagamento forma) throws EntidadeJaExisteException {
-        if (formas.contains(forma)) {
-            throw new EntidadeJaExisteException("Forma de pagamento já cadastrada.");
-        }
-        formas.add(forma);
-    }
-
     public String formatarCartao(String numeroCartao) {
         //para adicionar os espacos manualmente para evitar mais complexidade
         return numeroCartao.substring(0, 4) + " " +
@@ -154,15 +148,4 @@ public class GerenciadorPessoa {
     public ArrayList<Motorista> listarMotoristas() {
         return repoPessoa.listarMotoristas();
     }
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-    /* public Motorista buscarMotoristaDisponivel() {
-        for (Motorista motorista : listarMotoristas()) {
-            if (motorista.isDisponivel()) {
-                return motorista;
-            }
-        }
-        return null;
-    } */
 }

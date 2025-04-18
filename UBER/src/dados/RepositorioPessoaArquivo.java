@@ -83,8 +83,6 @@ public class RepositorioPessoaArquivo implements IRepositorioPessoa<Pessoa> {
         }
     }
 
-    // Função auxiliar
-
     public ArrayList<Pessoa> getPessoas() {
         return pessoas;
     }

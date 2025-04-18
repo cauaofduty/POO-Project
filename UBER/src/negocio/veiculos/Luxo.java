@@ -16,6 +16,7 @@ public class Luxo extends Veiculo {
         return taxaViagem;
     }
 
+    @Override
     public String getTipo() {
         return tipo;
     }
